@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spidron-kocka / Spidron Cube</title>
+<meta name="description" content="A 64 hexagram spidron-fészkekből kirakva egy 4×4×4-es kockában: hajtás a vonalakból, szín a vonalpárokból, kiemelt ellentét és szomszédok. / The 64 hexagrams built from spidron nests in a 4×4×4 cube: folds from the lines, colour from the line pairs, highlighted opposite and neighbours.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Spidron-kocka / Spidron Cube">
+<meta property="og:description" content="64 spidron-fészek, egy kocka: hexagram, szín és hajtás egy térben. / 64 spidron nests, one cube: hexagram, colour and fold in one space.">
+<meta property="og:url" content="https://madcsaba.github.io/spidron/spidron-cube.html">
+<script>
+(function(){var l;try{l=localStorage.getItem("sjk-lang")}catch(e){}
+if(l!=="hu"&&l!=="en")l=(navigator.language||"").toLowerCase().indexOf("hu")===0?"hu":"en";
+document.documentElement.setAttribute("data-lang",l);document.documentElement.lang=l;})();
+</script>
+<script src="vendor/three.min.js"></script>
+<style>
+  :root{--bg:#f6f7f9;--panel:#fff;--line:#e3e6ea;--ink:#1a1d21;--dim:#6b7280;--acc:#2563eb;--green:#16a34a;--chg:#ea580c;--cuo:#dc2626;
+    --display:ui-sans-serif,system-ui,"Segoe UI",Helvetica,Arial;--serif:Georgia,'Times New Roman',serif}
+  html[data-lang="hu"] .en{display:none}
+  html[data-lang="en"] .hu{display:none}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--display)}
+  .wrap{max-width:1320px;margin:0 auto;padding:22px 18px 48px}
+  .kicker{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);font-weight:700}
+  h1{font:600 30px/1.2 var(--serif);margin:6px 0}
+  h3{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin:16px 0 6px}
+  .lead{color:var(--dim);max-width:900px;margin:0 0 14px}
+  .grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px}
+  @media (max-width:980px){.grid{grid-template-columns:minmax(0,1fr)}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
+  .stage{position:relative;border-radius:12px;overflow:hidden;background:radial-gradient(ellipse at 50% 40%,#fff 0%,#e9edf2 100%);border:1px solid var(--line)}
+  #gl{display:block;width:100%;height:min(72vh,640px);touch-action:none;cursor:grab}
+  .hint{position:absolute;left:10px;bottom:8px;font-size:12px;color:var(--dim);pointer-events:none;background:rgba(255,255,255,.8);padding:2px 6px;border-radius:6px}
+  .axes{position:absolute;right:10px;top:8px;font-size:12px;color:var(--dim);text-align:right;pointer-events:none;background:rgba(255,255,255,.85);border-radius:8px;padding:2px 6px;line-height:1.45}
+  .tip{position:absolute;pointer-events:none;background:rgba(26,29,33,.92);color:#fff;font-size:12.5px;padding:5px 8px;border-radius:8px;display:none;white-space:nowrap}
+  .bar{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-top:10px}
+  .bar label{font-size:13px;color:var(--dim);display:flex;align-items:center;gap:6px}
+  input[type=range]{width:120px}
+  button.t{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font:13px var(--display);cursor:pointer;color:var(--ink);min-height:34px}
+  button.t:hover{border-color:#c5cad1}
+  button.t.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+  .head{display:flex;gap:14px;align-items:center}
+  .sw{width:56px;height:56px;border-radius:12px;border:1px solid var(--line);flex:none}
+  .zh{font:600 34px/1.1 var(--serif)}
+  .nm{font-weight:600}
+  .small{font-size:12.5px;color:var(--dim)}
+  .rel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .rc{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;padding:6px 8px;background:#fff;cursor:pointer;font-size:13px;text-align:left;min-height:44px}
+  .rc:hover{border-color:#c5cad1}
+  .rc i{width:18px;height:18px;border-radius:5px;flex:none;border:1px solid rgba(0,0,0,.12)}
+  .rc b{font-family:var(--serif);font-size:16px}
+  .rc.cuo{border-color:var(--cuo)}
+  .note{font-size:13px;background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin-top:12px}
+  .langsw{position:fixed;top:10px;right:12px;z-index:50;display:flex;background:#fff;border:1px solid #e3e6ea;border-radius:999px;padding:3px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+  .langsw button{border:0;background:none;font:600 13px var(--display);color:#6b7280;padding:5px 11px;border-radius:999px;cursor:pointer;min-height:32px}
+  .langsw button[aria-pressed="true"]{background:#1a1d21;color:#fff}
+  a{color:var(--acc)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker"><span class="hu">Prototípus · térkitöltés</span><span class="en">Prototype · space filling</span></div>
+  <h1><span class="hu">Spidron-kocka</span><span class="en">Spidron Cube</span></h1>
+  <p class="lead"><span class="hu">A 64 hexagram, mindegyik egy spidron-fészek, kirakva egy 4×4×4-es kockába. A három vonalpár a három tengely (ugyanúgy, mint a <a href="iching.html">Változások terében</a>), a fészek hajtásai a hat vonal (jang = hegy, jin = völgy), a színe a vonalpárokból jön (1–2 = vörös, 3–4 = zöld, 5–6 = kék csatorna). Így a 錯 ellentét mindig a kocka középpontján át, a kiegészítő színnél van.</span><span class="en">The 64 hexagrams, each a spidron nest, laid out in a 4×4×4 cube. The three line pairs are the three axes (as in <a href="iching.html">The Space of Changes</a>), the nest's folds are the six lines (yang = mountain, yin = valley), and its colour comes from the line pairs (1–2 = red, 3–4 = green, 5–6 = blue channel). So the 錯 opposite always sits through the cube's centre, at the complementary colour.</span> <a href="index.html"><span class="hu">← nyitóoldal</span><span class="en">← home</span></a></p>
+
+  <div class="grid">
+    <section class="card">
+      <div class="stage">
+        <canvas id="gl"></canvas>
+        <div class="axes" id="axes"></div>
+        <div class="hint"><span class="hu">Húzd: forgatás · görgő: nagyítás · kattintás: kiválasztás</span><span class="en">Drag: rotate · wheel: zoom · click: select</span></div>
+        <div class="tip" id="tip"></div>
+      </div>
+      <div class="bar">
+        <label><span class="hu">Szétnyitás</span><span class="en">Spread</span> <input type="range" id="spread" min="0" max="100" value="35"></label>
+        <label><span class="hu">Hajtás</span><span class="en">Fold</span> <input type="range" id="fold" min="0" max="100" value="60"></label>
+        <label><span class="hu">Emelet (Ég-pár)</span><span class="en">Floor (Heaven pair)</span>
+          <select id="floor"><option value="-1" data-hu="mind a 4" data-en="all 4">mind a 4</option><option value="0">⚏</option><option value="1">⚍</option><option value="2">⚌</option><option value="3">⚎</option></select></label>
+        <button class="t on" id="spin"><span class="hu">⟳ Forgás</span><span class="en">⟳ Spin</span></button>
+        <button class="t" id="dim"><span class="hu">Csak a kapcsolatok</span><span class="en">Relations only</span></button>
+      </div>
+    </section>
+
+    <section class="card" id="panel">
+      <div class="head"><div class="sw" id="sw"></div><div><div class="small" id="num"></div><div class="zh" id="zh"></div><div class="nm" id="nm"></div><div class="small" id="bits"></div></div></div>
+      <h3><span class="hu">錯 ellentét – a középponton át</span><span class="en">錯 opposite – through the centre</span></h3>
+      <div class="rel" id="cuo"></div>
+      <h3><span class="hu">6 szomszéd – egy vonal, egy csatornalépés</span><span class="en">6 neighbours – one line, one channel step</span></h3>
+      <div class="rel" id="nbs"></div>
+      <div class="note"><span class="hu">A kiválasztott fészek fekete kerettel, az ellentéte piros kerettel, a szomszédai narancs vonallal látszanak a kockában. Egy szomszéd egyetlen vonalban tér el: a térben egy lépés a tengely mentén, a fészken egy kar átfordulása, a színben egy csatorna 85 vagy 170 egységnyi lépése.</span><span class="en">In the cube the selected nest has a black frame, its opposite a red frame, and its neighbours are joined by orange lines. A neighbour differs in a single line: one step along an axis in space, one arm flipping in the nest, and a step of 85 or 170 in one colour channel.</span></div>
+      <p class="small" style="margin-top:12px"><a href="iching.html"><span class="hu">A változások tere</span><span class="en">The Space of Changes</span></a> · <a href="spidron-lab.html"><span class="hu">Spidron-labor</span><span class="en">Spidron Lab</span></a> · <a href="harmonia.html"><span class="hu">Harmónia Labor</span><span class="en">Harmony Lab</span></a> · <a href="chroma.html">SJK-Chroma Engine</a></p>
+    </section>
+  </div>
+</div>
+
+<div class="langsw" role="group" aria-label="Nyelv / Language"><button type="button" data-l="hu">HU</button><button type="button" data-l="en">EN</button></div>
+
+<script>
+const HX=[["111111","乾","Teremtő","Creative"],["000000","坤","Befogadó","Receptive"],["100010","屯","Kezdeti nehézség","Difficulty at the Beginning"],["010001","蒙","Ifjúi tudatlanság","Youthful Folly"],["111010","需","Várakozás","Waiting"],["010111","訟","Viszály","Conflict"],["010000","師","Sereg","The Army"],["000010","比","Összetartás","Holding Together"],["111011","小畜","A kicsi szelídítő ereje","Small Taming"],["110111","履","Lépdelés","Treading"],["111000","泰","Béke","Peace"],["000111","否","Pangás","Standstill"],["101111","同人","Közösség","Fellowship"],["111101","大有","Nagy birtoklás","Great Possession"],["001000","謙","Szerénység","Modesty"],["000100","豫","Lelkesedés","Enthusiasm"],["100110","隨","Követés","Following"],["011001","蠱","A megromlott helyrehozása","Repairing the Spoiled"],["110000","臨","Közeledés","Approach"],["000011","觀","Szemlélődés","Contemplation"],["100101","噬嗑","Átharapás","Biting Through"],["101001","賁","Kecsesség","Grace"],["000001","剝","Szétmállás","Splitting Apart"],["100000","復","Visszatérés","Return"],["100111","無妄","Ártatlanság","Innocence"],["111001","大畜","A nagy szelídítő ereje","Great Taming"],["100001","頤","Táplálás","Nourishment"],["011110","大過","A nagy túlsúlya","Great Exceeding"],["010010","坎","A mélység","The Abysmal"],["101101","離","A tapadó","The Clinging"],["001110","咸","Hatás","Influence"],["011100","恒","Tartósság","Duration"],["001111","遯","Visszavonulás","Retreat"],["111100","大壯","A nagy ereje","Great Power"],["000101","晉","Előrehaladás","Progress"],["101000","明夷","A fény elsötétülése","Darkening of the Light"],["101011","家人","Család","The Family"],["110101","睽","Szembenállás","Opposition"],["001010","蹇","Akadály","Obstruction"],["010100","解","Feloldás","Deliverance"],["110001","損","Csökkenés","Decrease"],["100011","益","Gyarapodás","Increase"],["111110","夬","Áttörés","Breakthrough"],["011111","姤","Találkozás","Coming to Meet"],["000110","萃","Gyülekezés","Gathering"],["011000","升","Felfelé törekvés","Pushing Upward"],["010110","困","Kimerülés","Oppression"],["011010","井","A kút","The Well"],["101110","革","Átalakulás","Revolution"],["011101","鼎","Az üst","The Cauldron"],["100100","震","A felrázó","The Arousing"],["001001","艮","A nyugalom","Keeping Still"],["001011","漸","Fokozatos fejlődés","Gradual Development"],["110100","歸妹","A férjhez menő leány","The Marrying Maiden"],["101100","豐","Bőség","Abundance"],["001101","旅","A vándor","The Wanderer"],["011011","巽","A szelíd","The Gentle"],["110110","兌","A derűs","The Joyous"],["010011","渙","Szétoszlás","Dispersion"],["110010","節","Mértékletesség","Limitation"],["110011","中孚","Belső igazság","Inner Truth"],["001100","小過","A kicsi túlsúlya","Small Exceeding"],["101010","既濟","Beteljesülés után","After Completion"],["010101","未濟","Beteljesülés előtt","Before Completion"]];
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const L=()=>document.documentElement.getAttribute("data-lang")==="en"?"en":"hu";
+const T=(hu,en)=>L()==="en"?en:hu;
+const byB={};HX.forEach((h,i)=>{byB[h[0]]=i;});
+const name=i=>`${i+1}. ${HX[i][1]} ${T(HX[i][2],HX[i][3])}`;
+const flip=c=>c==="1"?"0":"1";
+const cuoOf=i=>byB[[...HX[i][0]].map(flip).join("")];
+const nbOf=i=>[0,1,2,3,4,5].map(k=>{const b=HX[i][0];return byB[b.slice(0,k)+flip(b[k])+b.slice(k+1)];});
+/* colour: pair (lower, upper) -> level (2*lower+upper)*85; R = lines 1-2, G = 3-4, B = 5-6 */
+const rgb=i=>{const b=HX[i][0];return [0,2,4].map(k=>(2*+b[k]+ +b[k+1])*85);};
+const hex=i=>"#"+rgb(i).map(v=>v.toString(16).padStart(2,"0")).join("");
+/* position: Gray order per pair, so neighbours along an axis differ in one line */
+const GRAY={"00":0,"10":1,"11":2,"01":3};
+const cell=i=>{const b=HX[i][0];return [GRAY[b[0]+b[1]],GRAY[b[4]+b[5]],GRAY[b[2]+b[3]]];};
+
+/* ---------- three.js scene ---------- */
+const cv=$("#gl");
+const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
+renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(36,1,.1,100);
+scene.add(new THREE.HemisphereLight(0xffffff,0x8892a0,.75));
+const d1=new THREE.DirectionalLight(0xffffff,.75);d1.position.set(4,7,5);scene.add(d1);
+const d2=new THREE.DirectionalLight(0xffffff,.25);d2.position.set(-5,-3,-4);scene.add(d2);
+const geo=new THREE.BufferGeometry(),mat=new THREE.MeshStandardMaterial({vertexColors:true,side:THREE.DoubleSide,flatShading:true,roughness:.55,metalness:.05});
+const mesh=new THREE.Mesh(geo,mat);scene.add(mesh);
+const frameGeo=new THREE.BufferGeometry(),frame=new THREE.LineSegments(frameGeo,new THREE.LineBasicMaterial({color:0x1a1d21,transparent:true,opacity:.18}));scene.add(frame);
+const relGeo=new THREE.BufferGeometry(),relLines=new THREE.LineSegments(relGeo,new THREE.LineBasicMaterial({color:0xea580c}));scene.add(relLines);
+const cuoGeo=new THREE.BufferGeometry(),cuoLine=new THREE.Line(cuoGeo,new THREE.LineDashedMaterial({color:0xdc2626,dashSize:.12,gapSize:.08}));scene.add(cuoLine);
+const ringGeo=new THREE.RingGeometry(.47,.53,6);
+const selRing=new THREE.Mesh(new THREE.RingGeometry(.47,.56,6),new THREE.MeshBasicMaterial({color:0x1a1d21,side:THREE.DoubleSide}));
+const cuoRing=new THREE.Mesh(ringGeo,new THREE.MeshBasicMaterial({color:0xdc2626,side:THREE.DoubleSide}));
+selRing.rotation.x=cuoRing.rotation.x=-Math.PI/2;scene.add(selRing);scene.add(cuoRing);
+
+const S={sel:0,spread:.35,fold:.6,floor:-1,spin:true,dim:false};
+const LEV=5,SQ3=Math.sqrt(3);
+function worldPos(i){const c=cell(i),g=1+S.spread;return c.map(v=>(v-1.5)*g);}
+/* one spidron nest in local (x, z), relief along y; arm j = line j, at angle -150+60j */
+function nest(i,out,col,idx){
+  const b=HX[i][0],s=[...b].map(c=>c==="1"?1:-1),yang=s.filter(v=>v>0).length;
+  const tw=(yang-3)*2.2*Math.PI/180,R=.46,c=worldPos(i);
+  const V={},key=(n,j)=>n+","+((j%6+6)%6);
+  for(let n=0;n<=LEV;n++)for(let j=0;j<6;j++){const a=(-180+30*n+60*j)*Math.PI/180+tw*n,r=R*Math.pow(1/SQ3,n);V[key(n,j)]=[r*Math.cos(a),0,r*Math.sin(a)];}
+  for(let n=0;n<LEV;n++)for(let j=0;j<6;j++){const a=.22*R*Math.pow(1/SQ3,n)*s[j]*S.fold;
+    V[key(n,j+1)][1]+=a;V[key(n+1,j)][1]+=a;V[key(n,j)][1]-=a*.5;V[key(n+1,j+1)][1]-=a*.5;}
+  const base=new THREE.Color(hex(i)),hi=S.dim&&!rel.has(i);
+  const show=S.floor<0||cell(i)[1]===S.floor;
+  if(!show)return;
+  for(let n=0;n<LEV;n++)for(let j=0;j<6;j++){
+    const tris=[[key(n,j),key(n,j+1),key(n+1,j),true],[key(n,j+1),key(n+1,j),key(n+1,j+1),false]];
+    for(const [a,b2,c2,iso] of tris){const v=(iso?s[j]:-s[j]);
+      const cc=base.clone().lerp(new THREE.Color(v>0?0xffffff:0x000000),.14);if(hi)cc.lerp(new THREE.Color(0xe6e9ee),.85);
+      for(const k of [a,b2,c2]){const p=V[k];out.push(c[0]+p[0],c[1]+p[1],c[2]+p[2]);col.push(cc.r,cc.g,cc.b);idx.push(i);}}
+  }
+}
+let rel=new Set();let triOwner=[];
+function build(){
+  rel=new Set([S.sel,cuoOf(S.sel),...nbOf(S.sel)]);
+  const pos=[],col=[],idx=[];for(let i=0;i<64;i++)nest(i,pos,col,idx);
+  geo.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));geo.setAttribute("color",new THREE.Float32BufferAttribute(col,3));geo.computeVertexNormals();
+  triOwner=[];for(let t=0;t<idx.length;t+=3)triOwner.push(idx[t]);
+  // cube frame
+  const g=1.5*(1+S.spread)+.6,E=[];const cs=[-g,g];
+  for(const a of cs)for(const b of cs){E.push(-g,a,b,g,a,b, a,-g,b,a,g,b, a,b,-g,a,b,g);}
+  frameGeo.setAttribute("position",new THREE.Float32BufferAttribute(E,3));
+  // relations
+  const p0=worldPos(S.sel),R=[];nbOf(S.sel).forEach(n=>{const p=worldPos(n);R.push(...p0,...p);});
+  relGeo.setAttribute("position",new THREE.Float32BufferAttribute(R,3));
+  const pc=worldPos(cuoOf(S.sel));cuoGeo.setFromPoints([new THREE.Vector3(...p0),new THREE.Vector3(0,0,0),new THREE.Vector3(...pc)]);cuoLine.computeLineDistances();
+  selRing.position.set(...p0);cuoRing.position.set(...pc);
+}
+/* camera orbit */
+let th=.75,ph=1.05,rad=9.5,drag=null;
+function resize(){const r=cv.getBoundingClientRect();renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.updateProjectionMatrix();}
+new ResizeObserver(resize).observe(cv);
+cv.addEventListener("pointerdown",e=>{drag={x:e.clientX,y:e.clientY,m:0};cv.setPointerCapture(e.pointerId);cv.style.cursor="grabbing";});
+cv.addEventListener("pointermove",e=>{
+  if(drag){const dx=e.clientX-drag.x,dy=e.clientY-drag.y;drag.m+=Math.abs(dx)+Math.abs(dy);th-=dx*.008;ph=Math.max(.2,Math.min(2.9,ph-dy*.008));drag.x=e.clientX;drag.y=e.clientY;$("#tip").style.display="none";return;}
+  const i=pick(e),tip=$("#tip");if(i<0){tip.style.display="none";return;}const r=cv.getBoundingClientRect();
+  tip.style.display="block";tip.textContent=`${name(i)} · ${hex(i)}`;tip.style.left=Math.min(e.clientX-r.left+12,r.width-220)+"px";tip.style.top=(e.clientY-r.top+12)+"px";});
+cv.addEventListener("pointerup",e=>{const d=drag;drag=null;cv.style.cursor="grab";if(d&&d.m<6){const i=pick(e);if(i>=0)select(i);}});
+cv.addEventListener("pointerleave",()=>{$("#tip").style.display="none";});
+cv.addEventListener("wheel",e=>{e.preventDefault();rad=Math.max(4,Math.min(20,rad*(1+Math.sign(e.deltaY)*.08)));},{passive:false});
+const ray=new THREE.Raycaster(),mv=new THREE.Vector2();
+function pick(e){const r=cv.getBoundingClientRect();mv.set(((e.clientX-r.left)/r.width)*2-1,-((e.clientY-r.top)/r.height)*2+1);ray.setFromCamera(mv,camera);
+  const h=ray.intersectObject(mesh);return h.length&&h[0].faceIndex!=null?triOwner[h[0].faceIndex]:-1;}
+function loop(){requestAnimationFrame(loop);if(S.spin&&!drag)th+=.0025;
+  const R=rad*Math.max(1,1/camera.aspect);camera.position.set(R*Math.sin(ph)*Math.sin(th),R*Math.cos(ph),R*Math.sin(ph)*Math.cos(th));camera.lookAt(0,0,0);
+  renderer.render(scene,camera);}
+
+/* ---------- panel ---------- */
+function glyph(b){let s='<svg width="40" height="34" viewBox="0 0 40 34" aria-hidden="true">';for(let k=0;k<6;k++){const y=34-(k+1)*4.4-k*1.5;
+  s+=b[k]==="1"?`<rect x="0" y="${y}" width="40" height="4.4" rx="1" fill="#1a1d21"/>`:`<rect x="0" y="${y}" width="17" height="4.4" rx="1" fill="#1a1d21"/><rect x="23" y="${y}" width="17" height="4.4" rx="1" fill="#1a1d21"/>`;}return s+"</svg>";}
+function relCard(i,label,cls){return `<button class="rc ${cls||""}" data-go="${i}"><i style="background:${hex(i)}"></i><b>${HX[i][1]}</b><span>${T(HX[i][2],HX[i][3])}<br><span class="small">${label} · ${hex(i)}</span></span></button>`;}
+const CH=["R","R","G","G","B","B"];
+function renderPanel(){const i=S.sel,b=HX[i][0],c=rgb(i);
+  $("#sw").style.background=hex(i);$("#num").textContent=`${i+1}. hexagram`;$("#zh").textContent=HX[i][1];$("#nm").textContent=T(HX[i][2],HX[i][3]);
+  $("#bits").innerHTML=`${glyph(b)}<br>${T("vonalak (alulról)","lines (bottom up)")}: ${b} · ${hex(i)} = R ${c[0]} · G ${c[1]} · B ${c[2]}`;
+  $("#cuo").innerHTML=relCard(cuoOf(i),T("kiegészítő szín","complementary colour"),"cuo");
+  $("#nbs").innerHTML=nbOf(i).map((n,k)=>relCard(n,`${T(`${k+1}. vonal`,`line ${k+1}`)} (${CH[k]} ${k%2?"±85":"±170"})`)).join("");
+  document.querySelectorAll("#panel [data-go]").forEach(el=>el.addEventListener("click",()=>select(+el.dataset.go)));
+  $("#axes").innerHTML=T("X: 1–2. vonal (vörös)<br>Z: 3–4. vonal (zöld)<br>Y ↑: 5–6. vonal (kék)","X: lines 1–2 (red)<br>Z: lines 3–4 (green)<br>Y ↑: lines 5–6 (blue)");}
+function select(i){S.sel=i;build();renderPanel();}
+
+/* ---------- controls ---------- */
+$("#spread").addEventListener("input",e=>{S.spread=e.target.value/100;build();});
+$("#fold").addEventListener("input",e=>{S.fold=e.target.value/100;build();});
+$("#floor").addEventListener("change",e=>{S.floor=+e.target.value;build();});
+$("#spin").addEventListener("click",()=>{S.spin=!S.spin;$("#spin").classList.toggle("on",S.spin);});
+$("#dim").addEventListener("click",()=>{S.dim=!S.dim;$("#dim").classList.toggle("on",S.dim);build();});
+function applyLang(){const l=L();document.querySelectorAll("option[data-hu]").forEach(o=>{o.textContent=o.dataset[l];});
+  document.querySelectorAll(".langsw button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.l===l)));renderPanel();}
+document.querySelectorAll(".langsw button").forEach(b=>b.addEventListener("click",()=>{const l=b.dataset.l;try{localStorage.setItem("sjk-lang",l)}catch(e){}
+  document.documentElement.setAttribute("data-lang",l);document.documentElement.lang=l;applyLang();window.dispatchEvent(new CustomEvent("sjk:lang",{detail:l}));}));
+resize();build();applyLang();requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
