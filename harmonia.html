@@ -1,13 +1,21 @@
 <!DOCTYPE html>
-<html lang="hu" class="dark">
+<html lang="hu" class="dark" data-lang="hu">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spidron Harmónia Laboratórium – Geometria, Fény és Hang Szintézise</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<title>Spidron Harmónia Laboratórium / Spidron Harmony Lab</title>
+<meta name="description" content="A spidron síkbeli felépítése és 3D hajtogatása; a szintek mérete hangfrekvenciára és fényhullámhosszra leképezve. / How a spidron is built in the plane and folded in 3D; level sizes mapped to sound frequencies and light wavelengths.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Spidron Harmónia Laboratórium / Spidron Harmony Lab">
+<meta property="og:description" content="Geometria, fény és hang – interaktív spidron-labor. / Geometry, light and sound – an interactive spidron lab.">
+<meta property="og:url" content="https://madcsaba.github.io/spidron/harmonia.html">
+<link rel="stylesheet" href="harmonia.css">
+<script>
+(function(){var l;try{l=localStorage.getItem("sjk-lang")}catch(e){}
+if(l!=="hu"&&l!=="en")l=(navigator.language||"").toLowerCase().indexOf("hu")===0?"hu":"en";
+document.documentElement.setAttribute("data-lang",l);document.documentElement.lang=l;})();
+</script>
+<script src="vendor/three.min.js"></script>
 <style>
   :root {
     --bg: #0b0f17;
@@ -26,10 +34,16 @@
     margin: 0;
     background-color: var(--bg);
     color: var(--ink);
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
     overflow-x: hidden;
   }
-  .mono { font-family: 'JetBrains Mono', monospace; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  html[data-lang="hu"] .en { display: none; }
+  html[data-lang="en"] .hu { display: none; }
+  .langsw { display: flex; border: 1px solid var(--border); border-radius: 999px; padding: 2px; background: var(--panel); }
+  .langsw button { border: 0; background: none; color: var(--mute); font: 600 12px ui-sans-serif, system-ui, sans-serif; padding: 6px 10px; border-radius: 999px; cursor: pointer; min-height: 30px; }
+  .langsw button[aria-pressed="true"] { background: var(--cyan); color: var(--bg); }
+  .langsw button:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
 
   /* Custom Scrollbar */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -120,7 +134,7 @@
 <header class="border-b border-[#263248] px-4 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4 bg-[#0b0f17]/90 backdrop-blur-md sticky top-0 z-40">
   <div class="flex items-center gap-3.5">
     <!-- Geometric Spidron Hexagon SVG Icon -->
-    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-400 via-cyan-500 to-amber-500 p-[1px] shadow-lg shadow-sky-500/10">
+    <a href="index.html" aria-label="Nyitóoldal / Home" title="Nyitóoldal / Home" class="block w-11 h-11 rounded-xl bg-gradient-to-br from-sky-400 via-cyan-500 to-amber-500 p-[1px] shadow-lg shadow-sky-500/10">
       <div class="w-full h-full bg-[#0b0f17] rounded-[11px] flex items-center justify-center">
         <svg viewBox="-24 -24 48 48" class="w-7 h-7 stroke-sky-400 fill-none" stroke-width="1.8">
           <polygon points="0,-20 17.3,-10 17.3,10 0,20 -17.3,10 -17.3,-10" class="stroke-amber-400/80"/>
@@ -128,16 +142,16 @@
           <circle r="3" class="fill-amber-400 stroke-none"/>
         </svg>
       </div>
-    </div>
+    </a>
     <div>
       <div class="flex items-center gap-2">
         <span class="mono text-[11px] uppercase tracking-widest px-2 py-0.5 rounded bg-sky-500/10 text-sky-400 border border-sky-500/30">
-          Erdély Dániel Spidron-geometriája
+          <span class="hu">Erdély Dániel Spidron-geometriája</span><span class="en">Dániel Erdély's spidron geometry</span>
         </span>
-        <span class="text-xs text-slate-400 hidden sm:inline">Akusztikai &amp; Optikai Rezonancia Modell</span>
+        <span class="text-xs text-slate-400 hidden sm:inline"><span class="hu">Akusztikai &amp; Optikai Rezonancia Modell</span><span class="en">Acoustic &amp; optical resonance model</span> · <a href="index.html" class="underline hover:text-sky-400"><span class="hu">nyitóoldal</span><span class="en">home</span></a> · <a href="spidron-lab.html" class="underline hover:text-sky-400"><span class="hu">Spidron-labor</span><span class="en">Spidron Lab</span></a></span>
       </div>
       <h1 class="text-lg sm:text-xl font-bold tracking-tight text-slate-100 mt-0.5">
-        Spidron Harmónia Laboratórium: Geometria, Fény és Hang Szintézise
+        <span class="hu">Spidron Harmónia Laboratórium: Geometria, Fény és Hang Szintézise</span><span class="en">Spidron Harmony Lab: a Synthesis of Geometry, Light and Sound</span>
       </h1>
     </div>
   </div>
@@ -145,22 +159,23 @@
   <!-- Core Mathematical Equations & Audio Trigger -->
   <div class="flex flex-wrap items-center gap-2.5">
     <div class="hidden xl:flex items-center gap-3 px-3.5 py-1.5 rounded-lg bg-[#111827] border border-[#263248] text-xs mono text-slate-300">
-      <span title="Geometriai kicsinyítési arány">r<sub>k</sub> = r<sub>0</sub>·(1/√3)<sup>k</sup></span>
+      <span data-title-hu="Geometriai kicsinyítési arány" data-title-en="Geometric scaling ratio">r<sub>k</sub> = r<sub>0</sub>·(1/√3)<sup>k</sup></span>
       <span class="text-slate-600">|</span>
-      <span title="40 oktávos hang-fény transzponálás">f<sub>fény</sub> = f<sub>hang</sub> · 2<sup>40</sup></span>
+      <span data-title-hu="40 oktávos hang-fény transzponálás" data-title-en="40-octave sound-to-light transposition">f<sub><span class="hu">fény</span><span class="en">light</span></sub> = f<sub><span class="hu">hang</span><span class="en">sound</span></sub> · 2<sup>40</sup></span>
       <span class="text-slate-600">|</span>
-      <span title="Hullámhossz számítás">λ = c / f<sub>fény</sub></span>
+      <span data-title-hu="Hullámhossz számítás" data-title-en="Wavelength">λ = c / f<sub><span class="hu">fény</span><span class="en">light</span></sub></span>
     </div>
 
     <button id="btnPlaySpiral" class="lab-btn px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 cursor-pointer border-amber-500/50 text-amber-300 hover:bg-amber-500/15">
       <span id="spiralIcon">▶</span>
-      <span>Spirális Futam Lejátszása</span>
+      <span><span class="hu">Spirális Futam Lejátszása</span><span class="en">Play the spiral run</span></span>
     </button>
 
     <button id="btnAudioMute" aria-pressed="true" class="lab-btn px-3.5 py-2 rounded-lg text-xs flex items-center gap-2 cursor-pointer">
       <span id="muteDot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-      <span>WebAudio Szintetizátor: AKTÍV</span>
+      <span id="muteLabel">WebAudio Szintetizátor: AKTÍV</span>
     </button>
+    <div class="langsw" role="group" aria-label="Nyelv / Language"><button type="button" data-l="hu">HU</button><button type="button" data-l="en">EN</button></div>
   </div>
 </header>
 
@@ -172,25 +187,25 @@
 
     <!-- Top Mode Switcher: 2D Unrolled vs 3D Space Folding vs Dual Split -->
     <div class="p-3 px-4 border-b border-[#263248] bg-[#111827] flex flex-wrap items-center justify-between gap-2">
-      <div class="flex flex-wrap items-center gap-1.5" role="group" aria-label="Megjelenítési Mód">
+      <div class="flex flex-wrap items-center gap-1.5" role="group" aria-label="Nézet / View">
         <button data-stage="split" class="stage-mode-btn lab-btn active px-3.5 py-1.5 rounded-lg text-xs cursor-pointer">
-          Osztott Labor (2D Kiterített Kar + 3D Térszerkezet)
+          <span class="hu">Osztott Labor (2D Kiterített Kar + 3D Térszerkezet)</span><span class="en">Split lab (2D unrolled arm + 3D structure)</span>
         </button>
         <button data-stage="2d" class="stage-mode-btn lab-btn px-3.5 py-1.5 rounded-lg text-xs cursor-pointer">
-          1. Kiterített Síkbeli Konstrukció (2D)
+          1. <span class="hu">Kiterített Síkbeli Konstrukció (2D)</span><span class="en">Unrolled plane construction (2D)</span>
         </button>
         <button data-stage="3d" class="stage-mode-btn lab-btn px-3.5 py-1.5 rounded-lg text-xs cursor-pointer">
-          2. 3D Térbeli Hajtogatás &amp; Relief
+          2. <span class="hu">3D Térbeli Hajtogatás &amp; Relief</span><span class="en">3D folding &amp; relief</span>
         </button>
       </div>
 
       <!-- 3D Structure Sub-mode -->
       <div class="flex items-center gap-1.5">
-        <label for="sel3DType" class="text-xs text-slate-400">3D Modell:</label>
+        <label for="sel3DType" class="text-xs text-slate-400"><span class="hu">3D Modell:</span><span class="en">3D model:</span></label>
         <select id="sel3DType" class="bg-[#1e293b] border border-[#263248] rounded-lg px-2.5 py-1.5 text-xs text-slate-100 outline-none focus:border-sky-400">
-          <option value="single_arm">Egyetlen Spidron-kar (Sík → 3D Spirál)</option>
-          <option value="hex_nest" selected>Hexagonális Spidron-fészek (6 Karos Relief)</option>
-          <option value="dome">Spidron Kupola / Térháló (Poliéderes)</option>
+          <option value="single_arm" data-hu="Egyetlen Spidron-kar (Sík → 3D Spirál)" data-en="Single spidron arm (plane → 3D spiral)">Egyetlen Spidron-kar (Sík → 3D Spirál)</option>
+          <option value="hex_nest" selected data-hu="Hexagonális Spidron-fészek (6 Karos Relief)" data-en="Hexagonal spidron nest (6-arm relief)">Hexagonális Spidron-fészek (6 Karos Relief)</option>
+          <option value="dome" data-hu="Spidron Kupola / Térháló (Poliéderes)" data-en="Spidron dome / space lattice (polyhedral)">Spidron Kupola / Térháló (Poliéderes)</option>
         </select>
       </div>
     </div>
@@ -203,9 +218,9 @@
         <div class="px-3.5 py-2 bg-[#0b0f17]/80 border-b border-[#263248]/60 flex items-center justify-between text-xs">
           <div class="flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-            <span class="font-semibold text-slate-200">Síkbeli Kiterített Konstrukció (2D)</span>
+            <span class="font-semibold text-slate-200"><span class="hu">Síkbeli Kiterített Konstrukció (2D)</span><span class="en">Unrolled plane construction (2D)</span></span>
           </div>
-          <span id="lbl2DSub" class="mono text-[11px] text-amber-400">Kattints egy háromszögre a hanghoz!</span>
+          <span id="lbl2DSub" class="mono text-[11px] text-amber-400"><span class="hu">Kattints egy háromszögre a hanghoz!</span><span class="en">Click a triangle to hear it!</span></span>
         </div>
 
         <div class="relative flex-1 flex items-center justify-center p-2 select-none overflow-hidden">
@@ -214,8 +229,8 @@
           <!-- 2D Legend Overlay -->
           <div class="absolute bottom-2.5 left-2.5 right-2.5 pointer-events-none flex flex-wrap items-center justify-between gap-2 text-[11px] mono">
             <div class="bg-[#0b0f17]/85 backdrop-blur px-2.5 py-1.5 rounded-lg border border-[#263248] text-slate-300 flex items-center gap-3">
-              <span><b class="text-sky-400">A-típus:</b> Szabályos Δ (60°–60°–60°)</span>
-              <span><b class="text-amber-400">B-típus:</b> Egyenlő szárú Δ (30°–120°–30°)</span>
+              <span><b class="text-sky-400"><span class="hu">A-típus:</span><span class="en">Type A:</span></b> <span class="hu">Szabályos</span><span class="en">Equilateral</span> Δ (60°–60°–60°)</span>
+              <span><b class="text-amber-400"><span class="hu">B-típus:</span><span class="en">Type B:</span></b> <span class="hu">Egyenlő szárú</span><span class="en">Isosceles</span> Δ (30°–120°–30°)</span>
             </div>
             <div id="metric2DRatio" class="bg-[#0b0f17]/85 backdrop-blur px-2.5 py-1.5 rounded-lg border border-[#263248] text-sky-400">
               Skála: 1 / √3 ≈ 0.5774
@@ -229,14 +244,14 @@
         <div class="px-3.5 py-2 bg-[#0b0f17]/80 border-b border-[#263248]/60 flex items-center justify-between text-xs z-10">
           <div class="flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-sky-400"></span>
-            <span class="font-semibold text-slate-200">3D Térbeli Hajtogatás (WebGL Kinematika)</span>
+            <span class="font-semibold text-slate-200"><span class="hu">3D Térbeli Hajtogatás (WebGL Kinematika)</span><span class="en">3D folding (WebGL kinematics)</span></span>
           </div>
           <div class="flex items-center gap-2">
             <button id="btnWireframe" aria-pressed="true" class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-[11px] mono text-slate-300 hover:border-sky-400 cursor-pointer">
-              Élek
+              <span class="hu">Élek</span><span class="en">Edges</span>
             </button>
             <button id="btnAutoRotate" aria-pressed="true" class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-[11px] mono text-slate-300 hover:border-sky-400 cursor-pointer">
-              Forgás
+              <span class="hu">Forgás</span><span class="en">Spin</span>
             </button>
           </div>
         </div>
@@ -246,13 +261,13 @@
 
           <!-- 3D Telemetry Overlay -->
           <div class="absolute top-2.5 left-2.5 pointer-events-none bg-[#0b0f17]/85 backdrop-blur px-3 py-2 rounded-lg border border-[#263248] text-[11px] mono flex flex-col gap-1">
-            <div class="text-slate-300">Térbeli Kiemelkedés (φ): <b id="hudFoldDeg" class="text-sky-400">65% (52.0°)</b></div>
-            <div class="text-slate-400">Spirális Csavarodás (θ): <b id="hudTwistDeg" class="text-amber-400">30.0° / szint</b></div>
-            <div class="text-slate-400">Aktív Gyűrű (k): <b id="hudActiveRing" class="text-emerald-400">1. szint</b></div>
+            <div class="text-slate-300"><span class="hu">Térbeli Kiemelkedés</span><span class="en">Elevation</span> (φ): <b id="hudFoldDeg" class="text-sky-400">65% (52.0°)</b></div>
+            <div class="text-slate-400"><span class="hu">Spirális Csavarodás</span><span class="en">Spiral twist</span> (θ): <b id="hudTwistDeg" class="text-amber-400">30.0° / szint</b></div>
+            <div class="text-slate-400"><span class="hu">Aktív Gyűrű</span><span class="en">Active ring</span> (k): <b id="hudActiveRing" class="text-emerald-400">1. szint</b></div>
           </div>
 
           <div class="absolute bottom-2.5 right-2.5 pointer-events-none bg-[#0b0f17]/85 backdrop-blur px-2.5 py-1 rounded-lg border border-[#263248] text-[11px] mono text-slate-400">
-            Egér húzás: 3D forgatás · Görgő: Zoom · Kattintás: Hang &amp; Gyűrű
+            <span class="hu">Egér húzás: 3D forgatás · Görgő: Zoom · Kattintás: Hang &amp; Gyűrű</span><span class="en">Drag: rotate in 3D · Wheel: zoom · Click: sound &amp; ring</span>
           </div>
         </div>
       </div>
@@ -264,55 +279,56 @@
       <!-- Slider 1: 2D to 3D Folding Elevation -->
       <div class="flex flex-col gap-1.5">
         <div class="flex justify-between text-xs">
-          <label for="slFold" class="text-slate-300 font-medium">1. Térbeli Hajtogatás (Sík → 3D)</label>
+          <label for="slFold" class="text-slate-300 font-medium">1. <span class="hu">Térbeli Hajtogatás (Sík → 3D)</span><span class="en">Folding (plane → 3D)</span></label>
           <span id="valFold" class="mono text-sky-400 font-semibold">65%</span>
         </div>
         <input id="slFold" type="range" min="0" max="100" value="65">
         <div class="flex justify-between text-[10px] mono text-slate-400">
-          <span>0% (Kiterített 2D sík)</span>
-          <span>100% (Mély 3D relief)</span>
+          <span>0% <span class="hu">(Kiterített 2D sík)</span><span class="en">(flat 2D plane)</span></span>
+          <span>100% <span class="hu">(Mély 3D relief)</span><span class="en">(deep 3D relief)</span></span>
         </div>
       </div>
 
       <!-- Slider 2: Spiral Twist -->
       <div class="flex flex-col gap-1.5">
         <div class="flex justify-between text-xs">
-          <label for="slTwist" class="text-slate-300 font-medium">2. Logaritmikus Torzió (Csavarás)</label>
+          <label for="slTwist" class="text-slate-300 font-medium">2. <span class="hu">Logaritmikus Torzió (Csavarás)</span><span class="en">Logarithmic torsion (twist)</span></label>
           <span id="valTwist" class="mono text-amber-400 font-semibold">55%</span>
         </div>
         <input id="slTwist" type="range" min="0" max="100" value="55">
         <div class="flex justify-between text-[10px] mono text-slate-400">
-          <span>0° (Radiális)</span>
-          <span>Spirális z(θ)=a·e<sup>bθ</sup></span>
+          <span>0° <span class="hu">(Radiális)</span><span class="en">(radial)</span></span>
+          <span><span class="hu">Spirális</span><span class="en">Spiral</span> z(θ)=a·e<sup>bθ</sup></span>
         </div>
       </div>
 
       <!-- Slider 3: Recursion Depth (Number of Rings k) -->
       <div class="flex flex-col gap-1.5">
         <div class="flex justify-between text-xs">
-          <label for="slRings" class="text-slate-300 font-medium">3. Rekurziós Szintek (k övek)</label>
-          <span id="valRings" class="mono text-emerald-400 font-semibold">7 szint</span>
+          <label for="slRings" class="text-slate-300 font-medium">3. <span class="hu">Rekurziós Szintek (k övek)</span><span class="en">Recursion levels (k rings)</span></label>
+          <span id="valRings" class="mono text-emerald-400 font-semibold">7</span>
         </div>
         <input id="slRings" type="range" min="2" max="10" value="7">
         <div class="flex justify-between text-[10px] mono text-slate-400">
-          <span>2 (Alap)</span>
-          <span>10 (Mikro-fraktál)</span>
+          <span>2 <span class="hu">(Alap)</span><span class="en">(base)</span></span>
+          <span>10 <span class="hu">(Mikro-fraktál)</span><span class="en">(micro-fractal)</span></span>
         </div>
       </div>
 
       <!-- Slider 4: Color & Frequency Mapping Law -->
       <div class="flex flex-col gap-1.5">
         <div class="flex justify-between text-xs">
-          <label for="selMappingLaw" class="text-slate-300 font-medium">4. Szín–Hang Leképezési Törvény</label>
-          <span class="mono text-[10px] text-sky-400">2<sup>40</sup> Oktáv</span>
+          <label for="selMappingLaw" class="text-slate-300 font-medium">4. <span class="hu">Szín–Hang Leképezési Törvény</span><span class="en">Colour–sound mapping</span></label>
+          <span class="mono text-[10px] text-sky-400">2<sup>40</sup> <span class="hu">Oktáv</span><span class="en">octaves</span></span>
         </div>
         <select id="selMappingLaw" class="bg-[#1e293b] border border-[#263248] rounded-lg px-2.5 py-1.5 text-xs text-slate-100 outline-none focus:border-sky-400">
-          <option value="sqrt3_harmonic">Geometriai √3 Felhangsor (f₀ · (√3)^(k/2))</option>
-          <option value="just_intonation" selected>Tiszta Akusztikus Hangolás (Just Intonation)</option>
-          <option value="golden_spiral">Logaritmikus Spirál Fázisspektrum</option>
+          <option value="inverse_size" data-hu="Fordított arány a mérettel (f₀ · (√3)^k)" data-en="Inverse to size (f₀ · (√3)^k)">Fordított arány a mérettel (f₀ · (√3)^k)</option>
+          <option value="sqrt3_harmonic" data-hu="Geometriai √3 Felhangsor (f₀ · (√3)^(k/2))" data-en="Geometric √3 overtone series (f₀ · (√3)^(k/2))">Geometriai √3 Felhangsor (f₀ · (√3)^(k/2))</option>
+          <option value="just_intonation" selected data-hu="Tiszta Akusztikus Hangolás (Just Intonation)" data-en="Just intonation">Tiszta Akusztikus Hangolás (Just Intonation)</option>
+          <option value="golden_spiral" data-hu="Logaritmikus Spirál Fázisspektrum" data-en="Logarithmic spiral phase spectrum">Logaritmikus Spirál Fázisspektrum</option>
         </select>
         <div class="text-[10px] mono text-slate-400 truncate">
-          A 3D hajtogatás a fényerőt és a felhangokat modulálja
+          <span class="hu">A 3D hajtogatás a fényerőt és a felhangokat modulálja</span><span class="en">3D folding modulates brightness and overtones</span>
         </div>
       </div>
     </div>
@@ -322,20 +338,20 @@
       <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
         <div>
           <h2 class="text-sm sm:text-base font-bold text-slate-100 flex items-center gap-2">
-            <span>Koncentrikus Spidron-szintek (k = 0 … N): Geometriai Méret → Hangfrekvencia → Fényhullámhossz</span>
+            <span><span class="hu">Koncentrikus Spidron-szintek (k = 0 … N): Geometriai Méret → Hangfrekvencia → Fényhullámhossz</span><span class="en">Concentric spidron levels (k = 0 … N): geometric size → sound frequency → light wavelength</span></span>
           </h2>
           <p class="text-xs text-slate-400">
-            Minden k-adik lépcsőben a háromszög oldalhossza <code class="text-sky-400">1/√3</code> arányban csökken, a húr/rezonátor rövidülése pedig magasabb hangfrekvenciát és rövidebb optikai hullámhosszt eredményez.
+            <span class="hu">Minden k-adik lépcsőben a háromszög oldalhossza <code class="text-sky-400">1/√3</code> arányban csökken, a húr/rezonátor rövidülése pedig magasabb hangfrekvenciát és rövidebb optikai hullámhosszt eredményez.</span><span class="en">At each step k the triangle side shrinks by <code class="text-sky-400">1/√3</code>; a shorter string or resonator gives a higher sound frequency and a shorter optical wavelength.</span>
           </p>
         </div>
 
         <div class="flex items-center gap-2">
-          <label for="selBaseFreq" class="text-xs text-slate-400 mono">Alaphang (f₀):</label>
+          <label for="selBaseFreq" class="text-xs text-slate-400 mono"><span class="hu">Alaphang</span><span class="en">Base tone</span> (f₀):</label>
           <select id="selBaseFreq" class="bg-[#111827] border border-[#263248] rounded-lg px-2.5 py-1 text-xs mono text-amber-400">
-            <option value="256">256.0 Hz (Tudományos C4)</option>
-            <option value="261.63">261.63 Hz (Standard C4, A=440)</option>
-            <option value="216">216.0 Hz (Verdi A=432 alap)</option>
-            <option value="194.18">194.18 Hz (Szoláris nap-oktáv)</option>
+            <option value="256" data-hu="256.0 Hz (Tudományos C4)" data-en="256.0 Hz (scientific C4)">256.0 Hz (Tudományos C4)</option>
+            <option value="261.63" data-hu="261.63 Hz (Standard C4, A=440)" data-en="261.63 Hz (standard C4, A=440)">261.63 Hz (Standard C4, A=440)</option>
+            <option value="216" data-hu="216.0 Hz (A3, A=432 hangolás)" data-en="216.0 Hz (A3, A=432 tuning)">216.0 Hz (A3, A=432 hangolás)</option>
+            <option value="194.18" data-hu="194.18 Hz (Cousto: Föld-nap)" data-en="194.18 Hz (Cousto: Earth day)">194.18 Hz (Cousto: Föld-nap)</option>
           </select>
         </div>
       </div>
@@ -343,11 +359,11 @@
       <!-- Continuous Visible Spectrum Reference Bar -->
       <div class="mb-3">
         <div class="flex justify-between text-[10px] mono text-slate-400 mb-1">
-          <span>750 nm (Vörös ~400 THz)</span>
-          <span>600 nm (Narancs/Sárga ~500 THz)</span>
-          <span>530 nm (Zöld ~565 THz)</span>
-          <span>470 nm (Kék ~640 THz)</span>
-          <span>390 nm (Ibolya ~770 THz)</span>
+          <span>750 nm (<span class="hu">Vörös</span><span class="en">red</span> ~400 THz)</span>
+          <span>600 nm (<span class="hu">Narancs/Sárga</span><span class="en">orange/yellow</span> ~500 THz)</span>
+          <span>530 nm (<span class="hu">Zöld</span><span class="en">green</span> ~565 THz)</span>
+          <span>470 nm (<span class="hu">Kék</span><span class="en">blue</span> ~640 THz)</span>
+          <span>390 nm (<span class="hu">Ibolya</span><span class="en">violet</span> ~770 THz)</span>
         </div>
         <div class="h-2.5 w-full rounded-full spectrum-bar relative shadow-inner"></div>
       </div>
@@ -367,54 +383,54 @@
     <div class="bg-[#0b0f17] border border-[#263248] rounded-xl p-4 flex flex-col gap-3">
       <div class="flex items-center justify-between">
         <h3 class="text-xs font-bold uppercase tracking-wider text-amber-400">
-          I. Síkbeli Konstrukció: A Háromszögtől a Térszerkezetig
+          I. <span class="hu">Síkbeli Konstrukció: A Háromszögtől a Térszerkezetig</span><span class="en">Plane construction: from a triangle to a spatial structure</span>
         </h3>
-        <span class="mono text-[11px] text-slate-400">4 építési fázis</span>
+        <span class="mono text-[11px] text-slate-400"><span class="hu">4 építési fázis</span><span class="en">4 building steps</span></span>
       </div>
 
       <p class="text-xs text-slate-300 leading-relaxed m-0">
-        Válaszd ki az építési lépést, és figyeld meg a bal oldali <b>2D Kiterített Konstrukciós</b> rajzon, hogyan épül fel a rendszer egyetlen háromszögből:
+        <span class="hu">Válaszd ki az építési lépést, és figyeld meg a bal oldali <b>2D Kiterített Konstrukciós</b> rajzon, hogyan épül fel a rendszer egyetlen háromszögből:</span><span class="en">Pick a building step and watch on the <b>2D unrolled construction</b> how the whole system grows from a single triangle:</span>
       </p>
 
       <!-- Stepper Buttons -->
       <div class="grid grid-cols-1 gap-2" id="constructionSteps">
         <button data-step="1" class="step-card active p-3 rounded-xl text-left cursor-pointer">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-amber-400">1. Lépés: A Kezdeti Háromszög-pár (A + B)</span>
+            <span class="text-xs font-bold text-amber-400"><span class="hu">1. Lépés: A Kezdeti Háromszög-pár (A + B)</span><span class="en">Step 1: the initial triangle pair (A + B)</span></span>
             <span class="mono text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-300">1 : 1/√3</span>
           </div>
           <p class="text-[11px] text-slate-300 mt-1 mb-0 leading-relaxed">
-            Egy <b>szabályos háromszög</b> (60°–60°–60°, oldal = 1) oldalához egy <b>egyenlő szárú tompaszögű háromszöget</b> (30°–120°–30°) illesztünk. A tompaszögű háromszög szárai pontosan <code class="text-sky-400">1/√3 ≈ 0.577</code> hosszúak.
+            <span class="hu">Egy <b>szabályos háromszög</b> (60°–60°–60°, oldal = 1) oldalához egy <b>egyenlő szárú tompaszögű háromszöget</b> (30°–120°–30°) illesztünk. A tompaszögű háromszög szárai pontosan <code class="text-sky-400">1/√3 ≈ 0.577</code> hosszúak.</span><span class="en">To one side of an <b>equilateral triangle</b> (60°–60°–60°, side = 1) we attach an <b>obtuse isosceles triangle</b> (30°–120°–30°). Its legs are exactly <code class="text-sky-400">1/√3 ≈ 0.577</code> long.</span>
           </p>
         </button>
 
         <button data-step="2" class="step-card p-3 rounded-xl text-left cursor-pointer">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-sky-400">2. Lépés: Kiterített Spidron-félkar (Spirális Sorozat)</span>
+            <span class="text-xs font-bold text-sky-400"><span class="hu">2. Lépés: Kiterített Spidron-félkar (Spirális Sorozat)</span><span class="en">Step 2: unrolled spidron half-arm (spiral series)</span></span>
             <span class="mono text-[10px] px-1.5 py-0.5 rounded bg-sky-500/10 text-sky-300">Δθ = 30°</span>
           </div>
           <p class="text-[11px] text-slate-300 mt-1 mb-0 leading-relaxed">
-            A 30°–120°–30°-os háromszög rövidebb szárára egy újabb, <code class="text-sky-400">√3</code>-szor kisebb szabályos háromszöget építünk. A váltakozó sorozat minden lépésben <b>30°-kal elfordul</b> és a középpont felé konvergál.
+            <span class="hu">A 30°–120°–30°-os háromszög rövidebb szárára egy újabb, <code class="text-sky-400">√3</code>-szor kisebb szabályos háromszöget építünk. A váltakozó sorozat minden lépésben <b>30°-kal elfordul</b> és a középpont felé konvergál.</span><span class="en">On a leg of the 30°–120°–30° triangle we build a new equilateral triangle, <code class="text-sky-400">√3</code> times smaller. The alternating series <b>turns by 30°</b> at every step and converges to the centre.</span>
           </p>
         </button>
 
         <button data-step="3" class="step-card p-3 rounded-xl text-left cursor-pointer">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-emerald-400">3. Lépés: Teljes S-alakú Spidron-kar</span>
-            <span class="mono text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-300">2 Félkar</span>
+            <span class="text-xs font-bold text-emerald-400"><span class="hu">3. Lépés: Teljes S-alakú Spidron-kar</span><span class="en">Step 3: full S-shaped spidron arm</span></span>
+            <span class="mono text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-300"><span class="hu">2 Félkar</span><span class="en">2 half-arms</span></span>
           </div>
           <p class="text-[11px] text-slate-300 mt-1 mb-0 leading-relaxed">
-            Két kiterített Spidron-félkart a legnagyobb alapjuk mentén, középpontosan szimmetrikusan (S-alakban) összeillesztünk. Ez Erdély Dániel klasszikus <b>Spidron alapmodulja</b>.
+            <span class="hu">Két kiterített Spidron-félkart a legnagyobb alapjuk mentén, középpontosan szimmetrikusan (S-alakban) összeillesztünk. Ez Erdély Dániel klasszikus <b>Spidron alapmodulja</b>.</span><span class="en">Two unrolled half-arms are joined along their largest base, point-symmetrically (in an S shape). This is Dániel Erdély's classic <b>spidron module</b>.</span>
           </p>
         </button>
 
         <button data-step="4" class="step-card p-3 rounded-xl text-left cursor-pointer">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold text-rose-400">4. Lépés: 6 Karos Hexagonális Spidron-fészek</span>
+            <span class="text-xs font-bold text-rose-400"><span class="hu">4. Lépés: 6 Karos Hexagonális Spidron-fészek</span><span class="en">Step 4: six-arm hexagonal spidron nest</span></span>
             <span class="mono text-[10px] px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-300">6 × 60° = 360°</span>
           </div>
           <p class="text-[11px] text-slate-300 mt-1 mb-0 leading-relaxed">
-            Hat darab Spidron-félkart 60°-onként körbeforgatva a háromszögek hézagtalanul kitöltik a szabályos hatszöget. Amikor az élek mentén 3D-be hajtjuk, a gyűrűk egymásba csavarodva emelkednek ki a síkból!
+            <span class="hu">Hat darab Spidron-félkart 60°-onként körbeforgatva a háromszögek hézagtalanul kitöltik a szabályos hatszöget. Amikor az élek mentén 3D-be hajtjuk, a gyűrűk egymásba csavarodva emelkednek ki a síkból!</span><span class="en">Rotating six half-arms by 60° each, the triangles tile the regular hexagon without gaps. Folded along the edges into 3D, the rings twist into each other and rise out of the plane.</span>
           </p>
         </button>
       </div>
@@ -424,7 +440,7 @@
     <div class="bg-[#0b0f17] border border-[#263248] rounded-xl p-4 flex flex-col gap-3.5">
       <div class="flex items-center justify-between">
         <h3 class="text-xs font-bold uppercase tracking-wider text-sky-400">
-          II. Aktív Spidron-szint (k) Fizikai Analízise
+          II. <span class="hu">Aktív Spidron-szint (k) Fizikai Analízise</span><span class="en">Physical analysis of the active spidron level (k)</span>
         </h3>
         <span id="inspRingBadge" class="mono text-xs px-2 py-0.5 rounded bg-sky-500/15 text-sky-300 border border-sky-500/30">
           k = 0 (Külső gyűrű)
@@ -434,54 +450,57 @@
       <!-- Color Swatch + Dual Complementary Preview -->
       <div class="grid grid-cols-2 gap-2.5">
         <div id="inspColorBox" class="p-3 rounded-xl border border-white/20 flex flex-col justify-between min-h-[84px] transition-colors">
-          <span class="text-[10px] mono uppercase opacity-80">Rezonáns Optikai Szín</span>
+          <span class="text-[10px] mono uppercase opacity-80"><span class="hu">Rezonáns Optikai Szín</span><span class="en">Resonant optical colour</span></span>
           <b id="inspHexCode" class="mono text-base">#EF4444</b>
           <span id="inspWavelength" class="mono text-[11px] opacity-90">λ = 650 nm · 461 THz</span>
         </div>
 
         <div id="inspCompBox" class="p-3 rounded-xl border border-white/20 flex flex-col justify-between min-h-[84px] transition-colors">
-          <span class="text-[10px] mono uppercase opacity-80">180° Fázis-komplementer</span>
+          <span class="text-[10px] mono uppercase opacity-80"><span class="hu">180° Fázis-komplementer</span><span class="en">180° phase complement</span></span>
           <b id="inspCompHex" class="mono text-base">#06B6D4</b>
-          <span id="inspPhaseInfo" class="mono text-[11px] opacity-90">Δθ = +180° (Ellenfázis)</span>
+          <span id="inspPhaseInfo" class="mono text-[11px] opacity-90">Δθ = +180° <span class="hu">(Ellenfázis)</span><span class="en">(antiphase)</span></span>
         </div>
       </div>
 
       <!-- Detailed Metrics Table -->
       <dl class="grid grid-cols-2 gap-y-2 gap-x-3 text-xs border-t border-[#263248] pt-3 m-0">
-        <dt class="text-slate-400">Relatív oldalhossz (r<sub>k</sub>):</dt>
+        <dt class="text-slate-400"><span class="hu">Relatív oldalhossz</span><span class="en">Relative side length</span> (r<sub>k</sub>):</dt>
         <dd id="inspEdgeLen" class="mono text-right text-slate-100 font-medium">(1/√3)⁰ = 1.0000</dd>
 
-        <dt class="text-slate-400">Háromszög terület (A<sub>k</sub>):</dt>
+        <dt class="text-slate-400"><span class="hu">Háromszög terület</span><span class="en">Triangle area</span> (A<sub>k</sub>):</dt>
         <dd id="inspAreaRatio" class="mono text-right text-slate-100 font-medium">(1/3)⁰ = 100.0%</dd>
 
-        <dt class="text-slate-400">Akusztikus alapfrekvencia:</dt>
+        <dt class="text-slate-400"><span class="hu">Akusztikus alapfrekvencia:</span><span class="en">Acoustic fundamental:</span></dt>
         <dd id="inspSoundHz" class="mono text-right text-amber-400 font-semibold">256.00 Hz (C4)</dd>
 
-        <dt class="text-slate-400">3D Hajtogatott Felhang (B-Δ):</dt>
+        <dt class="text-slate-400"><span class="hu">3D Hajtogatott Felhang</span><span class="en">3D folded overtone</span> (B-Δ):</dt>
         <dd id="inspOvertoneHz" class="mono text-right text-sky-400 font-semibold">384.00 Hz (Kvint)</dd>
 
-        <dt class="text-slate-400">Optikai frekvencia (×2<sup>40</sup>):</dt>
+        <dt class="text-slate-400"><span class="hu">Optikai frekvencia</span><span class="en">Optical frequency</span> (×2<sup>40</sup>):</dt>
         <dd id="inspLightTHz" class="mono text-right text-emerald-400 font-medium">422.2 THz</dd>
       </dl>
 
       <button id="btnPlaySelectedRing" class="lab-btn w-full py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer">
-        <span>🔊 Aktív Szint (k) Akusztikus Megszólaltatása</span>
+        <span>🔊 <span class="hu">Aktív Szint (k) Akusztikus Megszólaltatása</span><span class="en">Play the active level (k)</span></span>
       </button>
     </div>
 
     <!-- 3. THEORETICAL SYNTHESIS: WHY GEOMETRY = SOUND = COLOR -->
     <div class="bg-[#0b0f17] border border-[#263248] rounded-xl p-4 flex flex-col gap-2.5 text-xs text-slate-300 leading-relaxed">
       <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-400 m-0">
-        III. Hogyan kapcsolódik össze a Geometria, a Hang és a Szín?
+        III. <span class="hu">Hogyan kapcsolódik össze a Geometria, a Hang és a Szín?</span><span class="en">How do geometry, sound and colour connect?</span>
       </h3>
       <p class="m-0">
-        <b>1. Geometriai Húr-arány:</b> Püthagorasz óta tudjuk, hogy egy rezgő húr vagy lemez frekvenciája fordítottan arányos a méretével. A Spidron-karban minden belső gyűrű pontosan <code class="text-sky-400">1/√3</code> arányban rövidül, így a geometria önmagában egy logaritmikus frekvencia-létrát ír le.
+        <span class="hu"><b>1. Geometriai Húr-arány:</b> Püthagorasz óta tudjuk, hogy egy rezgő húr vagy lemez frekvenciája fordítottan arányos a méretével. A Spidron-karban minden belső gyűrű pontosan <code class="text-sky-400">1/√3</code> arányban rövidül, így a geometria önmagában egy logaritmikus frekvencia-létrát ír le (ezt számolja a „Fordított arány a mérettel” mód: f₀·(√3)<sup>k</sup>).</span><span class="en"><b>1. Geometric string ratio:</b> since Pythagoras we know that the frequency of a vibrating string falls as its length grows. In a spidron arm every inner ring is exactly <code class="text-sky-400">1/√3</code> shorter, so the geometry itself describes a logarithmic frequency ladder (the “Inverse to size” mode computes this: f₀·(√3)<sup>k</sup>).</span>
       </p>
       <p class="m-0">
-        <b>2. A 40 Oktáv Törvénye:</b> A hang mechanikai rezgés, a fény elektromágneses hullám. Ha egy hallható hangfrekvenciát (pl. 384 Hz) 40-szer megduplázunk (<code class="text-amber-400">f · 2⁴⁰ ≈ 422 THz</code>), a rezgésszám belép a látható fény tartományába (~700 nm vörös-narancs).
+        <span class="hu"><b>2. A 40 Oktáv Törvénye:</b> A hang mechanikai rezgés, a fény elektromágneses hullám. Ha egy hallható hangfrekvenciát (pl. 384 Hz) 40-szer megduplázunk (<code class="text-amber-400">f · 2⁴⁰ ≈ 422 THz</code>), a rezgésszám belép a látható fény tartományába (~700 nm vörös-narancs).</span><span class="en"><b>2. The 40-octave rule:</b> sound is a mechanical vibration, light an electromagnetic wave. Doubling an audible frequency (e.g. 384 Hz) 40 times (<code class="text-amber-400">f · 2⁴⁰ ≈ 422 THz</code>) brings the number into the range of visible light (~700 nm, red-orange).</span>
       </p>
       <p class="m-0">
-        <b>3. Térbeli Kiemelkedés = Színtelítettség &amp; Felhangok:</b> Amikor a síkbeli (2D) Spidron-kart a 3D térbe hajtjuk, a szabályos (A) és egyenlő szárú (B) háromszögek egymással bezárt szöge megváltoztatja a beeső fény visszaverődési szögét (optikai kontraszt), akusztikailag pedig megnyitja a felhang-szűrőt.
+        <span class="hu"><b>3. Térbeli Kiemelkedés = Színtelítettség &amp; Felhangok:</b> Amikor a síkbeli (2D) Spidron-kart a 3D térbe hajtjuk, a szabályos (A) és egyenlő szárú (B) háromszögek egymással bezárt szöge megváltoztatja a beeső fény visszaverődési szögét (optikai kontraszt), akusztikailag pedig megnyitja a felhang-szűrőt.</span><span class="en"><b>3. Elevation = saturation &amp; overtones:</b> when the flat (2D) arm is folded into 3D, the angle between the equilateral (A) and isosceles (B) triangles changes how incoming light is reflected (optical contrast), and acoustically it opens the overtone filter.</span>
+      </p>
+      <p class="m-0 text-slate-400">
+        <span class="hu"><b>Megjegyzés:</b> a 2⁴⁰-es oktáv-transzponálás és a hajtás–felhang kapcsolat szemléltető leképezés, nem fizikai törvény: a hang mechanikai, a fény elektromágneses rezgés, a kettő között nincs közvetlen fizikai átmenet.</span><span class="en"><b>Note:</b> the 2⁴⁰ octave transposition and the fold–overtone link are illustrative mappings, not physical laws: sound is a mechanical and light an electromagnetic vibration, with no direct physical conversion between them.</span>
       </p>
     </div>
 
@@ -494,6 +513,8 @@
   // ============================================================================
   // 1. MATEMAIKAI ÉS FIZIKAI KONSTANSOK (SPIDRON, AKUSZTIKA, OPTIKA)
   // ============================================================================
+  const L = () => document.documentElement.getAttribute('data-lang') === 'en' ? 'en' : 'hu';
+  const T = (hu, en) => L() === 'en' ? en : hu;
   const SQRT3 = Math.sqrt(3);
   const INV_SQRT3 = 1 / SQRT3; // ~0.577350269
   const C_LIGHT = 299792458;   // m/s
@@ -501,16 +522,16 @@
 
   // Just Intonation harmonic ratios within an octave + extension
   const JUST_RATIOS = [
-    { r: 1/1,   name: 'Alaphang (1:1 Prím)' },
-    { r: 9/8,   name: 'Nagy szekund (9:8)' },
-    { r: 5/4,   name: 'Nagy terc (5:4)' },
-    { r: 4/3,   name: 'Tiszta kvart (4:3)' },
-    { r: 3/2,   name: 'Tiszta kvint (3:2)' },
-    { r: 5/3,   name: 'Nagy szext (5:3)' },
-    { r: 15/8,  name: 'Nagy szeptim (15:8)' },
-    { r: 2/1,   name: 'Oktáv (2:1)' },
-    { r: 9/4,   name: 'Nóna (9:4)' },
-    { r: 5/2,   name: 'Decima (5:2)' }
+    { r: 1/1,   name: 'Alaphang (1:1 Prím)', en: 'Unison (1:1)' },
+    { r: 9/8,   name: 'Nagy szekund (9:8)', en: 'Major second (9:8)' },
+    { r: 5/4,   name: 'Nagy terc (5:4)', en: 'Major third (5:4)' },
+    { r: 4/3,   name: 'Tiszta kvart (4:3)', en: 'Perfect fourth (4:3)' },
+    { r: 3/2,   name: 'Tiszta kvint (3:2)', en: 'Perfect fifth (3:2)' },
+    { r: 5/3,   name: 'Nagy szext (5:3)', en: 'Major sixth (5:3)' },
+    { r: 15/8,  name: 'Nagy szeptim (15:8)', en: 'Major seventh (15:8)' },
+    { r: 2/1,   name: 'Oktáv (2:1)', en: 'Octave (2:1)' },
+    { r: 9/4,   name: 'Nóna (9:4)', en: 'Ninth (9:4)' },
+    { r: 5/2,   name: 'Decima (5:2)', en: 'Tenth (5:2)' }
   ];
 
   // Application State
@@ -538,7 +559,11 @@
     let freqHz;
     let intervalLabel;
 
-    if (mappingLaw === 'sqrt3_harmonic') {
+    if (mappingLaw === 'inverse_size') {
+      // Frequency inversely proportional to size: each level is 1/√3 smaller, so ×√3 per level
+      freqHz = baseFreq * Math.pow(SQRT3, k);
+      intervalLabel = `(√3)^${k} = ×${Math.pow(SQRT3, k).toFixed(2)}`;
+    } else if (mappingLaw === 'sqrt3_harmonic') {
       // Pure geometric scaling: each step scales frequency by (sqrt(3))^(k/2)
       freqHz = baseFreq * Math.pow(SQRT3, k * 0.5);
       intervalLabel = `(√3)^(${k}/2) = ×${Math.pow(SQRT3, k * 0.5).toFixed(2)}`;
@@ -546,11 +571,11 @@
       const item = JUST_RATIOS[k % JUST_RATIOS.length];
       const octBoost = Math.floor(k / JUST_RATIOS.length);
       freqHz = baseFreq * item.r * Math.pow(2, octBoost);
-      intervalLabel = item.name;
+      intervalLabel = T(item.name, item.en);
     } else {
       // Spiral phase 30-degree steps mapped across octave
       freqHz = baseFreq * Math.pow(2, (k * 2) / 12);
-      intervalLabel = `Spirál fázis: ${k * 30}°`;
+      intervalLabel = `${T('Spirál fázis', 'Spiral phase')}: ${k * 30}°`;
     }
 
     // Folded B-triangle (isosceles) overtone frequency modulated by 3D fold angle
@@ -763,7 +788,7 @@
           <circle cx="${p2[0].toFixed(1)}" cy="${p2[1].toFixed(1)}" r="4" fill="#10b981"/>
           <text x="${(p0[0] - 55).toFixed(1)}" y="${(p0[1] - 10).toFixed(1)}" fill="#38bdf8" font-weight="600">A: 60°–60°–60° (r₀ = 1)</text>
           <text x="${(p1[0] - 40).toFixed(1)}" y="${(p1[1] - 12).toFixed(1)}" fill="#f59e0b" font-weight="600">B: 30°–120°–30° (1/√3)</text>
-          <text x="${(p2[0] + 10).toFixed(1)}" y="${(p2[1] + 4).toFixed(1)}" fill="#10b981">120° csúcs</text>
+          <text x="${(p2[0] + 10).toFixed(1)}" y="${(p2[1] + 4).toFixed(1)}" fill="#10b981">${T('120° csúcs', '120° apex')}</text>
         </g>
       `;
     }
@@ -824,7 +849,8 @@
 
     // Kinematic folding elevation along Y (up/down accordion pleats)
     // Alternating pleats or spiral stair relief depending on foldPct
-    const pleatPhase = (i % 2 === 0 ? 1 : -1) * zOffsetSign;
+    // Pleat sign depends only on the vertex (k, i), so neighbouring sectors share the same vertex
+    const pleatPhase = (((i % 2) + 2) % 2 === 0 ? 1 : -1) * zOffsetSign;
     const ringElevation = foldPct * 1.15 * Math.pow(INV_SQRT3, k * 0.65) * pleatPhase;
     const spiralDepth = foldPct * 0.28 * (k - numRings * 0.35);
 
@@ -865,10 +891,11 @@
         const colIso  = baseColor.clone().lerp(new THREE.Color(0x000000), isSel ? 0.05 : 0.28);
 
         sectorsList.forEach(sec => {
-          const V_k_i     = getVertex3D(k, sec * 2, 1, domeCurve);
-          const V_k_ip1   = getVertex3D(k, sec * 2 + 1, -1, domeCurve);
-          const V_kp1_i   = getVertex3D(k + 1, sec * 2, 1, domeCurve);
-          const V_kp1_im1 = getVertex3D(k + 1, sec * 2 - 1, -1, domeCurve);
+          // Sector `sec` spans 60°: vertices i = sec and sec ± 1 (was sec * 2, which drew only 3 of 6 sectors, twice)
+          const V_k_i     = getVertex3D(k, sec, 1, domeCurve);
+          const V_k_ip1   = getVertex3D(k, sec + 1, 1, domeCurve);
+          const V_kp1_i   = getVertex3D(k + 1, sec, 1, domeCurve);
+          const V_kp1_im1 = getVertex3D(k + 1, sec - 1, 1, domeCurve);
 
           const tr = (pt) => [
             pt[0] * scaleMul + centerOffset[0],
@@ -972,10 +999,12 @@
     if (autoRotate && !isDragging) {
       camTheta += 0.0035;
     }
+    // On a portrait stage, step the camera back so the scene keeps its horizontal framing
+    const camR = camRad * Math.max(1, 1 / camera.aspect);
     camera.position.set(
-      camRad * Math.sin(camPhi) * Math.sin(camTheta),
-      camRad * Math.cos(camPhi),
-      camRad * Math.sin(camPhi) * Math.cos(camTheta)
+      camR * Math.sin(camPhi) * Math.sin(camTheta),
+      camR * Math.cos(camPhi),
+      camR * Math.sin(camPhi) * Math.cos(camTheta)
     );
     camera.lookAt(0, 0, 0);
     renderer.render(scene, camera);
@@ -994,12 +1023,12 @@
     const foldDeg = (foldPct * 80).toFixed(1);
     const twistDeg = (twistPct * 54).toFixed(1);
     document.getElementById('hudFoldDeg').textContent = `${Math.round(foldPct * 100)}% (${foldDeg}°)`;
-    document.getElementById('hudTwistDeg').textContent = `${twistDeg}° / szint`;
-    document.getElementById('hudActiveRing').textContent = `k = ${selectedRing} (${selectedRing + 1}. öv)`;
+    document.getElementById('hudTwistDeg').textContent = `${twistDeg}° / ${T('szint', 'level')}`;
+    document.getElementById('hudActiveRing').textContent = `k = ${selectedRing} (${T(`${selectedRing + 1}. öv`, `ring ${selectedRing + 1}`)})`;
 
     // Update Selected Ring Inspector
     const d = getRingData(selectedRing);
-    document.getElementById('inspRingBadge').textContent = `k = ${d.k} (${d.k + 1}. Spidron-öv)`;
+    document.getElementById('inspRingBadge').textContent = `k = ${d.k} (${T(`${d.k + 1}. Spidron-öv`, `spidron ring ${d.k + 1}`)})`;
 
     const cBox = document.getElementById('inspColorBox');
     cBox.style.backgroundColor = d.hex;
@@ -1018,7 +1047,7 @@
     document.getElementById('inspOvertoneHz').textContent = `${d.overtoneHz.toFixed(2)} Hz`;
     document.getElementById('inspLightTHz').textContent = `${d.lightTHz.toFixed(1)} THz`;
 
-    document.getElementById('metric2DRatio').textContent = `Aktív r_${d.k} = ${d.scaleEdge.toFixed(3)} · f = ${d.freqHz.toFixed(1)} Hz`;
+    document.getElementById('metric2DRatio').textContent = `${T('Aktív', 'Active')} r_${d.k} = ${d.scaleEdge.toFixed(3)} · f = ${d.freqHz.toFixed(1)} Hz`;
 
     // Populate bottom Ring Spectrum Cards
     const grid = document.getElementById('ringSpectrumGrid');
@@ -1032,7 +1061,7 @@
           isAct ? 'ring-2 ring-white scale-[1.03] z-10 border-white' : 'border-[#263248] opacity-90 hover:opacity-100'
         }" style="background:${rk.hex}; color:${txtCol}">
           <div class="flex items-center justify-between text-[10px] mono font-semibold opacity-90">
-            <span>k = ${k} (${k + 1}. öv)</span>
+            <span>k = ${k} (${T(`${k + 1}. öv`, `ring ${k + 1}`)})</span>
             <span>r=${rk.scaleEdge.toFixed(2)}</span>
           </div>
           <div class="my-1">
@@ -1134,7 +1163,7 @@
 
   document.getElementById('slRings').addEventListener('input', (e) => {
     numRings = Number(e.target.value);
-    document.getElementById('valRings').textContent = `${numRings} szint`;
+    document.getElementById('valRings').textContent = `${numRings}`;
     updateAllViews();
   });
 
@@ -1171,7 +1200,7 @@
     this.setAttribute('aria-pressed', audioEnabled);
     const dot = document.getElementById('muteDot');
     dot.className = `w-2 h-2 rounded-full ${audioEnabled ? 'bg-emerald-400 animate-pulse' : 'bg-rose-500'}`;
-    this.querySelector('span:last-child').textContent = `WebAudio Szintetizátor: ${audioEnabled ? 'AKTÍV' : 'NÉMÍTVA'}`;
+    renderMuteLabel();
   });
 
   document.getElementById('btnPlaySelectedRing').addEventListener('click', () => {
@@ -1204,7 +1233,28 @@
     }, 420);
   });
 
+  function renderMuteLabel() {
+    document.getElementById('muteLabel').textContent = `${T('WebAudio Szintetizátor', 'WebAudio synth')}: ${audioEnabled ? T('AKTÍV', 'ON') : T('NÉMÍTVA', 'MUTED')}`;
+  }
+  function applyLang() {
+    const l = L();
+    document.querySelectorAll('[data-title-hu]').forEach(el => { el.title = el.dataset[l === 'en' ? 'titleEn' : 'titleHu']; });
+    document.querySelectorAll('option[data-hu]').forEach(o => { o.textContent = o.dataset[l]; });
+    document.querySelectorAll('.langsw button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.l === l)));
+    renderMuteLabel();
+  }
+  document.querySelectorAll('.langsw button').forEach(b => b.addEventListener('click', () => {
+    const l = b.dataset.l;
+    try { localStorage.setItem('sjk-lang', l); } catch (e) {}
+    document.documentElement.setAttribute('data-lang', l);
+    document.documentElement.lang = l;
+    applyLang();
+    updateAllViews();
+    window.dispatchEvent(new CustomEvent('sjk:lang', { detail: l }));
+  }));
+
   // Initialize
+  applyLang();
   resizeThree();
   updateAllViews();
   requestAnimationFrame(animateLoop);
