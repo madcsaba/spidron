@@ -1,0 +1,9 @@
+Jel,Név,Pinyin,Vonalak alulról,Hagyományos tulajdonság,Alsó trigramként: gyűrűminta,Felső trigramként: amino-minta,Fu Xi-ellenpár (inverz)
+☰,Ég,Qian,111,"erős, teremtő",purin–purin–purin,amino–amino–amino,☷ Föld
+☱,Tó,Dui,110,"derűs, örvendező",purin–purin–pirimidin,amino–amino–keto,☶ Hegy
+☲,Tűz,Li,101,"tapadó, világos",purin–pirimidin–purin,amino–keto–amino,☵ Víz
+☳,Mennydörgés,Zhen,100,"felrázó, mozgató",purin–pirimidin–pirimidin,amino–keto–keto,☴ Szél
+☴,Szél,Xun,011,"szelíd, behatoló",pirimidin–purin–purin,keto–amino–amino,☳ Mennydörgés
+☵,Víz,Kan,010,"mély, veszélyes",pirimidin–purin–pirimidin,keto–amino–keto,☲ Tűz
+☶,Hegy,Gen,001,"nyugvó, megálló",pirimidin–pirimidin–purin,keto–keto–amino,☱ Tó
+☷,Föld,Kun,000,"befogadó, odaadó",pirimidin–pirimidin–pirimidin,keto–keto–keto,☰ Ég

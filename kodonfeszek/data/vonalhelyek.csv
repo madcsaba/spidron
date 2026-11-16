@@ -1,0 +1,7 @@
+Vonal,Hagyományos helyérték,Trigram,Bázis és tulajdonság,Mutációs érzékenység (%),Spidron (mozgó modell),Szint,"Mi tény, mi megállapodás"
+1,"Kezdet, rejtett alap",alsó,"1. bázis: gyűrű (purin jang, pirimidin jin)",95.6,1. kar; szemben a 4. kar (egy bázis),2. helyzeti,Tény: az érzékenység a kódból számolt. Megállapodás: hogy az 1. bázis az 1. és 4. vonal.
+2,"Alsó közép, helyénvaló (中)",alsó,"2. bázis: gyűrű. Ha a középső bázis U (2. és 5. vonal jin), az aminosav víztaszító",100.0,"2. kar, a 2–5. tengelyen: átforduláskor mozdulatlan",2. helyzeti,Tény: középső U esetén 16-ból 16 kodon víztaszító. Megállapodás: hogy a középső bázis a 2. és 5. vonal; a hagyomány „közép” fogalmával való egyezés ebből adódik.
+3,"Átmenet, bizonytalan hely",alsó,3. bázis: gyűrű; lötyögő (wobble) párosodás,31.1,3. kar: gyengén remeg,2. helyzeti,Tény: a 3. vonal átfordítása 34 kodonnál néma. Megállapodás: a vonal helye.
+4,Átlépés a külsőbe,felső,1. bázis: amino (jang) / keto (jin),95.6,4. kar; szemben az 1. kar,2. helyzeti,"Ugyanaz, mint az 1. vonalnál."
+5,"Felső közép, uralkodó (中)",felső,2. bázis: amino / keto,100.0,"5. kar, a 2–5. tengelyen: mozdulatlan",2. helyzeti,"Ugyanaz, mint a 2. vonalnál."
+6,"Túl a helyzeten, a bölcs",felső,3. bázis: amino / keto; 64-ből 60 esetben néma,31.1,6. kar: erősen remeg,2. helyzeti,Tény: a 6. vonal átfordítása 60 kodonnál néma. Megállapodás: a vonal helye; négy rokon kiosztásban ugyanez a 3. vonalra esik.

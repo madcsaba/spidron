@@ -13,6 +13,7 @@ Interaktív, böngészőben futó prototípusok egy közös, 6 bites állapotté
 | `chroma.html` | **SJK-Chroma Engine v1.3** (three.js): 3D spidron-fészek (6 öv = 6 vonal), RGB-színkocka a 錯 komplementer tengellyel, spidronhedron (8 trigram-csúcs); színtani panel, 五音 hangrezonancia (Web Audio), Hamming-szomszédsági paletta CSS-exporttal, 8×8 King Wen mátrix |
 | `harmonia.html` | **Spidron Harmónia Labor** (three.js): a spidron felépítése 4 lépésben (2D kiterítve és 3D hajtogatva: egy kar, hatszögű fészek, kupola); a szintek mérete hangfrekvenciára (négy leképezés, köztük a mérettel fordított arányú f₀·(√3)^k) és a 2⁴⁰-es oktáv-transzponálással fényhullámhosszra képezve, Web Audio hangokkal |
 | `spidron-lab.html` | **Spidron-labor:** SJK-mozaik (hatszögű LBP vs. gradiens-szabály), SJK-UI demó (spidron-gomb, mutáció + időgörbe, spirális menü), színek (spidron-színkör HSL/OKLCH-ban, harmóniák, hexagram mint paletta, 64 szín) |
+| `kodonfeszek/` | **Kodonfészek:** mozgó 3D spidronfészek, amelyben minden öv egy kodon és minden kar egy hexagramvonal (應-páros kiosztás); szemközti szál mint tükör, kötés-trigram, inzulingén és ismert változatai, szinonim átirat, hangrend magyarázattal, három igazságszint, véletlen elleni próba, adattáblák CSV-ben, versciklus. Részletek: [`kodonfeszek/README.md`](kodonfeszek/README.md) |
 
 A `chroma.html` saját hozzárendelést használ: a színt a két trigramból számolja (az R csatornát az 1. és 4. vonal adja, azaz ⅔ alsó + ⅓ felső trigram), a kodont pedig Krakowski kódolásával. A 錯 itt is a kiegészítő szín. A többi oldal a vonalpáros (1–2 = R, 3–4 = G, 5–6 = B) hozzárendelést használja.
 
@@ -30,8 +31,8 @@ Utána: `http://localhost:8000/`
 
 ## Felépítés
 
-- Nincs külső betűtípus, CDN vagy követőkód. Az `index.html`, `iching.html` és `spidron-lab.html` minden CSS-t és JS-t az oldalon belül tartalmaz; a `chroma.html` és a `harmonia.html` a saját helyi CSS-ét (`chroma.css`, `harmonia.css`: Tailwind CSS 3.4-gyel előre fordítva, csak a használt osztályok) és a helyi `vendor/three.min.js`-t (three.js r128) tölti be.
-- Mind az öt oldal kétnyelvű (HU/EN): a szövegek `<span class="hu">` / `<span class="en">` párokban; a választott nyelv a `localStorage["sjk-lang"]` kulcsban, a nyelvváltáskor `sjk:lang` esemény fut.
+- Nincs külső betűtípus, CDN vagy követőkód. Az `index.html`, `iching.html` és `spidron-lab.html` minden CSS-t és JS-t az oldalon belül tartalmaz; a `chroma.html` és a `harmonia.html` a saját helyi CSS-ét (`chroma.css`, `harmonia.css`: Tailwind CSS 3.4-gyel előre fordítva, csak a használt osztályok) és a helyi `vendor/three.min.js`-t (three.js r128) tölti be. A `kodonfeszek/` oldal a közös `vendor/three.min.js` másolatot használja.
+- Az öt fő oldal kétnyelvű (HU/EN): a szövegek `<span class="hu">` / `<span class="en">` párokban; a választott nyelv a `localStorage["sjk-lang"]` kulcsban, a nyelvváltáskor `sjk:lang` esemény fut. Kivétel: a `kodonfeszek/` csak magyarul érhető el.
 - Böngészőben tárolva (csak az adott gépen): nyelv, idővonal (`iching-log`), képgenerálási beállítások (`iching-img`; a kulcs csak kifejezett kérésre).
 - A képgenerálás az egyetlen hely, ahol az oldal külső szolgáltatást hív: csak kattintásra, a felhasználó saját kulcsával, közvetlenül a böngészőből.
 
@@ -41,6 +42,8 @@ Utána: `http://localhost:8000/`
 - **Hexagram → kodon:** vonalpár (alsó, felső) → bázis: jang-jang = A, jin-jang = G, jang-jin = C, jin-jin = U. 1. bit = amino/keto, 2. bit = purin/pirimidin; a 錯 a komplementer szál.
 - **Hexagram → spidron:** a hat kar a hat vonal; jang = hegyhajtás, jin = völgyhajtás. A 64 állapot virtuális (a papír-spidron hajtogatása egyetlen szabadságfokú).
 - **Hexagram → szín:** vonalpár → R, G, B csatorna, 4 fokozat (0, 85, 170, 255); a 錯 a kiegészítő szín. Palettaként: a jang vonalak a hat alapszín közül a palettában lévők.
+
+- **Kodonfészek:** itt egy bázis nem két egymás utáni vonal, hanem egy 應-pár (1–4, 2–5, 3–6): az alsó trigram a gyűrűbitek, a felső az amino-bitek. A 錯 itt is a komplementer szál, de ugyanannak a kodonnak más hexagram felel meg, mint az `iching.html`-ben. Indoklás és próba: [`kodonfeszek/README.md`](kodonfeszek/README.md).
 
 Ezek választott megfeleltetések, nem felfedezések.
 

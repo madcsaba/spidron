@@ -1,0 +1,28 @@
+Fogalom,Rendszer,Jelentés,Megfelelés a modellben,Szint
+Kodon,DNS,Három egymást követő bázis; egy aminosavat vagy stopjelet kódol.,Egy hexagram (hat vonal); a mozgó modellben egy spidronöv.,1. szerkezeti
+Bázis,DNS,"A, G, C és T (DNS) vagy U (RNS).",Két vonal: az i. és az (i+3). (應-pár); a fészekben két szemközti kar.,1. szerkezeti
+Purin / pirimidin,DNS,Két- vagy egygyűrűs bázis.,Az alsó trigram vonalai: jang / jin.,1. szerkezeti
+Amino / keto,DNS,A bázis párosodó peremén álló csoport.,A felső trigram vonalai: jang / jin.,1. szerkezeti
+Erős / gyenge bázis,DNS,"G és C három, A és T/U két hidrogénkötéssel párosodik. Ez a gyűrű- és az amino-tulajdonság „kizáró vagy”-a.","Bázisonként egy harmadik bit: erős jang, gyenge jin. A párosodás nem változtat rajta.",1. szerkezeti
+Komplementer szál,DNS,A–T(U) és G–C párosodás.,Minden vonal megfordul (錯卦); a spidronban tükörkép és színcsere; hangban tükrözés a tengelyre.,1. szerkezeti
+Antiparallel szálak,DNS,A két szál ellentétes irányban fut (5′→3′ és 3′→5′).,Mozgó modell: ellentétes folyás- és forgásirány; hangban rák-tükör.,1. szerkezeti
+Olvasási keret,DNS,A kodonok hármas tagolása; az AUG startkodon jelöli ki.,Az övek egymásutánja a fészekben.,1. szerkezeti
+Wobble,DNS,"A 3. kodonpozíció lazább párosodása az antikodonnal (Crick, 1966).","A 6. kar erősen, a 3. kar gyengén remeg; hangban a rövid, remegő harmadik hang.",2. helyzeti
+Szinonim kodonok,DNS,Ugyanazt az aminosavat kódoló kodonok.,"A 6. vonal 64-ből 60 esetben néma, a 3. vonal 34 esetben.",2. helyzeti
+Középső bázis,DNS,A 2. pozíció határozza meg leginkább az aminosav jellegét; U esetén víztaszító.,"2. és 5. vonal, a két közép; a 2–5. tengely; hangban a legmélyebb középső hang.",2. helyzeti
+Mutációs érzékenység,DNS,"Egy pontmutáció aminosav-cserét okoz: 1. poz. 95,6%, 2. poz. 100%, 3. poz. 31,1% (a standard kódból számolva).",Hangban két hosszú és egy rövid hang. Egy spidronkar egymást követő háromszögeinek területe 1 : 1 : ⅓ (ez csak rím).,3. költői
+Hexagram,I Ching,Hat jin/jang vonal; 64 féle.,Egy kodon.,1. szerkezeti
+Trigram,I Ching,Három vonal; 8 féle.,"Alsó = gyűrűszál, felső = amino-szál a kodon mentén.",1. szerkezeti
+Kötés-trigram,I Ching,A kodon három bázisának erős/gyenge mintája mint harmadik trigram.,"A két szálon közös (a másik irányból olvasva fordított sorrendben); a fészekben a fényes élek, hangban a tengelytől mért távolságok.",1. szerkezeti
+Jin / jang,I Ching,Törött / folytonos vonal.,0 / 1 bit.,1. szerkezeti
+"應 (yìng), megfelelés",I Ching,"Az 1–4., 2–5. és 3–6. vonal rezonanciája.",Egy bázis két tulajdonsága; szemközti karok.,2. helyzeti
+"中 (zhōng), közép",I Ching,A 2. és 5. vonal kedvező középhelyzete.,Középső bázis; a forgástengely.,2. helyzeti
+"錯卦 (cuò guà), ellentett hexagram",I Ching,Minden vonal megfordítva.,A szemközti szál hexagramja.,1. szerkezeti
+Fu Xi-sorrend,I Ching,A trigramok bináris rendje; az átellenes trigramok egymás inverzei.,A kodontábla sor- és oszloprendje.,1. szerkezeti
+Spidron,Spidron,Váltakozó szabályos és 30–30–120°-os egyenlő szárú háromszögek spirálsorozata (Erdély Dániel).,A modell tere és mozgása.,1. szerkezeti
+Spidronöv,Spidron,6 szabályos és 6 egyenlő szárú háromszög két hatszög között; az övek egymásba ágyazhatók.,Egy kodon.,1. szerkezeti
+Spidronkar,Spidron,A hatszögben hat spirálkar fut.,Egy vonal; szemközti karok = egy bázis.,1. szerkezeti
+"Spidronfészek, bináris szabály",Spidron,Egymásba ágyazott övek; Erdély szerint az övek forgásiránya 0/1 jelként olvasható.,"A szál jele: kódoló ↻, szemközti ↺ (a szabályból itt egyetlen bit marad).",1. szerkezeti
+Önhasonlóság,Spidron,√3-szoros nagyítás és 30°-os forgatás a végtelen fészket önmagára képezi.,"Holografikus zoom: a forma ismétlődik, a tartalom (a kodonok) halad; hangban Shepard-hang.",1. szerkezeti
+Spidron-dombormű,Spidron,A fészek háromszögei torzulás nélkül térbe hajlanak; a csúcsok felváltva emelkednek és süllyednek.,"A „Dombormű” csúszka: kiszámolt, merev hajtás. A DNS-hez csak hasonlat.",3. költői
+SpHidron,Spidron,"A spidron ívelt, csavart változata; síkba hajthatósága vitatott (Erdély, 2011).",Metafora a DNS szupercsavarodására.,3. költői

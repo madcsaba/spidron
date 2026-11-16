@@ -1,0 +1,65 @@
+Kodon (RNS),Aminosav,Hexagram,Pinyin,Magyar név,Kép,Alsó trigram (gyűrűszál),Felső trigram (amino-szál),Csoport,Jel,Aminosav neve,Kodon (DNS),Vonalak 1→6,"Szemközti szál (錯, 1. szint)",Másik szál saját irányban,Középső bázis U (2. szint: víztaszító),6. vonal (2. szint),Költői megjegyzés (3. szint),"Kötés-trigram (két szálon közös, 1. szint)",Hidrogénkötések
+UUU,Phe,2,Kun,A befogadó,Kettőzött föld,☷ Föld,☷ Föld,apoláris,,fenilalanin,TTT,000000,1. Qian – A teremtő,AAA (Lys) → 1. Qian,igen,néma,"Az elsőként megfejtett kodon (1961, poli-U → fenilalanin); csupa jin: A befogadó.",☷ Föld,6
+UUC,Phe,23,Bo,Szétesés,Hegy a föld fölött,☷ Föld,☶ Hegy,apoláris,,fenilalanin,TTC,000001,43. Guai – Áttörés,GAA (Glu) → 9. Xiao Chu,igen,néma,,☶ Hegy,7
+UUA,Leu,52,Gen,A nyugalom,Kettőzött hegy,☶ Hegy,☶ Hegy,apoláris,,leucin,TTA,001001,58. Dui – A derűs,UAA (Stop) → 57. Xun,igen,néma,,☷ Föld,6
+UUG,Leu,15,Qian,Szerénység,Föld a hegy fölött,☶ Hegy,☷ Föld,apoláris,,leucin,TTG,001000,10. Lü – Fellépés,CAA (Gln) → 44. Gou,igen,néma,,☶ Hegy,7
+UCU,Ser,8,Bi,Összetartás,Víz a föld fölött,☷ Föld,☵ Víz,poláris,,szerin,TCT,000010,14. Da You – Nagy birtoklás,AGA (Arg) → 14. Da You,nem,néma,,☵ Víz,7
+UCC,Ser,20,Guan,Szemlélődés,Szél a föld fölött,☷ Föld,☴ Szél,poláris,,szerin,TCC,000011,34. Da Zhuang – A nagy ereje,GGA (Gly) → 26. Da Chu,nem,néma,,☴ Szél,8
+UCA,Ser,53,Jian,Fokozatos fejlődés,Szél a hegy fölött,☶ Hegy,☴ Szél,poláris,,szerin,TCA,001011,54. Gui Mei – A férjhez menő leány,UGA (Stop) → 18. Gu,nem,néma,,☵ Víz,7
+UCG,Ser,39,Jian,Akadály,Víz a hegy fölött,☶ Hegy,☵ Víz,poláris,,szerin,TCG,001010,38. Kui – Ellentét,CGA (Arg) → 50. Ding,nem,néma,,☴ Szél,8
+UAU,Tyr,29,Kan,A mélység,Kettőzött víz,☵ Víz,☵ Víz,poláris,,tirozin,TAT,010010,30. Li – A tapadó,AUA (Ile) → 30. Li,nem,néma,,☷ Föld,6
+UAC,Tyr,59,Huan,Szétoszlás,Szél a víz fölött,☵ Víz,☴ Szél,poláris,,tirozin,TAC,010011,55. Feng – Bőség,GUA (Val) → 22. Bi,nem,néma,,☶ Hegy,7
+UAA,Stop,57,Xun,A szelíd,Kettőzött szél,☴ Szél,☴ Szél,stop,stop,stopjel,TAA,011011,51. Zhen – A felrázó,UUA (Leu) → 52. Gen,nem,néma,,☷ Föld,6
+UAG,Stop,48,Jing,A kút,Víz a szél fölött,☴ Szél,☵ Víz,stop,stop,stopjel,TAG,011010,21. Shi He – Átharapás,CUA (Leu) → 56. Lü,nem,néma,,☶ Hegy,7
+UGU,Cys,7,Shi,A sereg,Föld a víz fölött,☵ Víz,☷ Föld,poláris,,cisztein,TGT,010000,13. Tong Ren – Közösség az emberekkel,ACA (Thr) → 13. Tong Ren,nem,néma,,☵ Víz,7
+UGC,Cys,4,Meng,Ifjúi balgaság,Hegy a víz fölött,☵ Víz,☶ Hegy,poláris,,cisztein,TGC,010001,49. Ge – Forradalom,GCA (Ala) → 37. Jia Ren,nem,néma,,☴ Szél,8
+UGA,Stop,18,Gu,A megromlott helyrehozása,Hegy a szél fölött,☴ Szél,☶ Hegy,stop,stop,stopjel,TGA,011001,17. Sui – Követés,UCA (Ser) → 53. Jian,nem,számít (UGG → Trp),,☵ Víz,7
+UGG,Trp,46,Sheng,Felemelkedés,Föld a szél fölött,☴ Szél,☷ Föld,apoláris,,triptofán,TGG,011000,25. Wu Wang – Ártatlanság,CCA (Pro) → 33. Dun,nem,számít (UGA → Stop),,☴ Szél,8
+CUU,Leu,16,Yu,Lelkesedés,Mennydörgés a föld fölött,☷ Föld,☳ Mennydörgés,apoláris,,leucin,CTT,000100,9. Xiao Chu – A kicsi szelídítő ereje,AAG (Lys) → 43. Guai,igen,néma,,☳ Mennydörgés,7
+CUC,Leu,35,Jin,Haladás,Tűz a föld fölött,☷ Föld,☲ Tűz,apoláris,,leucin,CTC,000101,5. Xu – Várakozás,GAG (Glu) → 5. Xu,igen,néma,,☲ Tűz,8
+CUA,Leu,56,Lü,A vándor,Tűz a hegy fölött,☶ Hegy,☲ Tűz,apoláris,,leucin,CTA,001101,60. Jie – Korlátozás,UAG (Stop) → 48. Jing,igen,néma,,☳ Mennydörgés,7
+CUG,Leu,62,Xiao Guo,A kicsi túlsúlya,Mennydörgés a hegy fölött,☶ Hegy,☳ Mennydörgés,apoláris,,leucin,CTG,001100,61. Zhong Fu – Belső igazság,CAG (Gln) → 28. Da Guo,igen,néma,,☲ Tűz,8
+CCU,Pro,45,Cui,Gyülekezés,Tó a föld fölött,☷ Föld,☱ Tó,apoláris,,prolin,CCT,000110,26. Da Chu – A nagy szelídítő ereje,AGG (Arg) → 34. Da Zhuang,nem,néma,,☱ Tó,8
+CCC,Pro,12,Pi,Pangás,Ég a föld fölött,☷ Föld,☰ Ég,apoláris,,prolin,CCC,000111,11. Tai – Béke,GGG (Gly) → 11. Tai,nem,néma,12. Pangás: a prolin megtöri a fehérjék α-hélixét.,☰ Ég,9
+CCA,Pro,33,Dun,Visszavonulás,Ég a hegy fölött,☶ Hegy,☰ Ég,apoláris,,prolin,CCA,001111,19. Lin – Közeledés,UGG (Trp) → 46. Sheng,nem,néma,,☱ Tó,8
+CCG,Pro,31,Xian,Hatás,Tó a hegy fölött,☶ Hegy,☱ Tó,apoláris,,prolin,CCG,001110,41. Sun – Csökkenés,CGG (Arg) → 32. Heng,nem,néma,,☰ Ég,9
+CAU,His,47,Kun,Szorongattatás,Tó a víz fölött,☵ Víz,☱ Tó,bázikus (+),,hisztidin,CAT,010110,22. Bi – Kecsesség,AUG (Met) → 55. Feng,nem,néma,,☳ Mennydörgés,7
+CAC,His,6,Song,Viszály,Ég a víz fölött,☵ Víz,☰ Ég,bázikus (+),,hisztidin,CAC,010111,36. Ming Yi – A fény elsötétülése,GUG (Val) → 36. Ming Yi,nem,néma,,☲ Tűz,8
+CAA,Gln,44,Gou,Találkozás,Ég a szél fölött,☴ Szél,☰ Ég,poláris,,glutamin,CAA,011111,24. Fu – Visszatérés,UUG (Leu) → 15. Qian,nem,néma,,☳ Mennydörgés,7
+CAG,Gln,28,Da Guo,A nagy túlsúlya,Tó a szél fölött,☴ Szél,☱ Tó,poláris,,glutamin,CAG,011110,27. Yi – Táplálás,CUG (Leu) → 62. Xiao Guo,nem,néma,,☲ Tűz,8
+CGU,Arg,40,Xie,Felszabadulás,Mennydörgés a víz fölött,☵ Víz,☳ Mennydörgés,bázikus (+),,arginin,CGT,010100,37. Jia Ren – A család,ACG (Thr) → 49. Ge,nem,néma,,☱ Tó,8
+CGC,Arg,64,Wei Ji,Beteljesülés előtt,Tűz a víz fölött,☵ Víz,☲ Tűz,bázikus (+),,arginin,CGC,010101,63. Ji Ji – Beteljesülés után,GCG (Ala) → 63. Ji Ji,nem,néma,,☰ Ég,9
+CGA,Arg,50,Ding,Az üst,Tűz a szél fölött,☴ Szél,☲ Tűz,bázikus (+),,arginin,CGA,011101,3. Zhun – Kezdeti nehézség,UCG (Ser) → 39. Jian,nem,néma,,☱ Tó,8
+CGG,Arg,32,Heng,Tartósság,Mennydörgés a szél fölött,☴ Szél,☳ Mennydörgés,bázikus (+),,arginin,CGG,011100,42. Yi – Gyarapodás,CCG (Pro) → 31. Xian,nem,néma,,☰ Ég,9
+AUU,Ile,51,Zhen,A felrázó,Kettőzött mennydörgés,☳ Mennydörgés,☳ Mennydörgés,apoláris,,izoleucin,ATT,100100,57. Xun – A szelíd,AAU (Asn) → 58. Dui,igen,néma,,☷ Föld,6
+AUC,Ile,21,Shi He,Átharapás,Tűz a mennydörgés fölött,☳ Mennydörgés,☲ Tűz,apoláris,,izoleucin,ATC,100101,48. Jing – A kút,GAU (Asp) → 60. Jie,igen,néma,,☶ Hegy,7
+AUA,Ile,30,Li,A tapadó,Kettőzött tűz,☲ Tűz,☲ Tűz,apoláris,,izoleucin,ATA,101101,29. Kan – A mélység,UAU (Tyr) → 29. Kan,igen,számít (AUG → Met),,☷ Föld,6
+AUG,Met,55,Feng,Bőség,Mennydörgés a tűz fölött,☲ Tűz,☳ Mennydörgés,apoláris,start,metionin,ATG,101100,59. Huan – Szétoszlás,CAU (His) → 47. Kun,igen,számít (AUA → Ile),,☶ Hegy,7
+ACU,Thr,17,Sui,Követés,Tó a mennydörgés fölött,☳ Mennydörgés,☱ Tó,poláris,,treonin,ACT,100110,18. Gu – A megromlott helyrehozása,AGU (Ser) → 54. Gui Mei,nem,néma,,☵ Víz,7
+ACC,Thr,25,Wu Wang,Ártatlanság,Ég a mennydörgés fölött,☳ Mennydörgés,☰ Ég,poláris,,treonin,ACC,100111,46. Sheng – Felemelkedés,GGU (Gly) → 19. Lin,nem,néma,,☴ Szél,8
+ACA,Thr,13,Tong Ren,Közösség az emberekkel,Ég a tűz fölött,☲ Tűz,☰ Ég,poláris,,treonin,ACA,101111,7. Shi – A sereg,UGU (Cys) → 7. Shi,nem,néma,,☵ Víz,7
+ACG,Thr,49,Ge,Forradalom,Tó a tűz fölött,☲ Tűz,☱ Tó,poláris,,treonin,ACG,101110,4. Meng – Ifjúi balgaság,CGU (Arg) → 40. Xie,nem,néma,,☴ Szél,8
+AAU,Asn,58,Dui,A derűs,Kettőzött tó,☱ Tó,☱ Tó,poláris,,aszparagin,AAT,110110,52. Gen – A nyugalom,AUU (Ile) → 51. Zhen,nem,néma,,☷ Föld,6
+AAC,Asn,10,Lü,Fellépés,Ég a tó fölött,☱ Tó,☰ Ég,poláris,,aszparagin,AAC,110111,15. Qian – Szerénység,GUU (Val) → 24. Fu,nem,néma,,☶ Hegy,7
+AAA,Lys,1,Qian,A teremtő,Kettőzött ég,☰ Ég,☰ Ég,bázikus (+),,lizin,AAA,111111,2. Kun – A befogadó,UUU (Phe) → 2. Kun,nem,néma,Csupa jang: A teremtő. A poli-A a korai kísérletekben lizint adott.,☷ Föld,6
+AAG,Lys,43,Guai,Áttörés,Tó az ég fölött,☰ Ég,☱ Tó,bázikus (+),,lizin,AAG,111110,23. Bo – Szétesés,CUU (Leu) → 16. Yu,nem,néma,,☶ Hegy,7
+AGU,Ser,54,Gui Mei,A férjhez menő leány,Mennydörgés a tó fölött,☱ Tó,☳ Mennydörgés,poláris,,szerin,AGT,110100,53. Jian – Fokozatos fejlődés,ACU (Thr) → 17. Sui,nem,néma,,☵ Víz,7
+AGC,Ser,38,Kui,Ellentét,Tűz a tó fölött,☱ Tó,☲ Tűz,poláris,,szerin,AGC,110101,39. Jian – Akadály,GCU (Ala) → 3. Zhun,nem,néma,,☴ Szél,8
+AGA,Arg,14,Da You,Nagy birtoklás,Tűz az ég fölött,☰ Ég,☲ Tűz,bázikus (+),,arginin,AGA,111101,8. Bi – Összetartás,UCU (Ser) → 8. Bi,nem,néma,,☵ Víz,7
+AGG,Arg,34,Da Zhuang,A nagy ereje,Mennydörgés az ég fölött,☰ Ég,☳ Mennydörgés,bázikus (+),,arginin,AGG,111100,20. Guan – Szemlélődés,CCU (Pro) → 45. Cui,nem,néma,,☴ Szél,8
+GUU,Val,24,Fu,Visszatérés,Föld a mennydörgés fölött,☳ Mennydörgés,☷ Föld,apoláris,,valin,GTT,100000,44. Gou – Találkozás,AAC (Asn) → 10. Lü,igen,néma,,☳ Mennydörgés,7
+GUC,Val,27,Yi,Táplálás,Hegy a mennydörgés fölött,☳ Mennydörgés,☶ Hegy,apoláris,,valin,GTC,100001,28. Da Guo – A nagy túlsúlya,GAC (Asp) → 61. Zhong Fu,igen,néma,,☲ Tűz,8
+GUA,Val,22,Bi,Kecsesség,Hegy a tűz fölött,☲ Tűz,☶ Hegy,apoláris,,valin,GTA,101001,47. Kun – Szorongattatás,UAC (Tyr) → 59. Huan,igen,néma,,☳ Mennydörgés,7
+GUG,Val,36,Ming Yi,A fény elsötétülése,Föld a tűz fölött,☲ Tűz,☷ Föld,apoláris,,valin,GTG,101000,6. Song – Viszály,CAC (His) → 6. Song,igen,néma,,☲ Tűz,8
+GCU,Ala,3,Zhun,Kezdeti nehézség,Víz a mennydörgés fölött,☳ Mennydörgés,☵ Víz,apoláris,,alanin,GCT,100010,50. Ding – Az üst,AGC (Ser) → 38. Kui,nem,néma,,☱ Tó,8
+GCC,Ala,42,Yi,Gyarapodás,Szél a mennydörgés fölött,☳ Mennydörgés,☴ Szél,apoláris,,alanin,GCC,100011,32. Heng – Tartósság,GGC (Gly) → 41. Sun,nem,néma,,☰ Ég,9
+GCA,Ala,37,Jia Ren,A család,Szél a tűz fölött,☲ Tűz,☴ Szél,apoláris,,alanin,GCA,101011,40. Xie – Felszabadulás,UGC (Cys) → 4. Meng,nem,néma,,☱ Tó,8
+GCG,Ala,63,Ji Ji,Beteljesülés után,Víz a tűz fölött,☲ Tűz,☵ Víz,apoláris,,alanin,GCG,101010,64. Wei Ji – Beteljesülés előtt,CGC (Arg) → 64. Wei Ji,nem,néma,,☰ Ég,9
+GAU,Asp,60,Jie,Korlátozás,Víz a tó fölött,☱ Tó,☵ Víz,savas (−),,aszparaginsav,GAT,110010,56. Lü – A vándor,AUC (Ile) → 21. Shi He,nem,néma,,☳ Mennydörgés,7
+GAC,Asp,61,Zhong Fu,Belső igazság,Szél a tó fölött,☱ Tó,☴ Szél,savas (−),,aszparaginsav,GAC,110011,62. Xiao Guo – A kicsi túlsúlya,GUC (Val) → 27. Yi,nem,néma,,☲ Tűz,8
+GAA,Glu,9,Xiao Chu,A kicsi szelídítő ereje,Szél az ég fölött,☰ Ég,☴ Szél,savas (−),,glutaminsav,GAA,111011,16. Yu – Lelkesedés,UUC (Phe) → 23. Bo,nem,néma,,☳ Mennydörgés,7
+GAG,Glu,5,Xu,Várakozás,Víz az ég fölött,☰ Ég,☵ Víz,savas (−),,glutaminsav,GAG,111010,35. Jin – Haladás,CUC (Leu) → 35. Jin,nem,néma,,☲ Tűz,8
+GGU,Gly,19,Lin,Közeledés,Föld a tó fölött,☱ Tó,☷ Föld,apoláris,,glicin,GGT,110000,33. Dun – Visszavonulás,ACC (Thr) → 25. Wu Wang,nem,néma,,☱ Tó,8
+GGC,Gly,41,Sun,Csökkenés,Hegy a tó fölött,☱ Tó,☶ Hegy,apoláris,,glicin,GGC,110001,31. Xian – Hatás,GCC (Ala) → 42. Yi,nem,néma,,☰ Ég,9
+GGA,Gly,26,Da Chu,A nagy szelídítő ereje,Hegy az ég fölött,☰ Ég,☶ Hegy,apoláris,,glicin,GGA,111001,45. Cui – Gyülekezés,UCC (Ser) → 20. Guan,nem,néma,,☱ Tó,8
+GGG,Gly,11,Tai,Béke,Föld az ég fölött,☰ Ég,☷ Föld,apoláris,,glicin,GGG,111000,12. Pi – Pangás,CCC (Pro) → 12. Pi,nem,néma,"11. Béke, a CCC (12. Pangás) teljes ellentéte: Tai–Pi pár.",☰ Ég,9

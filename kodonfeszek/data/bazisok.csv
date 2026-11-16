@@ -1,0 +1,5 @@
+Bázis,Típus,Gyűrűk,Amino / keto,Alsó vonal (gyűrű),Felső vonal (amino),Párja,Hidrogénkötések
+A (adenin),purin,2,amino,jang,jang,T (DNS) / U (RNS),2
+G (guanin),purin,2,keto,jang,jin,C,3
+C (citozin),pirimidin,1,amino,jin,jang,G,3
+"T (timin, DNS) / U (uracil, RNS)",pirimidin,1,keto,jin,jin,A,2

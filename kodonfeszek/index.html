@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kodonfészek</title>
+<style>
+/* VOICE everyday learning explorer, calm and exact
+   IDEA a light table in a dark lab: the specimen glows, the index card beside it explains
+   PICTURE the moving spidron nest, each belt a codon, each arm a hexagram line
+   COLOUR fixed night ground #0f0e1c; purine violet, pyrimidine teal, amino light/dim grey; amber marks selection and wobble
+   TYPE system sans throughout, heavier weights for names and figures
+   LAYOUT laptop: stage left with story overlay, index card right, codon ribbon under the stage; phone: title, stage, card, ribbon, map */
+:root{color-scheme:dark;--bg:#0f0e1c;--panel:#17162a;--panel2:#1f1d36;--line:#2e2c4a;--ink:#efeef8;--mute:#a9a7c4;--pur:#8b83ea;--tea:#2bb38a;--up1:#e4e2da;--up0:#6a6964;--amb:#f0a43a}
+*{box-sizing:border-box;min-width:0}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-weight:700;margin:0;letter-spacing:-.01em;line-height:1.1}
+button,select,input{font:inherit;color:var(--ink)}
+button{background:var(--panel2);border:1px solid var(--line);border-radius:8px;min-height:40px;padding:0 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+button:hover{border-color:#4a4772}
+button:focus-visible,input:focus-visible,.cell:focus-visible,.chip:focus-visible{outline:2px solid var(--amb);outline-offset:2px}
+button[aria-pressed=true]{background:#2c2950;border-color:var(--pur)}
+input[type=text]{background:var(--panel2);border:1px solid var(--line);border-radius:8px;min-height:40px;padding:0 10px;font-size:16px;font-family:ui-monospace,Menlo,monospace}
+select{background:var(--panel2);border:1px solid var(--line);border-radius:8px;min-height:40px;padding:0 8px;font-size:15px;max-width:230px}
+.strip{display:flex;height:14px;border-radius:3px;overflow:hidden;margin-top:4px}.strip span{flex:1}
+input[type=range]{accent-color:var(--amb);width:96px}
+a{color:var(--pur)}
+.app{display:grid;height:100%;grid-template-columns:minmax(0,1fr) 390px;grid-template-rows:auto minmax(0,1fr) auto}
+header{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:12px max(2vw,16px);border-bottom:1px solid var(--line)}
+header h1{font-size:26px;margin-right:auto}
+header h1 small{display:block;font:500 13px system-ui,sans-serif;color:var(--mute);letter-spacing:0}
+.grp{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.lbl{font-size:13px;color:var(--mute)}
+.stage{grid-column:1;grid-row:2;position:relative;background:radial-gradient(circle at 50% 45%,#1c1a36,#0f0e1c 70%);cursor:grab;touch-action:none}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%}
+#glow{filter:blur(16px) saturate(1.5);opacity:.8;mix-blend-mode:screen;pointer-events:none}
+.story{position:absolute;left:16px;bottom:16px;max-width:min(440px,calc(100% - 32px));background:rgba(23,22,42,.92);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.story h3{font-size:19px;margin-bottom:6px}
+.story p{margin:0 0 10px;color:#d8d6ec}
+.story .nav{display:flex;gap:8px;align-items:center}
+.story .nav span{margin-left:auto;font-size:13px;color:var(--mute)}
+.legend{position:absolute;right:14px;top:12px;display:grid;gap:4px;font-size:13px;color:var(--mute);text-align:right}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-left:6px;vertical-align:-1px}
+aside{grid-row:2/4;grid-column:2;border-left:1px solid var(--line);overflow:auto;padding:16px;display:grid;gap:16px;align-content:start;background:var(--panel)}
+.bases{display:flex;gap:8px}
+.base{font:700 34px system-ui,sans-serif;width:56px;height:62px;justify-content:center;border-radius:10px;padding:0}
+.base.hi{border-color:var(--amb);background:#3a2c18}
+.aa{font-size:16px;color:var(--mute)}
+.aa b{color:var(--ink);font-weight:600}
+.hex{display:flex;flex-direction:column-reverse;gap:7px}
+.row{display:grid;grid-template-columns:96px minmax(0,1fr);gap:12px;align-items:center;border-radius:6px;padding:2px 4px}
+.row.hi{background:#3a2c18}
+.row.gap{margin-top:8px}
+.bar{display:flex;gap:12px;height:12px}.bar span{flex:1;border-radius:2px}
+.row em{font-style:normal;font-size:13px;color:var(--mute)}
+.hname{font-size:24px}
+.hname small{display:block;font:400 15px system-ui,sans-serif;color:var(--mute);margin-top:4px}
+.tiers{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.tiers li{background:var(--panel2);border-radius:8px;padding:8px 10px;font-size:14px}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:1px 7px;border-radius:5px;margin-right:6px}
+.t1{background:#173d2e;color:#7ee0b2}.t2{background:#1d2f52;color:#9cc2ff}.t3{background:#45330f;color:#f6c76e}
+.sw{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mute);margin-top:8px;flex-wrap:wrap}
+.sw span{width:30px;height:18px;border-radius:4px;border:1px solid var(--line);flex:none}
+.report{font-size:14px;color:#f6c76e;min-height:22px}
+.map{display:grid;grid-template-columns:22px repeat(8,minmax(0,1fr));gap:3px}
+.map .h{font-size:13px;color:var(--mute);text-align:center;line-height:28px}
+.cell{border:0;min-height:30px;padding:0;border-radius:5px;font:500 13px ui-monospace,Menlo,monospace;color:var(--ink);justify-content:center}
+.cell.cur{outline:2px solid var(--amb);outline-offset:0}
+.cell.dim{opacity:.25}
+.ribbon{grid-column:1;grid-row:3;display:flex;gap:10px;align-items:center;padding:10px max(2vw,16px);border-top:1px solid var(--line);flex-wrap:wrap}
+.chips{display:flex;gap:6px;overflow-x:auto;flex:1 1 300px;padding:4px 2px}
+.chip{flex:none;min-height:38px;font-family:ui-monospace,Menlo,monospace;font-size:15px}
+.chip.cur{border-color:var(--amb);background:#3a2c18}
+.help{font-size:14px;color:#d8d6ec}.help summary{cursor:pointer;font-weight:600;color:var(--ink);min-height:32px}.help p,.help ul,.help ol{margin:6px 0}.help li{margin:3px 0}
+.err{font-size:13px;color:#ff8f8f;width:100%}
+.note{font-size:13px;color:var(--mute)}
+@media(max-width:1000px){html,body{height:auto}.app{display:block}.stage{height:86svh;min-height:560px}.stage canvas{height:58%}.story{left:8px;right:8px;bottom:8px;max-width:none;max-height:40%;overflow:auto}aside{border-left:0;border-top:1px solid var(--line)}header h1{font-size:22px}}
+@media(max-width:600px){.legend{display:none}.base{width:48px;height:54px;font-size:28px}.story{left:8px;bottom:8px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+<h1>Kodonfészek<small>DNS × I Ching × spidron, mozgásban</small></h1>
+<div class="grp">
+<button id="bPlay" aria-label="Szünet">❚❚</button>
+<button id="bPrev" aria-label="Előző kodon">‹</button>
+<button id="bNext" aria-label="Következő kodon">›</button>
+<button id="bFlip">Szemközti szál</button>
+<label class="lbl" for="spd">Sebesség</label><input type="range" id="spd" min="0.2" max="2" step="0.1" value="0.7">
+</div>
+<div class="grp">
+<button id="lWob" aria-pressed="true">Remegés</button>
+<button id="lSpine" aria-pressed="true">Gerinc</button>
+<button id="lPairs" aria-pressed="false">應-párok</button>
+<button id="lBond" aria-pressed="true">Kötés</button>
+<button id="lSoft" aria-pressed="true">Lágy fény</button>
+</div>
+<div class="grp">
+<label class="lbl" for="rel">Dombormű</label><input type="range" id="rel" min="0" max="0.22" step="0.01" value="0">
+<select id="mapSel" aria-label="Kiosztás">
+<option value="r00">Kiosztás: alap</option><option value="r01">amino-polaritás fordítva</option><option value="r10">gyűrű-polaritás fordítva</option><option value="r11">mindkét polaritás fordítva</option>
+<option value="a00">trigramok felcserélve</option><option value="a01">cserélve, amino fordítva</option><option value="a10">cserélve, gyűrű fordítva</option><option value="a11">cserélve, mindkettő fordítva</option>
+</select>
+</div>
+<div class="grp">
+<span class="lbl">Szintek</span>
+<button class="tier" data-t="1" aria-pressed="false">1</button>
+<button class="tier" data-t="2" aria-pressed="false">1–2</button>
+<button class="tier" data-t="3" aria-pressed="true">mind</button>
+</div>
+<div class="grp">
+<button id="bSnd" aria-pressed="false">🔈 Hang: ki</button>
+<button id="bStory" aria-pressed="true">Vezetett út</button>
+<button id="bFull">Teljes képernyő</button>
+</div>
+</header>
+
+<div class="stage" id="stage">
+<div class="legend">
+<span>gyűrű: purin / pirimidin<i style="background:var(--pur)"></i><i style="background:var(--tea)"></i></span>
+<span>amino / keto<i style="background:var(--up1)"></i><i style="background:var(--up0)"></i></span>
+<span>erős kötés (G, C): fényes él<i style="background:#e57fb0"></i></span>
+<span>kiemelés<i style="background:var(--amb)"></i></span>
+</div>
+<div class="story" id="story">
+<h3 id="sT"></h3>
+<p id="sX"></p>
+<div class="nav"><button id="sPrev">Vissza</button><button id="sNext">Tovább</button><span id="sN"></span></div>
+</div>
+</div>
+
+<div class="ribbon">
+<div class="chips" id="chips" aria-label="Szekvencia kodonjai"></div>
+<input type="text" id="seq" value="AUGGCCCUGUGGAUGCGCCUCCUGCCCCUGCUGGCGCUGCUGGCCCUCUGGGGACCUGACCCAGCCGCAGCCUUUGUGAACCAACACCUGUGCGGCUCACACCUGGUGGAAGCUCUCUACCUAGUGUGCGGGGAACGAGGCUUCUUCUACACACCCAAGACCCGCCGGGAGGCAGAGGACCUGCAGGUGGGGCAGGUGGAGCUGGGCGGGGGCCCUGGUGCAGGCAGCCUGCAGCCCUUGGCCCUGGAGGGGUCCCUGCAGAAGCGUGGCAUUGUGGAACAAUGCUGUACCAGCAUCUGCUCCCUCUACCAGCUGGAGAACUACUGCAACUAG" aria-label="Szekvencia" style="flex:1 1 220px">
+<button id="bLoad">Betöltés</button>
+<button id="pIns">Inzulin</button>
+<button id="pDemo">Rövid minta</button>
+<div class="err" id="err"></div>
+<div class="note">Alapértelmezés: az emberi inzulin (preproinzulin) kódoló szakasza, 110 kodon és a stop (GenBank AH002844.2); a rövid minta kitalált bemutatósor. Szóköz: lejátszás, nyilak: léptetés, C: szemközti szál, F: teljes képernyő. Hang: a kártyán a „Mire jó a hang” részben. Szín: bázisonként egy RGB-csatorna (A 3, G 2, C 1, U 0).</div>
+</div>
+
+<aside>
+<div>
+<div class="lbl" id="strand">Olvasott kodon, kódoló szál · kattints egy bázisra az átíráshoz</div>
+<div class="bases" id="bases" style="margin-top:8px"></div>
+<div class="aa" id="aa" style="margin-top:8px"></div>
+<div class="sw" id="sw"></div>
+<div class="report" id="report"></div>
+<div class="grp" style="margin-top:6px"><span class="lbl">Hang:</span><button class="smode" data-m="read" aria-pressed="true">Olvasott szál</button><button class="smode" data-m="pair" aria-pressed="false">Párja</button><button class="smode" data-m="both" aria-pressed="false">Mindkettő</button></div>
+<details class="help" style="margin-top:8px"><summary>Mire jó a hang, és hogyan használd?</summary>
+<p>A hang a kodon szerkezetét teszi hallhatóvá, hogy a kép nélkül, fül alapján is követni tudd. Jelölés, nem fizikai kapcsolat: a DNS-re nem hat, és nem gyógyít.</p>
+<p><b>Indítás:</b> kapcsold be a fejlécben a Hang gombot, majd lépkedj a nyilakkal vagy a ‹ › gombokkal. Minden lépésnél megszólal a kodon három hangja. Végig halkan szól egy mély D: ez a tükörtengely.</p>
+<ul>
+<li><b>A tengely fölött vagy alatt:</b> purin (A, G) vagy pirimidin (C, U).</li>
+<li><b>Közel vagy messze a tengelytől:</b> erős (G, C, három kötés) vagy gyenge (A, U, két kötés) bázis.</li>
+<li><b>Két hosszú, egy rövid hang:</b> az első két bázis cseréje szinte mindig más aminosavat ad (96 és 100%), a harmadiké ritkán (31%).</li>
+<li><b>Remegő harmadik hang:</b> a lazább, wobble-párosodás helye (a Remegés gombbal kapcsolható).</li>
+<li><b>Ha a középső hang a legmélyebb (G, vagyis U):</b> az aminosav mindig víztaszító, 16 kodonból 16-szor.</li>
+</ul>
+<p><b>Három kísérlet:</b></p>
+<ol>
+<li><b>Mindkettő:</b> a két szál egyszerre szól, balra és jobbra. Szűk hangköz (nagy terc) erős párt, tág hangköz (nagy nóna) gyenge párt jelez. Ez a három hangköz a kötés-trigram, és a két szálon azonos.</li>
+<li><b>Mutáció:</b> kattints a harmadik bázisra. Ha a hang a tengely ugyanazon oldalán marad (U↔C vagy A↔G), az aminosav szinte mindig ugyanaz marad (64 kodonból 60-nál). Ha átugrik a másik oldalra (U↔G vagy C↔A), nagyjából minden második esetben megváltozik (64-ből 30-nál).</li>
+<li><b>Szemközti szál:</b> a gomb megnyomása után a dallam rák-tükörben szól: tükrözve és visszafelé, ahogy a másik szál a saját irányában olvasódik.</li>
+</ol>
+<p>Lejátszás közben a háttérben √3 arányú Shepard-hang szól: a fészek nagyításának hangja, amely mindig emelkedik, mégis önmagába tér vissza.</p>
+<p class="note">A ±2 és ±7 félhangos távolság választás; a szerkezet más szimmetrikus hangközökkel is ugyanígy működne.</p>
+</details>
+<div class="grp" style="margin-top:6px"><button id="bUndo">Visszavonás</button><button id="bReset">Alaphelyzet</button></div>
+<div class="lbl" style="margin-top:10px">Ismert inzulinváltozatok (jelölés: NM_000207.3; a hatást a szekvenciából számolja)</div>
+<div class="grp" id="vars" style="margin-top:6px"></div>
+</div>
+<div class="hex" id="hex"></div>
+<div id="bond"></div>
+<div><h2 class="hname" id="hname"></h2></div>
+<ul class="tiers" id="tiers"></ul>
+<div>
+<div class="lbl" style="margin-bottom:6px">A 64 kodon: oszlop az alsó, sor a felső trigram (Fu Xi-sorrend). Kattintásra beírja a kodont.</div>
+<div class="map" id="map"></div>
+<div class="note" id="mapInfo" style="margin-top:6px">&nbsp;</div>
+</div>
+<div>
+<div class="lbl">Összehasonlítás egy második szekvenciával, kodononként</div>
+<input type="text" id="seqB" aria-label="Második szekvencia" style="width:100%;margin-top:6px" placeholder="AUGGCU...">
+<div class="grp" style="margin-top:6px"><button id="bSyn">Szinonim átirat készítése</button><button id="bCmp">Összehasonlítás</button></div>
+<div class="err" id="errB"></div>
+<div id="cmp" class="note"></div>
+</div>
+<div class="note">Minden név és szint a <a href="data/">data mappa</a> CSV-tábláiból való (leírás: <a href="README.md">README</a>). Spidron: Erdély Dániel geometriája.</div>
+</aside>
+</div>
+
+<script src="../vendor/three.min.js"></script>
+<script>
+{
+const ORD=[7,4,2,1,0,3,5,6],FX=[7,6,5,4,3,2,1,0];
+const KW=[[1,25,6,33,12,44,13,10],[34,51,40,62,16,32,55,54],[5,3,29,39,8,48,63,60],[26,27,4,52,23,18,22,41],[11,24,7,15,2,46,36,19],[9,42,59,53,20,57,37,61],[14,21,64,56,35,50,30,38],[43,17,47,31,45,28,49,58]];
+const NM=['Qian','Kun','Zhun','Meng','Xu','Song','Shi','Bi','Xiao Chu','Lü','Tai','Pi','Tong Ren','Da You','Qian','Yu','Sui','Gu','Lin','Guan','Shi He','Bi','Bo','Fu','Wu Wang','Da Chu','Yi','Da Guo','Kan','Li','Xian','Heng','Dun','Da Zhuang','Jin','Ming Yi','Jia Ren','Kui','Jian','Xie','Sun','Yi','Guai','Gou','Cui','Sheng','Kun','Jing','Ge','Ding','Zhen','Gen','Jian','Gui Mei','Feng','Lü','Xun','Dui','Huan','Jie','Zhong Fu','Xiao Guo','Ji Ji','Wei Ji'];
+const HU=['A teremtő','A befogadó','Kezdeti nehézség','Ifjúi balgaság','Várakozás','Viszály','A sereg','Összetartás','A kicsi szelídítő ereje','Fellépés','Béke','Pangás','Közösség az emberekkel','Nagy birtoklás','Szerénység','Lelkesedés','Követés','A megromlott helyrehozása','Közeledés','Szemlélődés','Átharapás','Kecsesség','Szétesés','Visszatérés','Ártatlanság','A nagy szelídítő ereje','Táplálás','A nagy túlsúlya','A mélység','A tapadó','Hatás','Tartósság','Visszavonulás','A nagy ereje','Haladás','A fény elsötétülése','A család','Ellentét','Akadály','Felszabadulás','Csökkenés','Gyarapodás','Áttörés','Találkozás','Gyülekezés','Felemelkedés','Szorongattatás','A kút','Forradalom','Az üst','A felrázó','A nyugalom','Fokozatos fejlődés','A férjhez menő leány','Bőség','A vándor','A szelíd','A derűs','Szétoszlás','Korlátozás','Belső igazság','A kicsi túlsúlya','Beteljesülés után','Beteljesülés előtt'];
+const ZH=["乾", "坤", "屯", "蒙", "需", "訟", "師", "比", "小畜", "履", "泰", "否", "同人", "大有", "謙", "豫", "隨", "蠱", "臨", "觀", "噬嗑", "賁", "剝", "復", "無妄", "大畜", "頤", "大過", "坎", "離", "咸", "恆", "遯", "大壯", "晉", "明夷", "家人", "睽", "蹇", "解", "損", "益", "夬", "姤", "萃", "升", "困", "井", "革", "鼎", "震", "艮", "漸", "歸妹", "豐", "旅", "巽", "兌", "渙", "節", "中孚", "小過", "既濟", "未濟"];
+const GL=["teremtő erő, kitartó cselekvés", "befogadás, odaadó követés", "nehéz kezdet, csírázás", "tapasztalatlanság, tanulás", "türelmes várakozás", "vita, peres ügy", "fegyelem, szervezett sokaság", "összefogás, szövetség", "a kis erő visszatart, finom fékezés", "óvatos lépés, helyes viselkedés", "béke, ég és föld összhangja", "megrekedés, elzáródás", "közösség, egyetértés", "bőséges birtoklás", "szerénység", "lelkesedés, készenlét", "követés, alkalmazkodás", "a megromlott helyrehozása", "közeledés, felügyelet", "szemlélődés, rálátás", "átharapás, az akadály eltávolítása", "díszítés, kecsesség", "lehámlás, szétesés", "visszatérés, fordulópont", "ártatlanság, a váratlan", "a nagy erő felhalmozása", "táplálás, gondoskodás", "túlterhelés, a nagy túlsúlya", "mélység, ismétlődő veszély", "tapadó fény, világosság", "kölcsönös hatás, vonzás", "tartósság, állandóság", "visszavonulás", "a nagy ereje", "haladás, felkelő nap", "a fény elsötétülése", "család, háznép", "ellentét, eltávolodás", "akadály, nehéz út", "feloldás, megkönnyebbülés", "csökkenés, lemondás", "gyarapodás", "áttörés, határozott döntés", "váratlan találkozás", "gyülekezés", "felemelkedés", "szorongatottság, kimerülés", "kút, közös forrás", "gyökeres változás", "üst, átalakítás és táplálás", "megrázkódtatás, mennydörgés", "nyugalom, megállás", "fokozatos fejlődés", "a férjhez menő leány, alárendelt helyzet", "bőség, tetőpont", "vándor, úton lét", "szelíd behatolás, szél", "derű, öröm", "szétoszlás, feloldódás", "korlátozás, mérték", "belső igazság, bizalom", "a kicsi túlsúlya, apró lépések", "beteljesülés után, rend", "beteljesülés előtt, átmenet"];
+const TRI={7:['☰','Ég'],6:['☱','Tó'],5:['☲','Tűz'],4:['☳','Mennydörgés'],3:['☴','Szél'],2:['☵','Víz'],1:['☶','Hegy'],0:['☷','Föld']};
+const AAS='FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG';
+const A3={F:['Phe','fenilalanin'],L:['Leu','leucin'],S:['Ser','szerin'],Y:['Tyr','tirozin'],'*':['Stop','stopjel'],C:['Cys','cisztein'],W:['Trp','triptofán'],P:['Pro','prolin'],H:['His','hisztidin'],Q:['Gln','glutamin'],R:['Arg','arginin'],I:['Ile','izoleucin'],M:['Met','metionin'],T:['Thr','treonin'],N:['Asn','aszparagin'],K:['Lys','lizin'],V:['Val','valin'],A:['Ala','alanin'],D:['Asp','aszparaginsav'],E:['Glu','glutaminsav'],G:['Gly','glicin']};
+const GRP=a=>'AVLIPFMWG'.includes(a)?['apoláris','#8d8c86']:'STCYNQ'.includes(a)?['poláris','#2bb38a']:'KRH'.includes(a)?['bázikus','#4f9cf0']:'DE'.includes(a)?['savas','#f07a4f']:['stop','#ef5b5b'];
+const POET={UUU:'Az elsőként megfejtett kodon (1961: poli-U → fenilalanin), és a csupa jin hexagram.',AAA:'Csupa jang: A teremtő. A poli-A a korai kísérletekben lizint adott.',CCC:'12. Pangás: a prolin megtöri a fehérjék α-hélixét.',GGG:'11. Béke, a CCC (12. Pangás) teljes ellentéte.'};
+const CH={A:{r:1,a:1},G:{r:1,a:0},C:{r:0,a:1},U:{r:0,a:0}},MP={low:'r',pr:0,pa:0},upP=()=>MP.low==='r'?'a':'r',pol=p=>p==='r'?MP.pr:MP.pa,rb=b=>[CH[b][MP.low]^pol(MP.low),CH[b][upP()]^pol(upP())],lprop=j=>j<=3?MP.low:upP(),isDef=()=>MP.low==='r'&&!MP.pr&&!MP.pa,CP={A:'U',U:'A',G:'C',C:'G'},CYC={A:'G',G:'C',C:'U',U:'A'};
+const aaL=c=>AAS['UCAG'.indexOf(c[0])*16+'UCAG'.indexOf(c[1])*4+'UCAG'.indexOf(c[2])];
+const lines=c=>{const r=[...c].map(rb);return[r[0][0],r[1][0],r[2][0],r[0][1],r[1][1],r[2][1]]};
+const tri=l=>[l[0]*4+l[1]*2+l[2],l[3]*4+l[4]*2+l[5]];
+const hn=l=>{const[lo,up]=tri(l);return KW[ORD.indexOf(up)][ORD.indexOf(lo)]};
+const rc=c=>[...c].reverse().map(b=>CP[b]).join('');
+const mod=(a,b)=>((a%b)+b)%b;
+const $=id=>document.getElementById(id);
+const COLH=(j,b)=>{const p=lprop(j),v=b^pol(p);return p==='r'?(v?'#8b83ea':'#2bb38a'):(v?'#e4e2da':'#6a6964')};
+
+let start='AUGGCCCUGUGGAUGCGCCUCCUGCCCCUGCUGGCGCUGCUGGCCCUCUGGGGACCUGACCCAGCCGCAGCCUUUGUGAACCAACACCUGUGCGGCUCACACCUGGUGGAAGCUCUCUACCUAGUGUGCGGGGAACGAGGCUUCUUCUACACACCCAAGACCCGCCGGGAGGCAGAGGACCUGCAGGUGGGGCAGGUGGAGCUGGGCGGGGGCCCUGGUGCAGGCAGCCUGCAGCCCUUGGCCCUGGAGGGGUCCCUGCAGAAGCGUGGCAUUGUGGAACAAUGCUGUACCAGCAUCUGCUCCCUCUACCAGCUGGAGAACUACUGCAACUAG',cods=start.match(/.{3}/g),orig=cods.slice(),undo=[];
+let phi=0,dir=1,comp=false,playing=!matchMedia('(prefers-reduced-motion: reduce)').matches,speed=0.7,flip=null,stepTo=null;
+let wob=true,spineOn=true,pairsOn=false,hiBase=-1,relief=0,bondOn=true,sa=null,vel=0,wa=1,soft=true,tierMax=3,story=0,report='',lastStep=null,t=0;
+
+const stage=$('stage');
+const scene=new THREE.Scene();
+const cam=new THREE.PerspectiveCamera(38,1,0.1,100);cam.position.set(0,-6.6,11.4);cam.lookAt(0,-.5,0);
+const ren=new THREE.WebGLRenderer({antialias:true,alpha:true});ren.setPixelRatio(Math.min(2,devicePixelRatio));stage.prepend(ren.domElement);
+const glow=document.createElement('canvas');glow.id='glow';ren.domElement.after(glow);const gx=glow.getContext('2d');
+const ease=x=>x*x*(3-2*x),calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const root=new THREE.Group();scene.add(root);const flipG=new THREE.Group();root.add(flipG);const flowG=new THREE.Group();flipG.add(flowG);
+const R0=3,s3=Math.sqrt(3),D=Math.PI/180,LK=[4,3,2,1,6,5],KOF={1:3,2:2,3:1,4:0,5:5,6:4};
+const P=(n,k)=>{const r=R0/Math.pow(s3,n),a=(60-30*n-60*k)*D;return new THREE.Vector3(r*Math.cos(a),r*Math.sin(a),0)};
+const eN=new THREE.LineBasicMaterial({color:0x6a67a0,transparent:true,opacity:.18}),eH=new THREE.LineBasicMaterial({color:0xf0a43a}),eS=new THREE.LineBasicMaterial({color:0xe57fb0});
+const tris=[],isoAt={};
+function addTri(v,n,k,iso){const geo=new THREE.BufferGeometry();
+geo.setAttribute('position',new THREE.Float32BufferAttribute(9,3));
+geo.setAttribute('color',new THREE.Float32BufferAttribute([1,1,1,.8,.8,.88,.5,.5,.64],3));
+const m=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({vertexColors:true,transparent:true,opacity:iso?.95:.42,side:THREE.DoubleSide,depthWrite:false}));
+m.frustumCulled=false;const e=new THREE.LineLoop(geo,eN);e.frustumCulled=false;m.add(e);flowG.add(m);
+const o={tc:new THREE.Color(),m,e,n,v,line:LK[k],base:iso?.95:.42,axis:new THREE.Vector3(1,0,0),g:new THREE.Vector3()};tris.push(o);if(iso)isoAt[n+'_'+LK[k]]=o}
+for(let n=-1;n<=8;n++)for(let k=0;k<6;k++){addTri([[n,k],[n,k+1],[n+1,k]],n,k,true);addTri([[n,k+1],[n+1,k],[n+1,k+1]],n,k,false)}
+function chainStep(R,a){const r=R/s3;if(Math.abs(a)<1e-9)return[0,Math.PI/6];const rho=Math.sqrt(R*R-4*a*a);
+const F=x=>{const rp=Math.sqrt(r*r-4*x*x),d=Math.PI/6+Math.asin(Math.max(-1,Math.min(1,2*a*x/(rho*rp))));return[rho*rho+rp*rp-2*rho*rp*Math.cos(d)+(a-x)*(a-x)-r*r,d]};
+let x0=-a/s3*.8,x1=-a/s3,f0=F(x0)[0],f1=F(x1)[0];for(let i=0;i<40&&Math.abs(f1)>1e-14&&f1!==f0;i++){const x2=x1-f1*(x1-x0)/(f1-f0);x0=x1;f0=f1;x1=x2;f1=F(x1)[0]}return[x1,F(x1)[1]]}
+const LV=[];for(let j=0;j<=11;j++)LV.push({a:0,th:0,rho:0});
+function shape(f){let R=R0*s3,a=0,th=0;if(relief>0){const c=chainStep(1,relief),mag=relief+(Math.abs(c[0])*s3-relief)*f;a=mag*Math.cos(Math.PI*f)*R;th=f*(c[1]-Math.PI/6)}
+for(let j=0;j<=11;j++){const L=LV[j];L.a=a;L.th=th;L.rho=Math.sqrt(Math.max(R*R-4*a*a,0));if(j<11){const c=chainStep(R,a);a=c[0];th+=c[1]-Math.PI/6;R/=s3}}}
+const vpos=(n,k,out)=>{const L=LV[n+1],ang=(60-30*n-60*k)*D-L.th;return out.set(L.rho*Math.cos(ang),L.rho*Math.sin(ang),(k%2?-1:1)*L.a)};
+const tv=[new THREE.Vector3(),new THREE.Vector3(),new THREE.Vector3()];
+function updGeo(f){shape(f);tris.forEach(o=>{o.g.set(0,0,0);for(let i=0;i<3;i++){vpos(o.v[i][0],o.v[i][1],tv[i]);o.g.add(tv[i])}o.g.multiplyScalar(1/3);const p=o.m.geometry.attributes.position;for(let i=0;i<3;i++)p.setXYZ(i,tv[i].x-o.g.x,tv[i].y-o.g.y,tv[i].z-o.g.z);p.needsUpdate=true;o.m.position.copy(o.g);o.axis.set(-o.g.y,o.g.x,0).normalize()})}
+const mkLine=n=>{const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(n*3,3));const l=new THREE.Line(g,new THREE.LineBasicMaterial({color:0xc9c4ff}));l.frustumCulled=false;flowG.add(l);return l};
+const spine=mkLine(19),pairs=[1,2,3].map(()=>mkLine(2));
+function updLines(){const p=spine.geometry.attributes.position;let i=0;for(let n=0;n<=8;n++){const g=isoAt[n+'_2'].g;p.setXYZ(i++,g.x,g.y,g.z+.03)}p.setXYZ(i++,0,0,.03);for(let n=8;n>=0;n--){const g=isoAt[n+'_5'].g;p.setXYZ(i++,g.x,g.y,g.z+.03)}p.needsUpdate=true;
+pairs.forEach((l,j)=>{const a=isoAt['0_'+(j+1)].g,b=isoAt['0_'+(j+4)].g,q=l.geometry.attributes.position;q.setXYZ(0,a.x,a.y,a.z+.05);q.setXYZ(1,b.x,b.y,b.z+.05);q.needsUpdate=true})}
+let AC=null,snd=false,master=null,shG=null,shO=[],drone=null,sndMode='read';const PV={A:7,G:2,C:-2,U:-7},AX=293.66;
+function initAudio(){try{AC=new (window.AudioContext||window.webkitAudioContext)();master=AC.createGain();master.gain.value=.5;master.connect(AC.destination);
+shG=AC.createGain();shG.gain.value=0;shG.connect(master);for(let i=0;i<8;i++){const o=AC.createOscillator(),g=AC.createGain();g.gain.value=0;o.connect(g);g.connect(shG);o.start();shO.push({o,g})}
+const d=AC.createOscillator(),dg=AC.createGain();d.type='sine';d.frequency.value=AX/2;dg.gain.value=0;d.connect(dg);dg.connect(master);d.start();drone=dg}catch(e){AC=null}}
+function voice(c,t0,pan){const w=AC.createPeriodicWave(new Float32Array([0,0,0,0]),new Float32Array([0,1,.35,.12])),out=AC.createStereoPanner?AC.createStereoPanner():AC.createGain();if(out.pan)out.pan.value=pan;out.connect(master);
+const T=[[0,.4,.15],[.42,.4,.15],[.84,.2,.07]];
+[...c].forEach((b,i)=>{const o=AC.createOscillator(),g=AC.createGain(),s=t0+T[i][0],d=T[i][1];o.setPeriodicWave(w);o.frequency.value=AX*Math.pow(2,PV[b]/12);
+if(i===2&&wob){const lf=AC.createOscillator(),lg=AC.createGain();lf.frequency.value=6;lg.gain.value=o.frequency.value*.025;lf.connect(lg);lg.connect(o.frequency);lf.start(s);lf.stop(s+d+.1)}
+g.gain.setValueAtTime(0,s);g.gain.linearRampToValueAtTime(T[i][2],s+.02);g.gain.setValueAtTime(T[i][2],s+d*.6);g.gain.exponentialRampToValueAtTime(.001,s+d+.08);o.connect(g);g.connect(out);o.start(s);o.stop(s+d+.1)})}
+function playMotif(){if(!snd||!AC)return;try{const c=shown(),m=[...c].map(b=>CP[b]).join(''),t0=AC.currentTime+.03;
+if(sndMode==='read')voice(c,t0,0);else if(sndMode==='pair')voice(m,t0,0);else{voice(c,t0,-.6);voice(m,t0,.6)}}catch(e){}}
+function size(){const w=ren.domElement.clientWidth||stage.clientWidth,h=ren.domElement.clientHeight||stage.clientHeight;root.position.x=w>900?.9:0;ren.setSize(w,h,false);glow.width=Math.max(2,w>>2);glow.height=Math.max(2,h>>2);cam.aspect=w/h;cam.updateProjectionMatrix()}
+new ResizeObserver(size).observe(stage);size();
+
+const cur=()=>mod(Math.floor(phi+1e-6),cods.length);
+const shown=()=>{const c=cods[cur()];return comp?rc(c):c};
+function recolor(step,snap){tris.forEach(o=>{const c=cods[mod(step-o.n,cods.length)],b=lines(c)[o.line-1],v=comp?1-b:b;o.st='GC'.includes(c[(o.line-1)%3]);o.tc.set(COLH(o.line,v));if(snap)o.m.material.color.copy(o.tc)})}
+function hiLines(){const s=new Set(hiBase<0?[]:[hiBase+1,hiBase+4]);return s}
+
+function card(){const c=shown(),l=lines(c),[lo,up]=tri(l),n=hn(l),a=aaL(c),g=GRP(a),hs=hiLines();
+$('strand').textContent=(comp?'Olvasott kodon, szemközti szál a saját irányában':'Olvasott kodon, kódoló szál')+' · kattints egy bázisra az átíráshoz';
+$('bases').innerHTML=[...c].map((b,i)=>`<button class="base${hiBase===i?' hi':''}" data-i="${i}" aria-label="${i+1}. bázis: ${b}, átírás">${b}</button>`).join('');
+$('aa').innerHTML=`<b>${A3[a][0]}</b> · ${A3[a][1]} · <span style="color:${g[1]}">${g[0]}</span>${c==='AUG'&&!comp?' · startkodon':''}`;
+$('report').textContent=report;
+const lv={A:3,G:2,C:1,U:0},rgb=[...c].map(b=>lv[b]*85);
+$('sw').innerHTML=`<span style="background:rgb(${rgb})"></span>a kodon színe<span style="background:rgb(${rgb.map(v=>255-v)})"></span>a párosodó bázisoké: a negatív`;
+const pn=q=>q==='r'?'gyűrű':'amino',lab=[1,2,3,4,5,6].map(j=>`${(j-1)%3+1}. bázis ${pn(lprop(j))}`),sl=MP.low==='r'?6:3,wl=9-sl;
+$('hex').innerHTML=l.map((b,i)=>{const col=COLH(i+1,b),bar=b?`<span style="background:${col}"></span>`:`<span style="background:${col}"></span><span style="background:${col}"></span>`;
+return `<div data-l="${i+1}" class="row${hs.has(i+1)?' hi':''}${i===3?' gap':''}"><div class="bar">${bar}</div><em>${i+1}. vonal · ${lab[i]}${i===1||i===4?' · közép':''}${i+1===sl?' · wobble, többnyire néma':i+1===wl?' · gyenge wobble':''}</em></div>`}).join('');
+$('hname').innerHTML=`${n}. ${ZH[n-1]} ${NM[n-1]}: ${HU[n-1]}<small>Hagyományos jelentés: ${GL[n-1]}.<br>${up===lo?'Kettőzött '+TRI[up][1].toLowerCase():TRI[up][1]+(TRI[lo][1]==='Ég'?' az ':' a ')+TRI[lo][1].toLowerCase()+' fölött'} · lent ${TRI[lo][0]} ${TRI[lo][1]}, fent ${TRI[up][0]} ${TRI[up][1]}</small>`;
+const bb=[...c].map(b=>'GC'.includes(b)?1:0),bt=bb[0]*4+bb[1]*2+bb[2];
+$('bond').innerHTML=`<div class="lbl">Kötés-trigram ${TRI[bt][0]} ${TRI[bt][1]} · ${6+bb[0]+bb[1]+bb[2]} hidrogénkötés · a két szálon ugyanaz</div><div class="hex" style="margin-top:6px">`+bb.map((b,i)=>`<div class="row"><div class="bar">${b?'<span style="background:#e57fb0"></span>':'<span style="background:#7a4a62"></span><span style="background:#7a4a62"></span>'}</div><em>${i+1}. bázis · ${b?'erős, 3 kötés':'gyenge, 2 kötés'}</em></div>`).join('')+'</div>';
+const inv=hn(l.map(x=>1-x)),c6=c.slice(0,2)+{U:'C',C:'U',A:'G',G:'A'}[c[2]],a6=aaL(c6),T=[];
+T.push([1,`A szemközti szál minden vonalat megfordít: ${inv}. ${NM[inv-1]} (${HU[inv-1]}).`]);
+T.push([1,'Hangban a másik szál a saját irányában olvasva a motívum rák-tükre; színben a negatív.']);
+T.push([1,`Kötés-trigram ${TRI[bt][0]} ${TRI[bt][1]}: bázisonként a két vonal „kizáró vagy"-a, a hidrogénkötés ereje. A párosodás nem változtat rajta, ezért a két szálon közös (a másik irányból olvasva fordított sorrendben).`]);
+T.push([1,`Bázisonként két vonal: az 1–4., 2–5., 3–6. pár; a fészekben két szemközti kar.`]);
+if(c[1]==='U')T.push([2,'A középső bázis U (a 2. és az 5. vonal), ezért az aminosav víztaszító. A tény a genetikai kódé; hogy éppen a két középső vonalra esik, az az elrendezésből következik.']);
+if(!isDef())T.push([1,'Ez nem az alapkiosztás: a hexagramok mások, a szerkezet ugyanaz. A költői megjegyzések csak az alapkiosztásban állnak.']);
+T.push([2,a6===a?`A ${sl}. vonal néma: ${c6} is ${A3[a][0]}.`:`Itt a ${sl}. vonal kivételesen számít: ${c6} → ${A3[a6][0]}.`]);
+if(POET[c]&&isDef())T.push([3,POET[c]]);
+$('tiers').innerHTML=T.filter(x=>x[0]<=tierMax).map(x=>`<li><span class="tag t${x[0]}">${x[0]}. szint</span>${x[1]}</li>`).join('');
+$('chips').innerHTML=cods.map((k,i)=>`<button class="chip${i===cur()?' cur':''}" data-k="${i}">${k}</button>`).join('');
+const bx=$('chips'),cc=bx.querySelector('.cur');if(cc)bx.scrollLeft=cc.offsetLeft-bx.offsetLeft-bx.clientWidth/2+cc.clientWidth/2;
+map()}
+
+function map(){const c=shown();let h='<div></div>'+FX.map(l=>`<div class="h">${TRI[l][0]}</div>`).join('');
+FX.forEach(u=>{h+=`<div class="h">${TRI[u][0]}</div>`;FX.forEach(lo=>{const L=[(lo>>2)&1,(lo>>1)&1,lo&1],U=[(u>>2)&1,(u>>1)&1,u&1];
+const cd=[0,1,2].map(i=>['A','G','C','U'].find(b=>{const x=rb(b);return x[0]===L[i]&&x[1]===U[i]})).join(''),a=aaL(cd),col=GRP(a)[1];
+h+=`<button class="cell${cd===c?' cur':''}" data-c="${cd}" style="background:color-mix(in srgb,${col} 32%,transparent)" aria-label="${cd} ${A3[a][0]}">${cd}</button>`})});
+$('map').innerHTML=h}
+
+function edit(pos,newShown){const c=shown();const coding=comp?rc(newShown):newShown;const i=cur(),old=cods[i];if(coding===old)return;
+undo.push([i,old]);cods[i]=coding;const a0=aaL(comp?rc(old):old),a1=aaL(newShown),l0=lines(comp?rc(old):old),l1=lines(newShown);
+const fl=l0.map((v,k)=>v!==l1[k]?k+1:0).filter(Boolean);
+report=`${comp?rc(old):old} → ${newShown}: ${fl.length?fl.join(' és ')+'. vonal fordult':'nincs vonalváltozás'}; ${A3[a0][0]} → ${A3[a1][0]}${a0===a1?' (néma)':''}`;
+recolor(Math.floor(phi+1e-6));card();playMotif()}
+
+$('bases').addEventListener('click',e=>{const b=e.target.closest('.base');if(!b)return;const i=+b.dataset.i,c=shown();hiBase=i;edit(i,c.slice(0,i)+CYC[c[i]]+c.slice(i+1));const nb=$('bases').querySelector(`[data-i="${i}"]`);if(nb)nb.focus()});
+function setHi(i){hiBase=i;document.querySelectorAll('.base').forEach(b=>b.classList.toggle('hi',+b.dataset.i===i));const hs=hiLines();document.querySelectorAll('#hex .row').forEach(r=>r.classList.toggle('hi',hs.has(+r.dataset.l)))}
+$('bases').addEventListener('mouseover',e=>{const b=e.target.closest('.base');if(b)setHi(+b.dataset.i)});
+$('bases').addEventListener('focusin',e=>{const b=e.target.closest('.base');if(b)setHi(+b.dataset.i)});
+$('map').addEventListener('click',e=>{const b=e.target.closest('.cell');if(!b)return;edit(-1,b.dataset.c)});
+$('map').addEventListener('mouseover',e=>{const b=e.target.closest('.cell');if(!b)return;const cd=b.dataset.c,n=hn(lines(cd));$('mapInfo').textContent=`${cd} · ${A3[aaL(cd)][0]} · ${n}. ${NM[n-1]}: ${HU[n-1]}`});
+$('chips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;phi=+b.dataset.k;lastStep=null;report=''});
+$('bUndo').onclick=()=>{const u=undo.pop();if(!u){report='Nincs visszavonható lépés.';card();return}cods[u[0]]=u[1];report='Visszavonva.';recolor(Math.floor(phi+1e-6));card()};
+$('bReset').onclick=()=>{cods=orig.slice();undo=[];report='Alaphelyzet.';recolor(Math.floor(phi+1e-6));card()};
+const setPlay=p=>{playing=p;$('bPlay').textContent=p?'❚❚':'▶';$('bPlay').setAttribute('aria-label',p?'Szünet':'Lejátszás')};
+$('bPlay').onclick=()=>setPlay(!playing);
+const stepBy=d=>{setPlay(false);sa=null;stepTo=Math.round(phi)+d};
+$('bPrev').onclick=()=>stepBy(-1);$('bNext').onclick=()=>stepBy(1);
+const doFlip=()=>{if(flip)return;const v=new THREE.Vector3(0,-1,0).applyAxisAngle(new THREE.Vector3(0,0,1),flowG.rotation.z).applyQuaternion(flipG.quaternion);flip={a:0,axis:v.normalize(),q0:flipG.quaternion.clone(),sw:false}};
+$('bFlip').onclick=doFlip;
+$('bSnd').onclick=()=>{if(!AC)initAudio();if(!AC){report='A hangot ez a nézet nem engedi.';card();return}snd=!snd;if(AC.resume)AC.resume().catch(()=>{});if(!snd)shG.gain.setTargetAtTime(0,AC.currentTime,.05);drone.gain.setTargetAtTime(snd?.05:0,AC.currentTime,.2);$('bSnd').setAttribute('aria-pressed',snd);$('bSnd').textContent=snd?'🔊 Hang: be':'🔈 Hang: ki';report=snd?'Hang bekapcsolva: most a kodon három hangját kell hallanod.':'Hang kikapcsolva.';card();playMotif();if(snd)setTimeout(()=>{if(AC.state!=='running'){report='A böngésző ebben a nézetben letiltja a hangot. Nyisd meg az oldalt külön lapon.';card()}},600)};
+$('rel').oninput=e=>relief=+e.target.value;
+$('mapSel').onchange=e=>{const v=e.target.value;MP.low=v[0];MP.pr=+v[1];MP.pa=+v[2];recolor(Math.floor(phi+1e-6));report=isDef()?'Alapkiosztás.':'Másik érvényes kiosztás: a szemközti szál itt is a teljes ellentét.';card()};
+const VARS=[[3,'A','c.3G>A','a startkodon elvész; a forrás kórosként jelöli'],[25,'U','c.25C>T','a forrás szerint Pro9Ser, bizonytalan jelentőségű'],[215,'U','c.215C>T','a besorolását nem láttam a forrásban'],[279,'G','c.279A>G','a forrás szerint Glu93=, valószínűleg ártalmatlan']];
+$('vars').innerHTML=VARS.map((v,i)=>`<button data-v="${i}">${v[2]}</button>`).join('');
+$('vars').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const v=VARS[+b.dataset.v];
+if(orig.join('')!==start){cods=start.match(/.{3}/g);orig=cods.slice();undo=[];$('seq').value=start}
+const i=Math.floor((v[0]-1)/3),j=(v[0]-1)%3,old=orig[i],nw=old.slice(0,j)+v[1]+old.slice(j+1);if(cods[i]!==nw){undo.push([i,cods[i]]);cods[i]=nw}
+const l0=lines(old),l1=lines(nw),fl=l0.map((x,k)=>x!==l1[k]?k+1:0).filter(Boolean);setPlay(false);stepTo=null;sa=null;phi=i;lastStep=null;
+report=`${v[2]}, ${i+1}. kodon: ${old} → ${nw}; ${fl.join(' és ')}. vonal fordult; ${A3[aaL(old)][0]} → ${A3[aaL(nw)][0]}${aaL(old)===aaL(nw)?' (néma)':''}; ${v[3]}.`});
+const SYN={};Object.keys(CH).forEach(a=>Object.keys(CH).forEach(b=>Object.keys(CH).forEach(c=>{const k=a+b+c;(SYN[aaL(k)]=SYN[aaL(k)]||[]).push(k)})));
+$('bSyn').onclick=()=>{$('seqB').value=cods.map(c=>{const L=SYN[aaL(c)];return L[(L.indexOf(c)+1)%L.length]}).join('');$('bCmp').click()};
+$('bCmp').onclick=()=>{const v=$('seqB').value.toUpperCase().replace(/T/g,'U').replace(/\s/g,'');
+if(!/^[ACGU]+$/.test(v)||v.length<3){$('errB').textContent='Adj meg egy A, C, G, U vagy T betűkből álló szekvenciát, vagy készíts szinonim átiratot.';return}
+$('errB').textContent='';const B2=v.match(/.{3}/g)||[],n=Math.min(cods.length,B2.length);let sc=0,sa2=0,sb=0,slo=0,sup=0;const bt=c=>[...c].map(x=>'GC'.includes(x)?1:0).join('');
+const col=c=>`rgb(${[...c].map(x=>({A:3,G:2,C:1,U:0})[x]*85)})`;let r1='',r2='',r3='';
+for(let i=0;i<n;i++){const a=cods[i],b=B2[i],ta=tri(lines(a)),tb=tri(lines(b)),same=aaL(a)===aaL(b);sc+=a===b;sa2+=same;sb+=bt(a)===bt(b);slo+=ta[0]===tb[0];sup+=ta[1]===tb[1];
+r1+=`<span style="background:${col(a)}"></span>`;r2+=`<span style="background:${col(b)}"></span>`;r3+=`<span style="background:${same?'transparent':'#ef5b5b'}"></span>`}
+const pc=x=>`${x}/${n} (${Math.round(100*x/n)}%)`;
+$('cmp').innerHTML=`<div class="strip">${r1}</div><div class="strip">${r2}</div><div class="strip">${r3}</div>Felül a betöltött, alatta a második szekvencia kodonszínei; a piros sáv az eltérő aminosavakat jelöli.<br>Azonos aminosav: ${pc(sa2)} · azonos kodon és hexagram: ${pc(sc)} · azonos alsó trigram: ${pc(slo)} · azonos felső trigram: ${pc(sup)} · azonos kötés-trigram: ${pc(sb)}`};
+$('seqB').addEventListener('input',()=>$('errB').textContent='');
+document.querySelectorAll('.smode').forEach(b=>b.onclick=()=>{sndMode=b.dataset.m;document.querySelectorAll('.smode').forEach(x=>x.setAttribute('aria-pressed',x===b));if(!snd)$('bSnd').click();else playMotif()});
+$('spd').oninput=e=>speed=+e.target.value;
+const tog=(id,fn)=>{$(id).onclick=()=>{const v=$(id).getAttribute('aria-pressed')!=='true';$(id).setAttribute('aria-pressed',v);fn(v)}};
+tog('lWob',v=>wob=v);tog('lSpine',v=>spineOn=v);tog('lPairs',v=>pairsOn=v);tog('lBond',v=>bondOn=v);
+tog('lSoft',v=>{soft=v;glow.style.display=v?'':'none';eN.opacity=v?.18:.6;tris.forEach(o=>{o.m.material.vertexColors=v;o.m.material.needsUpdate=true})});
+document.querySelectorAll('.tier').forEach(b=>b.onclick=()=>{tierMax=+b.dataset.t;document.querySelectorAll('.tier').forEach(x=>x.setAttribute('aria-pressed',x===b));card()});
+$('bFull').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch(e){report='A teljes képernyőt ez a nézet nem engedi; nyisd meg az oldalt külön lapon.';card()}};
+$('bLoad').onclick=()=>{let v=$('seq').value.toUpperCase().replace(/T/g,'U').replace(/\s/g,'');
+if(!/^[ACGU]+$/.test(v)){$('err').textContent='Csak A, C, G, U vagy T betűt adj meg.';return}
+if(v.length%3||v.length<3||v.length>1500){$('err').textContent='3–1500 betű, hárommal osztható hosszúság kell.';return}
+$('err').textContent='';cods=v.match(/.{3}/g);orig=cods.slice();undo=[];phi=0;lastStep=null;report=''};
+$('seq').addEventListener('input',()=>$('err').textContent='');
+$('pIns').onclick=()=>{$('seq').value=start;$('bLoad').click()};
+$('pDemo').onclick=()=>{$('seq').value='AUGGACUGCCCAUUUAAAGGGUAA';$('bLoad').click()};
+
+const STEPS=[
+['A bázis két vonal','Minden bázisnak két igen/nem tulajdonsága van: két- vagy egygyűrűs (purin vagy pirimidin), és amino- vagy keto-csoportot visel. Ebből két vonal lesz. A kiemelt két kar és a két sor a kártyán ugyanaz az első bázis.',{hi:0,play:false,pairs:true}],
+['Egy kodon egy hexagram','Három bázis hat vonal. Az alsó trigram a három bázis gyűrűmintája, a felső az amino/keto mintájuk. A 64 kodon így pontosan a 64 hexagram.',{hi:-1,play:false,pairs:true}],
+['A szemközti szál a tükörkép','Az A–U és a G–C párosodás mindkét tulajdonságot megfordítja: minden vonal az ellentétére vált. A fészek közben a térben átfordul, és a folyása is megfordul, ahogy az ellentétes futású szálé.',{hi:-1,play:false,flip:true}],
+['A harmadik trigram összeköt','A bázisoknak van egy harmadik tulajdonsága: a hidrogénkötés ereje (G és C három kötés, A és U kettő). Ez a két vonal „kizáró vagy"-a, és a párosodás nem változtat rajta. Ezért van egy harmadik trigram, amely a két szálon közös. A fészekben ezek a fényes élek: átforduláskor a lapok színe vált, az élek maradnak.',{hi:-1,play:false,flip:true,bond:true}],
+['A közép a tengely','A 2. és az 5. vonal, a hagyomány két közepe, a középső bázis. Ez a tengely: átforduláskor mozdulatlan marad. A középső bázis dönti el leginkább, milyen az aminosav.',{hi:1,play:false,spine:true,flip:true}],
+['A harmadik bázis remeg','A 3. és a 6. vonal a harmadik bázis, ahol a riboszómán lazább a párosodás (wobble). A 6. vonal átfordítása 64 kodonból 60-nál néma, ezért erősen remeg. A 3. vonalé csak 34-nél, ezért az gyengébben. Az első két bázison egy csere 96–100%-ban aminosavat vált.',{hi:2,play:false,wob:true}],
+['A sorozat halad','A végtelen fészek √3-szoros nagyítással és 30°-os forgatással önmagára képeződik. A forma ismétlődik, a tartalom halad: minden öv a következő kodon.',{hi:-1,play:true}],
+['A fészek domborművé csavarodik','A spidron különlegessége, hogy a háromszögei torzulás nélkül térbe hajlanak: a hatszögek csúcsai felváltva emelkednek és süllyednek, a belső övek egyre jobban elfordulnak. Itt minden képkocka kiszámolt, merev hajtás. A DNS-hez ez 3. szintű kép: a feltekeredés hasonlata.',{hi:-1,play:true,rel:.16}],
+['Próbáld ki','Kattints a kártyán egy bázisra: átírja a kodont. Látod, melyik vonal fordul, és változik-e az aminosav. A táblára kattintva bármely kodont beírhatod.',{hi:-1,play:false}],
+['Mi biztos, mi költői','1. szint: a szabályból következik. 2. szint: a genetikai kód valódi tulajdonsága, olyan helyen, amelyet a mi elrendezésünk jelöl ki, tehát a hely megállapodás. 3. szint: szép egybecsengés, de nem bizonyíték. A fenti szűrővel elrejtheted a 3. szintet.',{hi:-1,play:true}]];
+function showStory(){const s=STEPS[story];$('sT').textContent=s[0];$('sX').textContent=s[1];$('sN').textContent=`${story+1} / ${STEPS.length}`;
+const o=s[2];hiBase=o.hi;if('play' in o)setPlay(o.play&&!matchMedia('(prefers-reduced-motion: reduce)').matches);
+if(o.pairs!==undefined){pairsOn=o.pairs;$('lPairs').setAttribute('aria-pressed',o.pairs)}
+if(o.spine){spineOn=true;$('lSpine').setAttribute('aria-pressed',true)}
+if(o.wob){wob=true;$('lWob').setAttribute('aria-pressed',true)}
+if('rel' in o){relief=o.rel;$('rel').value=o.rel}
+if(o.bond){bondOn=true;$('lBond').setAttribute('aria-pressed',true)}
+if(o.flip)doFlip();card()}
+$('sPrev').onclick=()=>{story=mod(story-1,STEPS.length);showStory()};
+$('sNext').onclick=()=>{story=mod(story+1,STEPS.length);showStory()};
+$('bStory').onclick=()=>{const v=$('story').hidden;$('story').hidden=!v;$('bStory').setAttribute('aria-pressed',v)};
+
+document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;
+if(e.key===' '){e.preventDefault();setPlay(!playing)}else if(e.key==='ArrowRight')stepBy(1);else if(e.key==='ArrowLeft')stepBy(-1);
+else if(e.key==='c'||e.key==='C')doFlip();else if(e.key==='f'||e.key==='F')$('bFull').click()});
+
+let drag=false,lx=0,ly=0;
+stage.addEventListener('pointerdown',e=>{if(e.target.closest('.story'))return;drag=true;lx=e.clientX;ly=e.clientY;stage.style.cursor='grabbing';stage.setPointerCapture(e.pointerId)});
+stage.addEventListener('pointermove',e=>{if(!drag)return;root.rotation.y+=(e.clientX-lx)*.008;root.rotation.x=Math.max(-1,Math.min(1,root.rotation.x+(e.clientY-ly)*.008));lx=e.clientX;ly=e.clientY});
+stage.addEventListener('pointerup',()=>{drag=false;stage.style.cursor='grab'});
+
+let last=performance.now();
+function loop(now){const dt=Math.min(.05,(now-last)/1000);last=now;t+=dt;
+if(stepTo!==null){if(!sa)sa={from:phi,t:0};sa.t=Math.min(1,sa.t+dt*1.4);phi=sa.from+(stepTo-sa.from)*ease(sa.t);if(sa.t>=1){phi=stepTo;stepTo=null;sa=null}}
+else{vel+=((playing&&!flip?speed:0)-vel)*Math.min(1,dt*3);phi+=dt*vel*.35*dir}
+wa+=((wob?1:0)-wa)*Math.min(1,dt*4);if(!calm)root.position.y=Math.sin(t*.6)*.06;
+const step=Math.floor(phi+1e-6),f=phi-step;
+flowG.scale.setScalar(Math.pow(s3,-f));flowG.rotation.z=-f*30*D;
+if(step!==lastStep){lastStep=step;recolor(step,1);card();playMotif()}
+if(snd&&AC){const mv=(playing&&!flip)||stepTo!==null;shG.gain.setTargetAtTime(mv?.12:0,AC.currentTime,.1);shO.forEach((x,i)=>{const q=i+f;x.o.frequency.value=55*Math.pow(s3,q);x.g.gain.value=Math.exp(-((q-4)*(q-4))/4.5)*.25})}
+const hb=hiBase<0?-1:(comp?2-hiBase:hiBase),hs=new Set(hb<0?[]:[hb+1,hb+4]);
+updGeo(f);updLines();const lk=Math.min(1,dt*5),SL=MP.low==='r'?6:3,WL=9-SL;
+tris.forEach(o=>{o.m.material.opacity=o.n===-1?o.base*ease(f):o.base;o.e.visible=o.n>=0||f>.55;o.m.material.color.lerp(o.tc,lk);
+const w=o.line===SL?.3*wa*Math.sin(t*3.2+o.n*.9):o.line===WL?.12*wa*Math.sin(t*3.2+o.n*.9+1):0;o.m.setRotationFromAxisAngle(o.axis,w);
+const em=o.n===0&&hs.has(o.line)?eH:(bondOn&&o.st?eS:eN);if(o.e.material!==em)o.e.material=em});
+spine.visible=spineOn;pairs.forEach((p,i)=>{p.visible=pairsOn;p.material.color.set(hb===i?0xf0a43a:0xc9c4ff)});
+if(flip){flip.a=Math.min(Math.PI,flip.a+dt*Math.PI/2.2);flipG.quaternion.copy(new THREE.Quaternion().setFromAxisAngle(flip.axis,Math.PI*ease(flip.a/Math.PI)).multiply(flip.q0));
+if(!flip.sw&&flip.a>=Math.PI/2){flip.sw=true;comp=!comp;dir=-dir;recolor(step);card();playMotif()}if(flip.a>=Math.PI)flip=null}
+ren.render(scene,cam);if(soft){gx.clearRect(0,0,glow.width,glow.height);gx.drawImage(ren.domElement,0,0,glow.width,glow.height)}requestAnimationFrame(loop)}
+recolor(0,1);showStory();setPlay(false);requestAnimationFrame(loop);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+Szám,Jel,Írásjegy,Pinyin,Magyar név,Hagyományos jelentés röviden,Kodon (alapkiosztás),Aminosav
+1,䷀,乾,Qian,A teremtő,"teremtő erő, kitartó cselekvés",AAA,Lys
+2,䷁,坤,Kun,A befogadó,"befogadás, odaadó követés",UUU,Phe
+3,䷂,屯,Zhun,Kezdeti nehézség,"nehéz kezdet, csírázás",GCU,Ala
+4,䷃,蒙,Meng,Ifjúi balgaság,"tapasztalatlanság, tanulás",UGC,Cys
+5,䷄,需,Xu,Várakozás,türelmes várakozás,GAG,Glu
+6,䷅,訟,Song,Viszály,"vita, peres ügy",CAC,His
+7,䷆,師,Shi,A sereg,"fegyelem, szervezett sokaság",UGU,Cys
+8,䷇,比,Bi,Összetartás,"összefogás, szövetség",UCU,Ser
+9,䷈,小畜,Xiao Chu,A kicsi szelídítő ereje,"a kis erő visszatart, finom fékezés",GAA,Glu
+10,䷉,履,Lü,Fellépés,"óvatos lépés, helyes viselkedés",AAC,Asn
+11,䷊,泰,Tai,Béke,"béke, ég és föld összhangja",GGG,Gly
+12,䷋,否,Pi,Pangás,"megrekedés, elzáródás",CCC,Pro
+13,䷌,同人,Tong Ren,Közösség az emberekkel,"közösség, egyetértés",ACA,Thr
+14,䷍,大有,Da You,Nagy birtoklás,bőséges birtoklás,AGA,Arg
+15,䷎,謙,Qian,Szerénység,szerénység,UUG,Leu
+16,䷏,豫,Yu,Lelkesedés,"lelkesedés, készenlét",CUU,Leu
+17,䷐,隨,Sui,Követés,"követés, alkalmazkodás",ACU,Thr
+18,䷑,蠱,Gu,A megromlott helyrehozása,a megromlott helyrehozása,UGA,Stop
+19,䷒,臨,Lin,Közeledés,"közeledés, felügyelet",GGU,Gly
+20,䷓,觀,Guan,Szemlélődés,"szemlélődés, rálátás",UCC,Ser
+21,䷔,噬嗑,Shi He,Átharapás,"átharapás, az akadály eltávolítása",AUC,Ile
+22,䷕,賁,Bi,Kecsesség,"díszítés, kecsesség",GUA,Val
+23,䷖,剝,Bo,Szétesés,"lehámlás, szétesés",UUC,Phe
+24,䷗,復,Fu,Visszatérés,"visszatérés, fordulópont",GUU,Val
+25,䷘,無妄,Wu Wang,Ártatlanság,"ártatlanság, a váratlan",ACC,Thr
+26,䷙,大畜,Da Chu,A nagy szelídítő ereje,a nagy erő felhalmozása,GGA,Gly
+27,䷚,頤,Yi,Táplálás,"táplálás, gondoskodás",GUC,Val
+28,䷛,大過,Da Guo,A nagy túlsúlya,"túlterhelés, a nagy túlsúlya",CAG,Gln
+29,䷜,坎,Kan,A mélység,"mélység, ismétlődő veszély",UAU,Tyr
+30,䷝,離,Li,A tapadó,"tapadó fény, világosság",AUA,Ile
+31,䷞,咸,Xian,Hatás,"kölcsönös hatás, vonzás",CCG,Pro
+32,䷟,恆,Heng,Tartósság,"tartósság, állandóság",CGG,Arg
+33,䷠,遯,Dun,Visszavonulás,visszavonulás,CCA,Pro
+34,䷡,大壯,Da Zhuang,A nagy ereje,a nagy ereje,AGG,Arg
+35,䷢,晉,Jin,Haladás,"haladás, felkelő nap",CUC,Leu
+36,䷣,明夷,Ming Yi,A fény elsötétülése,a fény elsötétülése,GUG,Val
+37,䷤,家人,Jia Ren,A család,"család, háznép",GCA,Ala
+38,䷥,睽,Kui,Ellentét,"ellentét, eltávolodás",AGC,Ser
+39,䷦,蹇,Jian,Akadály,"akadály, nehéz út",UCG,Ser
+40,䷧,解,Xie,Felszabadulás,"feloldás, megkönnyebbülés",CGU,Arg
+41,䷨,損,Sun,Csökkenés,"csökkenés, lemondás",GGC,Gly
+42,䷩,益,Yi,Gyarapodás,gyarapodás,GCC,Ala
+43,䷪,夬,Guai,Áttörés,"áttörés, határozott döntés",AAG,Lys
+44,䷫,姤,Gou,Találkozás,váratlan találkozás,CAA,Gln
+45,䷬,萃,Cui,Gyülekezés,gyülekezés,CCU,Pro
+46,䷭,升,Sheng,Felemelkedés,felemelkedés,UGG,Trp
+47,䷮,困,Kun,Szorongattatás,"szorongatottság, kimerülés",CAU,His
+48,䷯,井,Jing,A kút,"kút, közös forrás",UAG,Stop
+49,䷰,革,Ge,Forradalom,gyökeres változás,ACG,Thr
+50,䷱,鼎,Ding,Az üst,"üst, átalakítás és táplálás",CGA,Arg
+51,䷲,震,Zhen,A felrázó,"megrázkódtatás, mennydörgés",AUU,Ile
+52,䷳,艮,Gen,A nyugalom,"nyugalom, megállás",UUA,Leu
+53,䷴,漸,Jian,Fokozatos fejlődés,fokozatos fejlődés,UCA,Ser
+54,䷵,歸妹,Gui Mei,A férjhez menő leány,"a férjhez menő leány, alárendelt helyzet",AGU,Ser
+55,䷶,豐,Feng,Bőség,"bőség, tetőpont",AUG,Met
+56,䷷,旅,Lü,A vándor,"vándor, úton lét",CUA,Leu
+57,䷸,巽,Xun,A szelíd,"szelíd behatolás, szél",UAA,Stop
+58,䷹,兌,Dui,A derűs,"derű, öröm",AAU,Asn
+59,䷺,渙,Huan,Szétoszlás,"szétoszlás, feloldódás",UAC,Tyr
+60,䷻,節,Jie,Korlátozás,"korlátozás, mérték",GAU,Asp
+61,䷼,中孚,Zhong Fu,Belső igazság,"belső igazság, bizalom",GAC,Asp
+62,䷽,小過,Xiao Guo,A kicsi túlsúlya,"a kicsi túlsúlya, apró lépések",CUG,Leu
+63,䷾,既濟,Ji Ji,Beteljesülés után,"beteljesülés után, rend",GCG,Ala
+64,䷿,未濟,Wei Ji,Beteljesülés előtt,"beteljesülés előtt, átmenet",CGC,Arg
