@@ -82,6 +82,8 @@ Lejátszás közben √3 arányú Shepard-hang szól: a fészek nagyításának 
 | `versciklus.md` | Tizenkét vers a három szint szerint |
 | `scripts/build_data.py` | Előállítja a `data/*.csv` táblákat, és ellenőrzi az inzulinszekvenciát |
 | `scripts/check_relief.js` | Ellenőrzi, hogy a dombormű hajtása merev és önhasonló |
+| `proba/` | A spidronfészek 64 hajtásállapotának számítása és fizikai próbája: eredmények, nyomtatható sablon és jegyzőkönyv ([leírás](proba/README.md)) |
+| `scripts/spidron_allapotok.py`, `scripts/hajtasiranyok.py`, `scripts/ellenorzes_allapotok.py`, `scripts/proba_pdf.py` | A 64 állapot merev megoldása és ütközésvizsgálata, a hegy- és völgyhajtások, az ellenőrzések és a próba-PDF (numpy, reportlab) |
 
 Futtatás:
 
