@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spidron–Ji King–DNS</title>
+<meta name="description" content="A 64 hexagram tere, spidron-mozaik, mozgásnyelv és színek. / The space of the 64 hexagrams, spidron mosaics, motion language and colour.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Spidron–Ji King–DNS">
+<meta property="og:description" content="Interaktív prototípusok: a 64 hexagram tere, SJK-mozaik, SJK-UI, színek. / Interactive prototypes: the 64-hexagram space, SJK mosaic, SJK-UI, colour.">
+<meta property="og:url" content="https://madcsaba.github.io/spidron/">
+<script>
+(function(){var l;try{l=localStorage.getItem("sjk-lang")}catch(e){}
+if(l!=="hu"&&l!=="en")l=(navigator.language||"").toLowerCase().indexOf("hu")===0?"hu":"en";
+document.documentElement.setAttribute("data-lang",l);document.documentElement.lang=l;})();
+</script>
+<style>
+  :root{--bg:#f6f7f9;--panel:#fff;--line:#e3e6ea;--ink:#1a1d21;--dim:#6b7280;--acc:#2563eb;--green:#16a34a;
+    --display:ui-sans-serif,system-ui,"Segoe UI",Helvetica,Arial;--serif:Georgia,'Times New Roman',serif}
+  html[data-lang="hu"] .en{display:none}
+  html[data-lang="en"] .hu{display:none}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--display)}
+  .wrap{max-width:880px;margin:0 auto;padding:56px 18px 64px}
+  .kicker{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);font-weight:700}
+  h1{font:600 34px/1.2 var(--serif);margin:8px 0 10px}
+  .lead{color:var(--dim);margin:0 0 28px}
+  .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  @media (max-width:640px){.cards{grid-template-columns:minmax(0,1fr)}}
+  a.card{display:block;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;color:inherit;text-decoration:none}
+  a.card:hover{border-color:#c5cad1}
+  a.card:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+  .card h2{font:600 21px/1.3 var(--serif);margin:6px 0 6px}
+  .card p{margin:0;color:var(--dim);font-size:14.5px}
+  .card .ic{font-size:26px}
+  .foot{margin-top:32px;font-size:13px;color:var(--dim);border-top:1px solid var(--line);padding-top:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker"><span class="hu">Prototípusok</span><span class="en">Prototypes</span></div>
+  <h1>Spidron–Ji King–DNS</h1>
+  <p class="lead"><span class="hu">Egy közös, 6 bites állapottér három nézetből: hexagram, kodon és spidron. Interaktív, böngészőben futó kísérletek, build lépés és külső függőség nélkül.</span><span class="en">One shared 6-bit state space seen three ways: hexagram, codon and spidron. Interactive experiments that run in the browser, with no build step and no external dependencies.</span></p>
+  <div class="cards">
+    <a class="card" href="iching.html"><span class="ic">☯</span><h2><span class="hu">A változások tere</span><span class="en">The Space of Changes</span></h2>
+      <p><span class="hu">A 64 hexagram 3D-ben (kocka, 6D, Fu Hszi, Wen király), párok és tükörképek, változó vonalak az eredeti szöveggel és magyar fordítással, jelenet, spidron, idővonal, 64 szín.</span><span class="en">The 64 hexagrams in 3D (cube, 6D, Fu Xi, King Wen), pairs and mirrors, changing lines with the original text and translations, scenes, spidron, timeline, 64 colours.</span></p></a>
+    <a class="card" href="spidron-lab.html"><span class="ic">✶</span><h2><span class="hu">Spidron-labor</span><span class="en">Spidron Lab</span></h2>
+      <p><span class="hu">SJK-mozaik (képből hexagram-mozaik), SJK-UI mozgásnyelv (spidron-gomb, mutáció és időgörbe), és a spidron mint színkör.</span><span class="en">SJK mosaic (an image turned into a hexagram mosaic), SJK-UI motion language (spidron button, mutation and time curve), and the spidron as a colour wheel.</span></p></a>
+  </div>
+  <p class="foot"><span class="hu">Források: 周易 eredeti szöveg; James Legge, The Yî King (1882); saját magyar fordítás. Részletek a README-ben.</span><span class="en">Sources: the original 周易 text; James Legge, The Yî King (1882); our own Hungarian translation. Details in the README.</span></p>
+</div>
+<div class="langsw" role="group" aria-label="Nyelv / Language"><button type="button" data-l="hu">HU</button><button type="button" data-l="en">EN</button></div>
+<style>.langsw{position:fixed;top:10px;right:12px;z-index:50;display:flex;background:#fff;border:1px solid #e3e6ea;border-radius:999px;padding:3px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.langsw button{border:0;background:none;font:600 13px ui-sans-serif,system-ui,"Segoe UI",Helvetica,Arial;color:#6b7280;padding:5px 11px;border-radius:999px;cursor:pointer;min-height:32px}
+.langsw button[aria-pressed="true"]{background:#1a1d21;color:#fff}
+.langsw button:focus-visible{outline:2px solid #2563eb;outline-offset:2px}</style>
+<script>(function(){var bs=document.querySelectorAll(".langsw button");function mark(l){bs.forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.l===l));});}
+mark(document.documentElement.getAttribute("data-lang"));
+bs.forEach(function(b){b.addEventListener("click",function(){var l=b.dataset.l;try{localStorage.setItem("sjk-lang",l)}catch(e){}
+document.documentElement.setAttribute("data-lang",l);document.documentElement.lang=l;mark(l);window.dispatchEvent(new CustomEvent("sjk:lang",{detail:l}));});});})();</script>
+</body>
+</html>
