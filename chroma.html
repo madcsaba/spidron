@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="hu" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SJK-Chroma Engine v1.3 – Geometriai és Színtani Igazság Laboratórium</title>
+<meta name="description" content="SJK-Chroma Engine: 3D spidron-fészek, RGB-színkocka és spidronhedron; a 錯 komplementer színinvariáns, 五音 hangrezonancia és Hamming-szomszédsági paletta a 64 hexagramra.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="SJK-Chroma Engine v1.3">
+<meta property="og:description" content="Spidron · Ji King · DNS színtani szintézis – 3D labor.">
+<meta property="og:url" content="https://madcsaba.github.io/spidron/chroma.html">
+<link rel="stylesheet" href="chroma.css">
+<script src="vendor/three.min.js"></script>
+<style>
+  :root {
+    --bg: #12110e;
+    --panel: #191713;
+    --panel-alt: #211e19;
+    --ink: #ece6d6;
+    --mute: #9e9585;
+    --line: #332d24;
+    --acc: #d9503f;
+    --gold: #c9a54e;
+    --cyan: #4fa89f;
+  }
+  * { box-sizing: border-box; min-width: 0; }
+  body {
+    margin: 0;
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: ui-sans-serif, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
+    overflow-x: hidden;
+  }
+  .serif { font-family: Georgia, "Times New Roman", "Songti SC", "Noto Serif CJK JP", serif; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+  /* Range Sliders */
+  input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--line);
+    height: 5px;
+    border-radius: 999px;
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--gold);
+    cursor: pointer;
+    border: 2px solid var(--bg);
+    transition: transform 0.15s ease, background-color 0.15s ease;
+  }
+  input[type=range]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    background: var(--acc);
+  }
+
+  .btn-pill {
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--ink);
+    transition: all 0.18s ease;
+  }
+  .btn-pill:hover {
+    border-color: var(--gold);
+    background: var(--panel-alt);
+  }
+  .btn-pill[aria-pressed="true"], .btn-pill.active {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+    font-weight: 600;
+  }
+
+  .line-bar {
+    transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .line-bar:hover {
+    filter: brightness(1.2);
+    transform: translateX(2px);
+  }
+
+  #stage-wrap {
+    background: radial-gradient(circle at 50% 45%, #23201a 0%, #12110e 75%);
+    flex: none;
+    height: min(72vh, 680px);
+  }
+
+  .gold-top {
+    background-image: linear-gradient(90deg, var(--gold), transparent);
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+  }
+</style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+<!-- TOP HEADER -->
+<header class="border-b border-[#332d24] px-4 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4 bg-[#151310]/90 backdrop-blur-md sticky top-0 z-30">
+  <div class="flex items-center gap-3.5">
+    <a href="index.html" title="Vissza a nyitóoldalra" aria-label="Vissza a nyitóoldalra" class="w-10 h-10 rounded-lg bg-[#d9503f] text-[#fbf8f1] flex items-center justify-center serif text-2xl font-bold shadow-inner border border-white/20 select-none no-underline">
+      易
+    </a>
+    <div>
+      <div class="flex items-center gap-2.5">
+        <span class="mono text-[11px] uppercase tracking-widest px-2 py-0.5 rounded bg-[#211e19] text-[#c9a54e] border border-[#332d24]">SJK-Chroma Engine v1.3</span>
+        <span class="text-xs text-[#9e9585] hidden sm:inline">Spidron · Ji King · DNS Színtani Szintézis · <a href="index.html" class="underline hover:text-[#c9a54e]">nyitóoldal</a> · <a href="spidron-lab.html" class="underline hover:text-[#c9a54e]">Spidron-labor</a></span>
+      </div>
+      <h1 class="serif text-xl sm:text-2xl font-semibold tracking-tight text-[#ece6d6] mt-0.5">
+        Geometriai és Színtani Igazság Laboratórium
+      </h1>
+    </div>
+  </div>
+
+  <!-- Formula & Quick Controls -->
+  <div class="flex flex-wrap items-center gap-2.5">
+    <div class="hidden xl:flex items-center gap-3 px-3.5 py-1.5 rounded-lg bg-[#191713] border border-[#332d24] text-xs mono text-[#9e9585]">
+      <span>z(θ) = a·e<sup class="text-[#c9a54e]">bθ</sup></span>
+      <span class="text-[#332d24]">|</span>
+      <span>C<sub class="text-[#4fa89f]">hex</sub> = ⅔·T<sub class="text-[#d9503f]">alsó</sub> + ⅓·T<sub class="text-[#c9a54e]">felső</sub></span>
+      <span class="text-[#332d24]">|</span>
+      <span>錯(C) + C = <b class="text-[#ece6d6]">#7F7F7F</b></span>
+    </div>
+
+    <button id="btnAudioToggle" aria-pressed="false" class="btn-pill px-3.5 py-2 rounded-full text-xs flex items-center gap-2 cursor-pointer">
+      <span id="audioDot" class="w-2 h-2 rounded-full bg-[#9e9585]"></span>
+      <span>五音 Hangrezonancia</span>
+    </button>
+    <button id="btnRandom" class="btn-pill px-3.5 py-2 rounded-full text-xs cursor-pointer" title="Véletlen hexagram ugrás">
+      🎲 Mutáció
+    </button>
+  </div>
+</header>
+
+<!-- MAIN WORKSPACE -->
+<main class="flex-1 grid grid-cols-1 lg:grid-cols-12 border-b border-[#332d24]">
+
+  <!-- LEFT / CENTER: 3D SPIDRON & RGB HYPERCUBE VISUALIZER (7 cols on lg) -->
+  <section class="lg:col-span-7 xl:col-span-8 flex flex-col border-b lg:border-b-0 lg:border-r border-[#332d24]">
+    
+    <!-- Mode & View Toolbar -->
+    <div class="p-3 px-4 border-b border-[#332d24] bg-[#191713] flex flex-wrap items-center justify-between gap-2">
+      <div class="flex flex-wrap items-center gap-1.5" role="group" aria-label="3D Nézet Mód">
+        <button data-view="nest" class="view-btn btn-pill active px-3.5 py-1.5 rounded-full text-xs cursor-pointer">
+          1. Spidron-fészek (6 Öv = 6 Vonal)
+        </button>
+        <button data-view="rgb" class="view-btn btn-pill px-3.5 py-1.5 rounded-full text-xs cursor-pointer">
+          2. RGB Színkocka &amp; 錯 Komplementer Tengely
+        </button>
+        <button data-view="spidronhedron" class="view-btn btn-pill px-3.5 py-1.5 rounded-full text-xs cursor-pointer">
+          3. Spidronhedron (8 Trigram Csúcs)
+        </button>
+      </div>
+
+      <div class="flex items-center gap-1.5">
+        <button id="btnCurved" aria-pressed="true" class="btn-pill px-3 py-1.5 rounded-full text-xs cursor-pointer" title="SpHidron logaritmikus íveltség">
+          SpHidron Ív
+        </button>
+        <button id="btnBreath" aria-pressed="false" class="btn-pill px-3 py-1.5 rounded-full text-xs cursor-pointer" title="Folytonos Yin-Yang kinematikus lélegzés">
+          Lélegzés
+        </button>
+        <button id="btnSpin" aria-pressed="true" class="btn-pill px-3 py-1.5 rounded-full text-xs cursor-pointer">
+          Forgás
+        </button>
+      </div>
+    </div>
+
+    <!-- 3D Canvas Stage -->
+    <div id="stage-wrap" class="relative flex-1 min-h-[420px] sm:min-h-[500px] cursor-grab active:cursor-grabbing select-none overflow-hidden">
+      <canvas id="glCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+
+      <!-- Floating Top-Left Telemetry Overlay -->
+      <div class="absolute top-3.5 left-3.5 pointer-events-none flex flex-col gap-1.5 bg-[#12110e]/85 backdrop-blur-md border border-[#332d24] rounded-xl p-3 max-w-xs">
+        <div class="flex items-center gap-2">
+          <span id="overlayHexBadge" class="w-4 h-4 rounded border border-white/30 inline-block"></span>
+          <span id="overlayTitle" class="serif font-semibold text-base text-[#ece6d6]">1. 乾 Qián – Teremtő</span>
+        </div>
+        <div id="overlaySub" class="mono text-[11px] text-[#9e9585] leading-relaxed">
+          Kód: 111111 · Fu Xi #63 · Kodon: AAA (Lys)
+        </div>
+        <div id="overlayEquation" class="mono text-[11px] text-[#c9a54e] pt-1 border-t border-[#332d24]/80">
+          Spidron fázis: 6 Yang / 0 Yin · ΔE komplementer: 100%
+        </div>
+      </div>
+
+      <!-- Floating Bottom-Left Belt Legend -->
+      <div class="absolute bottom-3.5 left-3.5 right-3.5 pointer-events-none flex flex-wrap items-center justify-between gap-2">
+        <div id="beltPills" class="pointer-events-auto flex flex-wrap gap-1.5 bg-[#12110e]/85 backdrop-blur-md border border-[#332d24] rounded-xl p-2">
+          <!-- Populated by JS: 6 belts from outer (1) to inner (6) -->
+        </div>
+
+        <div class="bg-[#12110e]/85 backdrop-blur-md border border-[#332d24] rounded-xl px-3 py-2 text-[11px] mono text-[#9e9585]">
+          Húzás: 3D forgatás · Görgő: Zoom · Kattints egy övre a mutációhoz
+        </div>
+      </div>
+    </div>
+
+    <!-- Geometry & Spiral Phase Sliders Bar -->
+    <div class="p-4 border-t border-[#332d24] bg-[#191713] grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="flex flex-col gap-1.5">
+        <div class="flex justify-between text-xs">
+          <label for="slFold" class="text-[#9e9585]">Spidron Hajtogatási Feszültség (Fold)</label>
+          <span id="valFold" class="mono text-[#ece6d6]">72%</span>
+        </div>
+        <input id="slFold" type="range" min="0" max="100" value="72">
+        <span class="text-[11px] text-[#9e9585]">Yang (1) = kiemelkedő él · Yin (0) = 3D bemélyedés</span>
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <div class="flex justify-between text-xs">
+          <label for="slTwist" class="text-[#9e9585]">Logaritmikus Spirál Fázisszög (θ)</label>
+          <span id="valTwist" class="mono text-[#c9a54e]">30.0°</span>
+        </div>
+        <input id="slTwist" type="range" min="0" max="100" value="60">
+        <span class="text-[11px] text-[#9e9585]">Arány: r<sub>k</sub> = r<sub>0</sub> · (1/√3)<sup>k</sup> csavarodás</span>
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <div class="flex justify-between text-xs">
+          <label for="slColorMode" class="text-[#9e9585]">Öv Színleképezési Igazság</label>
+          <span class="mono text-[11px] text-[#4fa89f]">SJK-SDF</span>
+        </div>
+        <select id="slColorMode" class="bg-[#211e19] border border-[#332d24] rounded-lg px-2.5 py-1.5 text-xs text-[#ece6d6] outline-none focus:border-[#c9a54e]">
+          <option value="trigram_blend">Színtani Igazság (Trigram RGB + 錯 Mag)</option>
+          <option value="mantra_lines">6 Vonal Spektrum (OM-MA-NI-PAD-ME-HUM)</option>
+          <option value="wuxing">五行 Wu Xing (Öt Elem Harmónia)</option>
+          <option value="tension">Mechanikai Feszültség (Yang Arany / Yin Lazúr)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- BOTTOM: 6D HYPERCUBE HARMONIC PALETTE GENERATOR -->
+    <div class="p-4 sm:p-5 border-t border-[#332d24] bg-[#151310]">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+        <div>
+          <h2 class="serif text-lg font-medium text-[#ece6d6] flex items-center gap-2">
+            <span>Kényszerített Harmonikus Paletta (Q6 Hiperkocka Szomszédság)</span>
+          </h2>
+          <p class="text-xs text-[#9e9585]">
+            A kiválasztott hexagram 6 közvetlen Hamming-szomszédja (1 bit mutáció) + a 錯 Komplementer és 互 Mag automatikusan disszonancia-mentes palettát alkot.
+          </p>
+        </div>
+        <button id="btnCopyCSS" class="btn-pill px-3.5 py-1.5 rounded-lg text-xs mono flex items-center gap-1.5 cursor-pointer">
+          <span>📋 CSS Változók Másolása</span>
+        </button>
+      </div>
+
+      <div id="harmonicPaletteGrid" class="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8 gap-2.5">
+        <!-- Populated dynamically by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- RIGHT PANEL: GEOMETRIC & COLOR TRUTH INSPECTOR (5 cols on lg) -->
+  <aside class="lg:col-span-5 xl:col-span-4 bg-[#191713] p-4 sm:p-5 flex flex-col gap-5 gold-top">
+
+    <!-- 1. ACTIVE HEXAGRAM & INTERACTIVE 6-LINE MUTATOR -->
+    <div class="bg-[#211e19] border border-[#332d24] rounded-xl p-4">
+      <div class="flex items-start justify-between gap-3 mb-3">
+        <div>
+          <span id="hexMetaNum" class="mono text-xs text-[#c9a54e]">KING WEN #1 · FU XI #63</span>
+          <div class="flex items-baseline gap-2.5 mt-0.5">
+            <span id="hexZh" class="serif text-4xl font-semibold text-[#ece6d6]">乾</span>
+            <div>
+              <div id="hexNameHu" class="serif text-xl font-medium text-[#ece6d6]">Qián – Teremtő</div>
+              <div id="hexCodonInfo" class="mono text-xs text-[#9e9585]">DNS Triplet: AAA · Lizin (K)</div>
+            </div>
+          </div>
+        </div>
+        <div id="hexMiniPreview" class="w-12 h-12 rounded-lg border border-white/20 shadow-md shrink-0"></div>
+      </div>
+
+      <div class="text-[11px] text-[#9e9585] mb-2 flex justify-between">
+        <span>Kattints bármelyik vonalra (övre) a Yang ↔ Yin átfordításhoz:</span>
+        <span class="mono text-[#ece6d6]">Felső ☰ / Alsó ☰</span>
+      </div>
+
+      <!-- 6 Interactive Lines (6 down to 1) -->
+      <div id="interactiveLines" class="flex flex-col gap-1.5 my-2">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- 2. THE COLOR TRUTH PROOF: TRIGRAM SYNTHESIS & CUO COMPLEMENTARITY -->
+    <div class="bg-[#211e19] border border-[#332d24] rounded-xl p-4 flex flex-col gap-3.5">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-[#c9a54e]">
+          I. Színtani Igazság: 錯 (Cuo) Invariáns
+        </h3>
+        <span class="mono text-[11px] text-[#9e9585]">C ⊕ 63 = Komplementer</span>
+      </div>
+
+      <!-- Trigram 2/3 + 1/3 Breakdown -->
+      <div class="grid grid-cols-2 gap-2.5">
+        <div class="p-2.5 rounded-lg bg-[#191713] border border-[#332d24] flex items-center gap-2.5">
+          <div id="swatchLower" class="w-8 h-8 rounded-md border border-white/20 shrink-0"></div>
+          <div class="text-xs leading-tight">
+            <div class="text-[#9e9585] text-[10px] mono">ALSÓ TRIGRAM (⅔ súly)</div>
+            <div id="txtLowerTrig" class="font-medium text-[#ece6d6] mt-0.5">☰ 乾 Ég</div>
+            <div id="rgbLowerTrig" class="mono text-[10px] text-[#9e9585]">RGB(255, 255, 255)</div>
+          </div>
+        </div>
+
+        <div class="p-2.5 rounded-lg bg-[#191713] border border-[#332d24] flex items-center gap-2.5">
+          <div id="swatchUpper" class="w-8 h-8 rounded-md border border-white/20 shrink-0"></div>
+          <div class="text-xs leading-tight">
+            <div class="text-[#9e9585] text-[10px] mono">FELSŐ TRIGRAM (⅓ súly)</div>
+            <div id="txtUpperTrig" class="font-medium text-[#ece6d6] mt-0.5">☰ 乾 Ég</div>
+            <div id="rgbUpperTrig" class="mono text-[10px] text-[#9e9585]">RGB(255, 255, 255)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual Proof of Complementarity Midpoint = #7F7F7F -->
+      <div class="rounded-lg overflow-hidden border border-[#332d24]">
+        <div class="grid grid-cols-3 text-center text-xs mono">
+          <div id="boxMainColor" class="p-3 flex flex-col justify-between min-h-[76px] transition-colors">
+            <span class="text-[10px] uppercase opacity-80">Aktív Hexagram</span>
+            <b id="hexCodeMain" class="text-sm">#FFFFFF</b>
+            <span id="rgbCodeMain" class="text-[10px] opacity-85">255, 255, 255</span>
+          </div>
+
+          <div id="boxMidpoint" class="p-3 flex flex-col justify-between min-h-[76px] bg-[#7f7f7f] text-[#12110e] border-x border-black/20">
+            <span class="text-[10px] uppercase font-semibold">Mértani Közép</span>
+            <b class="text-sm">#7F7F7F</b>
+            <span class="text-[10px] font-medium">Abszolút Semleges</span>
+          </div>
+
+          <div id="boxCompColor" class="p-3 flex flex-col justify-between min-h-[76px] cursor-pointer transition-colors" title="Kattints a 錯 komplementer hexagramra ugráshoz">
+            <span class="text-[10px] uppercase opacity-80">錯 Ellentett ↗</span>
+            <b id="hexCodeComp" class="text-sm">#000000</b>
+            <span id="rgbCodeComp" class="text-[10px] opacity-85">0, 0, 0</span>
+          </div>
+        </div>
+        <!-- Continuous SDF Gradient Bar between Hexagram and its Cuo Opposite -->
+        <div id="cuoGradientBar" class="h-3 w-full"></div>
+      </div>
+
+      <p class="text-[11px] text-[#9e9585] leading-relaxed m-0">
+        <b>Matematikai bizonyíték:</b> Bármely hexagram 6 bitjét megfordítva (<code class="text-[#ece6d6]">c ^ 63</code>) az RGB-kocka pontosan átellenes csúcsát kapjuk. A két szín vektorösszege minden esetben <code class="text-[#ece6d6]">(255, 255, 255)</code>, felezőpontja pedig a tökéletes akromatikus szürke.
+      </p>
+    </div>
+
+    <!-- 3. WU XING & LIGHT-OCTAVE ACOUSTIC RESONANCE -->
+    <div class="bg-[#211e19] border border-[#332d24] rounded-xl p-4 flex flex-col gap-3">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-[#c9a54e]">
+          II. Fény-Oktáv &amp; 五音 Hangrezonancia
+        </h3>
+        <span id="wavelengthBadge" class="mono text-[11px] px-2 py-0.5 rounded bg-[#191713] text-[#4fa89f] border border-[#332d24]">
+          λ ≈ Akromatikus
+        </span>
+      </div>
+
+      <div id="resonanceRows" class="flex flex-col gap-2">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- 4. 8x8 KING WEN MATRIX NAVIGATOR -->
+    <div class="bg-[#211e19] border border-[#332d24] rounded-xl p-4 flex flex-col gap-2.5">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-[#c9a54e]">
+          III. 64 Hexagram Színtér-Mátrix (King Wen)
+        </h3>
+        <span class="text-[11px] text-[#9e9585]">Piros keret = 1 bit szomszéd</span>
+      </div>
+      <div id="kwGrid" class="grid grid-cols-8 gap-1">
+        <!-- 64 buttons populated by JS -->
+      </div>
+    </div>
+
+  </aside>
+</main>
+
+<!-- Notification Toast -->
+<div id="toast" class="fixed bottom-5 right-5 bg-[#ece6d6] text-[#12110e] px-4 py-2.5 rounded-xl shadow-2xl mono text-xs font-medium opacity-0 pointer-events-none transition-opacity duration-300 z-50">
+  CSS változók a vágólapra másolva!
+</div>
+
+<script>
+(() => {
+  // ============================================================================
+  // 1. ADATSTRUKTÚRÁK: 64 HEXAGRAM, TRIGRAMOK, WU XING, DNS ÉS SZÍNTAN
+  // ============================================================================
+  const KW = [
+    '111111','000000','100010','010001','111010','010111','010000','000010',
+    '111011','110111','111000','000111','101111','111101','001000','000100',
+    '100110','011001','110000','000011','100101','101001','000001','100000',
+    '100111','111001','100001','011110','010010','101101','001110','011100',
+    '001111','111100','000101','101000','101011','110101','001010','010100',
+    '110001','100011','111110','011111','000110','011000','010110','011010',
+    '101110','011101','100100','001001','001011','110100','101100','001101',
+    '011011','110110','010011','110010','110011','001100','101010','010101'
+  ];
+
+  const NM = [
+    ['乾','Qián','Teremtő'],['坤','Kūn','Befogadó'],['屯','Zhūn','Kezdeti nehézség'],['蒙','Méng','Ifjúi balgaság'],
+    ['需','Xū','Várakozás'],['訟','Sòng','Viszály'],['師','Shī','Sereg'],['比','Bǐ','Összetartás'],
+    ['小畜','Xiǎo Chù','Kicsi szelídítő ereje'],['履','Lǚ','Fellépés'],['泰','Tài','Béke'],['否','Pǐ','Pangás'],
+    ['同人','Tóng Rén','Közösség'],['大有','Dà Yǒu','Nagy birtoklás'],['謙','Qiān','Szerénység'],['豫','Yù','Lelkesedés'],
+    ['隨','Suí','Követés'],['蠱','Gǔ','Romlás helyrehozása'],['臨','Lín','Közeledés'],['觀','Guān','Szemlélődés'],
+    ['噬嗑','Shì Kè','Átharapás'],['賁','Bì','Kecsesség'],['剝','Bō','Széthullás'],['復','Fù','Visszatérés'],
+    ['無妄','Wú Wàng','Ártatlanság'],['大畜','Dà Chù','Nagy szelídítő ereje'],['頤','Yí','Táplálás'],['大過','Dà Guò','Nagy túlsúlya'],
+    ['坎','Kǎn','A mélység'],['離','Lí','A tapadó'],['咸','Xián','Hatás'],['恆','Héng','Tartósság'],
+    ['遯','Dùn','Visszavonulás'],['大壯','Dà Zhuàng','A nagy ereje'],['晉','Jìn','Haladás'],['明夷','Míng Yí','Fény elsötétülése'],
+    ['家人','Jiā Rén','A család'],['睽','Kuí','Ellentét'],['蹇','Jiǎn','Akadály'],['解','Xiè','Feloldás'],
+    ['損','Sǔn','Csökkentés'],['益','Yì','Gyarapítás'],['夬','Guài','Áttörés'],['姤','Gòu','Találkozás'],
+    ['萃','Cuì','Gyülekezés'],['升','Shēng','Felemelkedés'],['困','Kùn','Szorultság'],['井','Jǐng','A kút'],
+    ['革','Gé','Átalakulás'],['鼎','Dǐng','Az üst'],['震','Zhèn','A felrázó'],['艮','Gèn','A nyugalom'],
+    ['漸','Jiàn','Fokozatos fejlődés'],['歸妹','Guī Mèi','Férjhez menő leány'],['豐','Fēng','Bőség'],['旅','Lǚ','A vándor'],
+    ['巽','Xùn','A szelíd'],['兌','Duì','A derűs'],['渙','Huàn','Szétoszlás'],['節','Jié','Korlátozás'],
+    ['中孚','Zhōng Fú','Belső igazság'],['小過','Xiǎo Guò','Kicsi túlsúlya'],['既濟','Jì Jì','Beteljesülés után'],['未濟','Wèi Jì','Beteljesülés előtt']
+  ];
+
+  // 8 Trigrams: [Zh, Hu, Symbol, ElementKey]
+  const TG = {
+    7: ['乾','Ég','☰','m'],
+    6: ['兌','Tó','☱','m'],
+    5: ['離','Tűz','☲','f'],
+    4: ['震','Mennydörgés','☳','w'],
+    3: ['巽','Szél','☴','w'],
+    2: ['坎','Víz','☵','a'],
+    1: ['艮','Hegy','☶','e'],
+    0: ['坤','Föld','☷','e']
+  };
+
+  // Wu Xing (Five Elements) + Pentatonic Ratio + Color
+  const WX = {
+    w: { zh: '木', hu: 'Fa', note: '角 jué (81/64)', ratio: 81/64, col: '#4fa89f' },
+    f: { zh: '火', hu: 'Tűz', note: '徵 zhǐ (3/2)', ratio: 3/2, col: '#e0604c' },
+    e: { zh: '土', hu: 'Föld', note: '宮 gōng (1/1)', ratio: 1, col: '#e8b04a' },
+    m: { zh: '金', hu: 'Fém', note: '商 shāng (9/8)', ratio: 9/8, col: '#ece4d0' },
+    a: { zh: '水', hu: 'Víz', note: '羽 yǔ (27/16)', ratio: 27/16, col: '#6b93dc' }
+  };
+
+  const LINE_COLORS = ['#ece4d0', '#5fb085', '#e8b04a', '#6b93dc', '#e0604c', '#9b8fc4'];
+  const MANTRA = ['OM (1. külső öv)', 'MA (2. öv)', 'NI (3. öv)', 'PAD (4. öv)', 'ME (5. öv)', 'HUM (6. belső öv)'];
+
+  // DNA Codon mapping (Krakowski: 3=A, 0=U, 2=G, 1=C)
+  const BASE_MAP = { 3: 'A', 0: 'U', 2: 'G', 1: 'C' };
+  const ORD = 'UCAG';
+  const AAS = 'FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG';
+  const AAN = {
+    F:'Fenilalanin', L:'Leucin', S:'Szerin', Y:'Tirozin', '*':'STOP', C:'Cisztein', W:'Triptofán',
+    P:'Prolin', H:'Hisztidin', Q:'Glutamin', R:'Arginin', I:'Izoleucin', M:'Metionin',
+    T:'Treonin', N:'Aszparagin', K:'Lizin', V:'Valin', A:'Alanin', D:'Aszparaginsav', E:'Glutaminsav', G:'Glicin'
+  };
+
+  // Build 64 Hexagram objects indexed by binary code c (0..63)
+  const H = [];
+  KW.forEach((bitsStr, kIdx) => {
+    const b = [...bitsStr].map(Number); // b[0] = bottom line 1, b[5] = top line 6
+    const c = b.reduce((acc, v, i) => acc | (v << i), 0);
+    const lo = (b[0] << 2) | (b[1] << 1) | b[2];
+    const up = (b[3] << 2) | (b[4] << 1) | b[5];
+    const fx = lo * 8 + up;
+    const yang = b.reduce((a, v) => a + v, 0);
+    const codon = [0, 1, 2].map(p => BASE_MAP[b[2*p] + 2*b[2*p+1]]).join('');
+    const ci = ORD.indexOf(codon[0])*16 + ORD.indexOf(codon[1])*4 + ORD.indexOf(codon[2]);
+    const aa = AAS[ci];
+    H[c] = { c, b, k: kIdx, nm: NM[kIdx], lo, up, fx, yang, codon, aa };
+  });
+
+  // ============================================================================
+  // 2. SZÍNTANI MATEMATIKA ÉS KOMPLEMENTER (錯 CUO) FÜGGVÉNYEK
+  // ============================================================================
+  const trgRGB = (t) => [ (t >> 2) & 1, (t >> 1) & 1, t & 1 ].map(v => v * 255);
+  
+  // Hexagram RGB: 2/3 Lower Trigram + 1/3 Upper Trigram
+  const rgbOf = (h) => [0, 1, 2].map(ch => (2 * h.b[ch] + h.b[ch + 3]) * 85);
+  
+  const toHex = (rgb) => '#' + rgb.map(v => Math.round(v).toString(16).padStart(2, '0')).join('').toUpperCase();
+  
+  const relLum = (rgb) => (0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]) / 255;
+
+  const hueOf = (rgb) => {
+    const [r, g, b] = rgb.map(x => x / 255);
+    const mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn;
+    if (d < 1e-5) return null;
+    let h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+    h *= 60;
+    return h < 0 ? h + 360 : h;
+  };
+
+  // Approximate visible wavelength (nm) from Hue
+  const SPEC = [[0, 650], [30, 600], [60, 578], [120, 530], [180, 490], [240, 460], [275, 415]];
+  const wavelengthOf = (rgb) => {
+    const h = hueOf(rgb);
+    if (h === null || h > 275) return null;
+    for (let i = 1; i < SPEC.length; i++) {
+      if (h <= SPEC[i][0]) {
+        const [h0, l0] = SPEC[i - 1], [h1, l1] = SPEC[i];
+        return l0 + (l1 - l0) * (h - h0) / (h1 - h0);
+      }
+    }
+    return null;
+  };
+
+  // Topological relations
+  const cuoComp = (c) => c ^ 63;
+  const zongInv = (c) => {
+    let r = 0;
+    for (let i = 0; i < 6; i++) if ((c >> i) & 1) r |= 1 << (5 - i);
+    return r;
+  };
+  const huNuc = (c) => {
+    const b = H[c].b;
+    const n = [b[1], b[2], b[3], b[2], b[3], b[4]];
+    return n.reduce((acc, v, i) => acc | (v << i), 0);
+  };
+
+  // ============================================================================
+  // 3. ÁLLAPOT (STATE) ÉS AKUSZTIKAI SZINTETIZÁTOR (WEB AUDIO API)
+  // ============================================================================
+  let sel = 63; // Default: 1. Qian (111111 = 63)
+  let viewMode = 'nest'; // 'nest' | 'rgb' | 'spidronhedron'
+  let curvedMode = true;
+  let breathMode = false;
+  let spinMode = true;
+  let foldAmount = 0.72;
+  let twistAngle = 0.60;
+  let colorMode = 'trigram_blend';
+  let highlightBelt = -1;
+
+  // Smooth interpolation targets for the 6 lines (-1 for Yin, +1 for Yang)
+  const animBits = [1, 1, 1, 1, 1, 1];
+
+  // Audio Synthesizer
+  let audioCtx = null;
+  let soundEnabled = false;
+  const baseFreq = 256.87; // C4 (A=432Hz tuning)
+
+  function playHarmonicChord(f1, f2) {
+    try {
+      if (!audioCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return;
+        audioCtx = new AC();
+      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const now = audioCtx.currentTime + 0.02;
+
+      const strikeBowl = (freq, panVal) => {
+        if (!freq) return;
+        const gain = audioCtx.createGain();
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(0.14, now + 0.035);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 3.6);
+
+        let dest = gain;
+        if (audioCtx.createStereoPanner) {
+          const pan = audioCtx.createStereoPanner();
+          pan.pan.value = panVal;
+          gain.connect(pan);
+          dest = pan;
+        }
+        dest.connect(audioCtx.destination);
+
+        // Singing bowl partials
+        [[1, 1.0], [2.71, 0.25], [5.15, 0.08]].forEach(([mult, amp]) => {
+          const osc = audioCtx.createOscillator();
+          const og = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = freq * mult;
+          og.gain.value = amp;
+          osc.connect(og);
+          og.connect(gain);
+          osc.start(now);
+          osc.stop(now + 3.7);
+        });
+      };
+
+      strikeBowl(f1, -0.65);
+      strikeBowl(f2, 0.65);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  function getTrigramFreq(t) {
+    const elKey = TG[t][3];
+    const isYang = (t === 7 || t === 4 || t === 2 || t === 1);
+    return baseFreq * WX[elKey].ratio * (isYang ? 1 : 0.5);
+  }
+
+  // ============================================================================
+  // 4. THREE.JS 3D SPIDRON-CHROMA RENDERELŐ MOTOR
+  // ============================================================================
+  const canvas = document.getElementById('glCanvas');
+  const stageWrap = document.getElementById('stage-wrap');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+
+  // Lighting
+  const hemiLight = new THREE.HemisphereLight(0xffffff, 0x221f1a, 0.85);
+  scene.add(hemiLight);
+  const dirLight1 = new THREE.DirectionalLight(0xfff8e7, 0.9);
+  dirLight1.position.set(4, 6, 5);
+  scene.add(dirLight1);
+  const dirLight2 = new THREE.DirectionalLight(0x6b93dc, 0.35);
+  dirLight2.position.set(-5, -4, -3);
+  scene.add(dirLight2);
+
+  // Groups for the 3 views
+  const nestGroup = new THREE.Group();
+  const rgbCubeGroup = new THREE.Group();
+  const spidronhedronGroup = new THREE.Group();
+  scene.add(nestGroup);
+  scene.add(rgbCubeGroup);
+  scene.add(spidronhedronGroup);
+
+  // --- VIEW 1: SPIDRON NEST MESH ---
+  const nestGeo = new THREE.BufferGeometry();
+  const nestMat = new THREE.MeshStandardMaterial({
+    vertexColors: true,
+    side: THREE.DoubleSide,
+    flatShading: false,
+    roughness: 0.42,
+    metalness: 0.12
+  });
+  const nestMesh = new THREE.Mesh(nestGeo, nestMat);
+  nestGroup.add(nestMesh);
+
+  const wireGeo = new THREE.BufferGeometry();
+  const wireMat = new THREE.LineBasicMaterial({ color: 0x12110e, transparent: true, opacity: 0.45 });
+  const wireMesh = new THREE.LineSegments(wireGeo, wireMat);
+  nestGroup.add(wireMesh);
+
+  const S3 = Math.sqrt(3);
+  const LS3 = Math.log(S3);
+  const r0 = 2.35;
+
+  const smoothstep = (x) => x * x * (3 - 2 * x);
+
+  // Compute belt colors based on selected Color Truth mode
+  function computeBeltColorPair(k, bitVal, h) {
+    const isYang = bitVal >= 0;
+    const hexCol = new THREE.Color(toHex(rgbOf(h)));
+    const compCol = new THREE.Color(toHex(rgbOf(H[cuoComp(h.c)])));
+    const loCol = new THREE.Color(toHex(trgRGB(h.lo)));
+    const upCol = new THREE.Color(toHex(trgRGB(h.up)));
+
+    let base;
+    if (colorMode === 'trigram_blend') {
+      // Belts 0..2 reflect Lower Trigram + Hexagram blend; Belts 3..5 reflect Upper Trigram + Hexagram blend
+      const trigSource = k < 3 ? loCol : upCol;
+      base = hexCol.clone().lerp(trigSource, 0.45);
+      if (!isYang) base.lerp(new THREE.Color(0x2a2722), 0.42);
+    } else if (colorMode === 'mantra_lines') {
+      base = new THREE.Color(LINE_COLORS[k]);
+      if (!isYang) base.lerp(new THREE.Color(0x25221d), 0.55);
+    } else if (colorMode === 'wuxing') {
+      const elKey = k < 3 ? TG[h.lo][3] : TG[h.up][3];
+      base = new THREE.Color(WX[elKey].col);
+      if (!isYang) base.lerp(new THREE.Color(0x25221d), 0.5);
+    } else {
+      // Mechanical tension
+      base = isYang ? new THREE.Color(0xd9503f).lerp(new THREE.Color(0xc9a54e), k / 5)
+                    : new THREE.Color(0x3a6073).lerp(new THREE.Color(0x1f242d), k / 5);
+    }
+
+    // Equilateral triangle vs Isosceles triangle shading contrast
+    const colEqui = base.clone().lerp(new THREE.Color(0x000000), isYang ? 0.12 : 0.28);
+    const colIso  = base.clone().lerp(new THREE.Color(0xffffff), isYang ? 0.28 : 0.06);
+
+    if (highlightBelt >= 0 && highlightBelt !== k) {
+      const dim = new THREE.Color(0x181612);
+      colEqui.lerp(dim, 0.72);
+      colIso.lerp(dim, 0.72);
+    }
+    return [colEqui, colIso, compCol];
+  }
+
+  // Deform 2D hexagonal Spidron point (x, y) into 3D space according to animBits
+  function deformSpidronPoint(x, y) {
+    const r = Math.hypot(x, y);
+    let t = r > 1e-9 ? Math.log(r0 / r) / LS3 : 6;
+    t = Math.max(0, Math.min(6, t));
+
+    let th = 0;
+    let z = 0;
+    const phiMax = twistAngle * 0.65;
+    const hMax = foldAmount * 0.85;
+
+    for (let k = 0; k < 6; k++) {
+      const s = animBits[k]; // Continuous -1..+1
+      const rk = r0 / Math.pow(S3, k);
+      let f = Math.max(0, Math.min(1, t - k));
+      if (curvedMode) f = smoothstep(f);
+
+      th += s * phiMax * f;
+      const wave = curvedMode ? (Math.sin(f * Math.PI) * 0.65 + f * 0.35) : f;
+      z += s * hMax * (rk / r0) * wave;
+      if (t < k + 1) break;
+    }
+
+    const c = Math.cos(th), sn = Math.sin(th);
+    return [x * c - y * sn, z, x * sn + y * c];
+  }
+
+  function ringVertex2D(k, i) {
+    const angle = k * (Math.PI / 6) + i * (Math.PI / 3);
+    const rad = r0 / Math.pow(S3, k);
+    return [rad * Math.cos(angle), rad * Math.sin(angle)];
+  }
+
+  function updateSpidronNestGeometry() {
+    const h = H[sel];
+    const pos = [];
+    const col = [];
+    const lin = [];
+    const subDiv = curvedMode ? 6 : 1;
+
+    const pushTriangle = (A, B, C, colorObj) => {
+      for (let i = 0; i < subDiv; i++) {
+        for (let j = 0; j < subDiv - i; j++) {
+          const interp = (u, v) => {
+            const w = 1 - u - v;
+            return [A[0]*w + B[0]*u + C[0]*v, A[1]*w + B[1]*u + C[1]*v];
+          };
+          const q1 = [[i/subDiv, j/subDiv], [(i+1)/subDiv, j/subDiv], [i/subDiv, (j+1)/subDiv]];
+          const tris = [q1];
+          if (i + j < subDiv - 1) {
+            tris.push([[(i+1)/subDiv, j/subDiv], [(i+1)/subDiv, (j+1)/subDiv], [i/subDiv, (j+1)/subDiv]]);
+          }
+          tris.forEach(triUV => {
+            triUV.forEach(([u, v]) => {
+              const p2 = interp(u, v);
+              const p3 = deformSpidronPoint(p2[0], p2[1]);
+              pos.push(p3[0], p3[1], p3[2]);
+              col.push(colorObj.r, colorObj.g, colorObj.b);
+            });
+          });
+        }
+      }
+      // Structural crease lines
+      const dA = deformSpidronPoint(A[0], A[1]);
+      const dB = deformSpidronPoint(B[0], B[1]);
+      const dC = deformSpidronPoint(C[0], C[1]);
+      lin.push(...dA, ...dB, ...dB, ...dC, ...dC, ...dA);
+    };
+
+    for (let k = 0; k < 6; k++) {
+      const [colEqui, colIso] = computeBeltColorPair(k, animBits[k], h);
+      for (let i = 0; i < 6; i++) {
+        // Isosceles (30-120-30) & Equilateral triangles forming the Spidron ring
+        pushTriangle(ringVertex2D(k, i), ringVertex2D(k, i + 1), ringVertex2D(k + 1, i), colIso);
+        pushTriangle(ringVertex2D(k, i), ringVertex2D(k + 1, i - 1), ringVertex2D(k + 1, i), colEqui);
+      }
+    }
+
+    // Center core: Colored with the Cuo Complementary color to show the core invariant
+    const [, , compCol] = computeBeltColorPair(5, animBits[5], h);
+    for (let i = 0; i < 6; i++) {
+      pushTriangle([0, 0], ringVertex2D(6, i), ringVertex2D(6, i + 1), compCol);
+    }
+
+    nestGeo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    nestGeo.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+    nestGeo.computeVertexNormals();
+    nestMat.flatShading = !curvedMode;
+    nestMat.needsUpdate = true;
+
+    wireGeo.setAttribute('position', new THREE.Float32BufferAttribute(lin, 3));
+  }
+
+  // --- VIEW 2: RGB COLOR CUBE & CUO COMPLEMENTARY AXIS ---
+  let rgbNodes = [];
+  let cuoLineGeo = null;
+  let activeMarker = null;
+  let compMarker = null;
+  let neutralCenterSphere = null;
+
+  function initRGBCubeView() {
+    const size = 1.65;
+    // Wireframe outer RGB cube
+    const boxGeo = new THREE.BoxGeometry(size * 2, size * 2, size * 2);
+    const edges = new THREE.EdgesGeometry(boxGeo);
+    const lineMat = new THREE.LineBasicMaterial({ color: 0xc9a54e, transparent: true, opacity: 0.35 });
+    rgbCubeGroup.add(new THREE.LineSegments(edges, lineMat));
+
+    // 64 Hexagram color nodes positioned inside the RGB cube
+    // Coordinates come directly from rgbOf(h) mapped to [-size, +size]
+    const sphereGeo = new THREE.SphereGeometry(0.09, 16, 16);
+    H.forEach((h, c) => {
+      const rgb = rgbOf(h);
+      const mat = new THREE.MeshStandardMaterial({
+        color: new THREE.Color(toHex(rgb)),
+        roughness: 0.3,
+        metalness: 0.1
+      });
+      const mesh = new THREE.Mesh(sphereGeo, mat);
+      const pos = rgb.map(v => ((v / 255) - 0.5) * 2 * size);
+      mesh.position.set(pos[0], pos[1], pos[2]);
+      mesh.userData.c = c;
+      rgbCubeGroup.add(mesh);
+      rgbNodes.push(mesh);
+    });
+
+    // Neutral Gray Center (#7F7F7F) at (0,0,0)
+    const centerGeo = new THREE.SphereGeometry(0.18, 24, 24);
+    const centerMat = new THREE.MeshStandardMaterial({
+      color: 0x7f7f7f,
+      roughness: 0.2,
+      metalness: 0.5,
+      wireframe: false
+    });
+    neutralCenterSphere = new THREE.Mesh(centerGeo, centerMat);
+    rgbCubeGroup.add(neutralCenterSphere);
+
+    // Highlight rings for Active Hexagram & its Cuo Opposite
+    const ringGeo = new THREE.RingGeometry(0.16, 0.23, 24);
+    activeMarker = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide }));
+    compMarker = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({ color: 0xd9503f, side: THREE.DoubleSide }));
+    rgbCubeGroup.add(activeMarker);
+    rgbCubeGroup.add(compMarker);
+
+    // Diagonal Cuo Complementary Line passing strictly through (0,0,0)
+    cuoLineGeo = new THREE.BufferGeometry();
+    const cuoMat = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 });
+    const cuoLine = new THREE.Line(cuoLineGeo, cuoMat);
+    rgbCubeGroup.add(cuoLine);
+  }
+
+  function updateRGBCubeView() {
+    const h = H[sel];
+    const compH = H[cuoComp(sel)];
+    const p1 = rgbNodes[sel].position;
+    const p2 = rgbNodes[compH.c].position;
+
+    rgbNodes.forEach((m, c) => {
+      const isAct = c === sel;
+      const isComp = c === compH.c;
+      const sc = isAct ? 1.85 : isComp ? 1.55 : 0.85;
+      m.scale.set(sc, sc, sc);
+    });
+
+    activeMarker.position.copy(p1);
+    activeMarker.lookAt(camera.position);
+    compMarker.position.copy(p2);
+    compMarker.lookAt(camera.position);
+
+    cuoLineGeo.setFromPoints([p1, new THREE.Vector3(0, 0, 0), p2]);
+  }
+
+  // --- VIEW 3: SPIDRONHEDRON (8 TRIGRAM VERTICES CUBE) ---
+  const shGeo = new THREE.BufferGeometry();
+  const shMat = new THREE.MeshStandardMaterial({
+    vertexColors: true,
+    side: THREE.DoubleSide,
+    flatShading: true,
+    roughness: 0.5,
+    metalness: 0.1
+  });
+  const shMesh = new THREE.Mesh(shGeo, shMat);
+  spidronhedronGroup.add(shMesh);
+
+  const TV = [];
+  for (let c = 0; c < 8; c++) {
+    TV.push([(c >> 2) & 1 ? 1.55 : -1.55, (c >> 1) & 1 ? 1.55 : -1.55, (c & 1) ? 1.55 : -1.55]);
+  }
+
+  function buildSpidronhedron() {
+    const pos = [];
+    const col = [];
+    const NB = 6;
+    const C30 = Math.cos(Math.PI / 6);
+
+    const sub = (a, b) => [a[0]-b[0], a[1]-b[1], a[2]-b[2]];
+    const crs = (a, b) => [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];
+    const dot = (a, b) => a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
+
+    const ringOf = (v) => {
+      const M = (a) => { const m = v.slice(); m[a] = 0; return m; };
+      const C = (a, b) => { const c = v.slice(); c[a] = 0; c[b] = 0; return c; };
+      let R = [M(0), C(0,1), M(1), C(1,2), M(2), C(2,0)];
+      if (dot(crs(sub(R[0], v), sub(R[1], v)), v) < 0) {
+        R = [M(0), C(2,0), M(2), C(1,2), M(1), C(0,1)];
+      }
+      return R;
+    };
+
+    const RINGS = TV.map(ringOf);
+    const NRMS = TV.map(v => {
+      const l = Math.hypot(...v);
+      return v.map(z => z / l);
+    });
+
+    const VV = (k, i) => {
+      const a = k * (Math.PI / 6) + i * (Math.PI / 3);
+      const r = Math.pow(3, -k / 2);
+      return [r * Math.cos(a), r * Math.sin(a)];
+    };
+
+    const cpt = (ni, x, y, bits) => {
+      let r = 0;
+      for (let j = 0; j < 6; j++) {
+        const a = Math.PI / 6 + j * (Math.PI / 3);
+        r = Math.max(r, (x * Math.cos(a) + y * Math.sin(a)) / C30);
+      }
+      let t = r > 1e-12 ? Math.log(1 / r) / LS3 : NB;
+      t = Math.max(0, Math.min(NB, t));
+
+      let th = 0, D = 0;
+      for (let k = 0; k < NB; k++) {
+        const s = bits[k % 6] ? 1 : -1;
+        let f = Math.max(0, Math.min(1, t - k));
+        th += s * twistAngle * 0.45 * smoothstep(f);
+        if (t < k + 1) {
+          D = s * foldAmount * 0.35 * Math.pow(3, -k / 2) * Math.sin(Math.PI * f);
+          break;
+        }
+      }
+      const c = Math.cos(th), sn = Math.sin(th);
+      const qx = x * c - y * sn, qy = x * sn + y * c;
+      let ang = Math.atan2(qy, qx);
+      if (ang < 0) ang += Math.PI * 2;
+      const sIdx = Math.floor(ang / (Math.PI / 3)) % 6;
+      const h0 = [Math.cos(sIdx * Math.PI / 3), Math.sin(sIdx * Math.PI / 3)];
+      const h1 = [Math.cos((sIdx + 1) * Math.PI / 3), Math.sin((sIdx + 1) * Math.PI / 3)];
+      const det = h0[0]*h1[1] - h1[0]*h0[1];
+      const a = (qx*h1[1] - h1[0]*qy) / det;
+      const b = (h0[0]*qy - qx*h0[1]) / det;
+      const ap = TV[ni].map(z => z * (1 - foldAmount * 0.72));
+      const T0 = RINGS[ni][sIdx], T1 = RINGS[ni][(sIdx + 1) % 6], N = NRMS[ni];
+      return [0, 1, 2].map(j => ap[j] + a * (T0[j] - ap[j]) + b * (T1[j] - ap[j]) + N[j] * D);
+    };
+
+    for (let ni = 0; ni < 8; ni++) {
+      const code = ((TV[ni][0] > 0 ? 1 : 0) | (TV[ni][1] > 0 ? 2 : 0) | (TV[ni][2] > 0 ? 4 : 0)) | (sel & 56);
+      const hNode = H[code];
+      const bits = hNode.b;
+      const trigCol = new THREE.Color(toHex(trgRGB(ni)));
+
+      const addTri = (A, B, C, cl) => {
+        [A, B, C].forEach(pt => {
+          pos.push(...cpt(ni, pt[0], pt[1], bits));
+          col.push(cl.r, cl.g, cl.b);
+        });
+      };
+
+      for (let k = 0; k < NB; k++) {
+        const [ce, ci] = computeBeltColorPair(k, bits[k] ? 1 : -1, hNode);
+        for (let i = 0; i < 6; i++) {
+          addTri(VV(k, i), VV(k, i + 1), VV(k + 1, i), ci);
+          addTri(VV(k, i), VV(k + 1, i - 1), VV(k + 1, i), ce);
+        }
+      }
+      for (let i = 0; i < 6; i++) {
+        addTri([0, 0], VV(NB, i), VV(NB, i + 1), trigCol);
+      }
+    }
+
+    shGeo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    shGeo.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+    shGeo.computeVertexNormals();
+  }
+
+  initRGBCubeView();
+
+  // ============================================================================
+  // 5. KAMERA MOZGATÁS, RAYCASTING ÉS ANIMÁCIÓS CIKLUS
+  // ============================================================================
+  let camTheta = 0.55;
+  let camPhi = 0.92;
+  let camRad = 6.2;
+  let isDragging = false;
+  let dragStart = [0, 0];
+  let dragMoved = 0;
+
+  stageWrap.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('button')) return;
+    isDragging = true;
+    dragStart = [e.clientX, e.clientY];
+    dragMoved = 0;
+  });
+
+  window.addEventListener('pointermove', (e) => {
+    if (!isDragging) return;
+    const dx = e.clientX - dragStart[0];
+    const dy = e.clientY - dragStart[1];
+    dragMoved += Math.abs(dx) + Math.abs(dy);
+    camTheta -= dx * 0.008;
+    camPhi = Math.max(0.15, Math.min(2.95, camPhi - dy * 0.008));
+    dragStart = [e.clientX, e.clientY];
+  });
+
+  window.addEventListener('pointerup', (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    if (dragMoved < 6 && e.target === canvas) {
+      handleCanvasClick(e);
+    }
+  });
+
+  stageWrap.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    camRad = Math.max(2.6, Math.min(14, camRad * (1 + Math.sign(e.deltaY) * 0.08)));
+  }, { passive: false });
+
+  const raycaster = new THREE.Raycaster();
+  const mouseVec = new THREE.Vector2();
+
+  function handleCanvasClick(e) {
+    const rect = canvas.getBoundingClientRect();
+    mouseVec.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouseVec.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    raycaster.setFromCamera(mouseVec, camera);
+
+    if (viewMode === 'rgb') {
+      const hits = raycaster.intersectObjects(rgbNodes);
+      if (hits.length > 0) {
+        selectHexagram(hits[0].object.userData.c);
+      }
+    } else if (viewMode === 'nest') {
+      const hits = raycaster.intersectObject(nestMesh);
+      if (hits.length > 0) {
+        const pt = hits[0].point;
+        const r = Math.hypot(pt.x, pt.z);
+        let beltIdx = r > 1e-6 ? Math.floor(Math.log(r0 / r) / LS3) : 5;
+        beltIdx = Math.max(0, Math.min(5, beltIdx));
+        selectHexagram(sel ^ (1 << beltIdx));
+      }
+    }
+  }
+
+  function resizeStage() {
+    const w = stageWrap.clientWidth;
+    const h = stageWrap.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(resizeStage).observe(stageWrap);
+  resizeStage();
+
+  let needsGeometryUpdate = true;
+
+  function animate(now) {
+    requestAnimationFrame(animate);
+
+    // Smoothly interpolate animBits toward current selected hexagram bits (-1 or +1)
+    const targetB = H[sel].b;
+    let bitsAnimating = false;
+    for (let k = 0; k < 6; k++) {
+      const targetVal = targetB[k] ? 1 : -1;
+      const diff = targetVal - animBits[k];
+      if (Math.abs(diff) > 0.002) {
+        animBits[k] += diff * 0.16;
+        bitsAnimating = true;
+      } else {
+        animBits[k] = targetVal;
+      }
+    }
+
+    if (breathMode) {
+      foldAmount = 0.5 + 0.45 * Math.sin(now / 1100);
+      document.getElementById('slFold').value = Math.round(foldAmount * 100);
+      document.getElementById('valFold').textContent = Math.round(foldAmount * 100) + '%';
+      needsGeometryUpdate = true;
+    }
+
+    if (spinMode && !isDragging) {
+      camTheta += 0.0035;
+    }
+
+    // On a portrait stage, step the camera back so the scene keeps its horizontal framing
+    const camR = camRad * Math.max(1, 1 / camera.aspect);
+    camera.position.set(
+      camR * Math.sin(camPhi) * Math.sin(camTheta),
+      camR * Math.cos(camPhi),
+      camR * Math.sin(camPhi) * Math.cos(camTheta)
+    );
+    camera.lookAt(0, 0, 0);
+
+    nestGroup.visible = (viewMode === 'nest');
+    rgbCubeGroup.visible = (viewMode === 'rgb');
+    spidronhedronGroup.visible = (viewMode === 'spidronhedron');
+
+    if (viewMode === 'nest' && (needsGeometryUpdate || bitsAnimating)) {
+      updateSpidronNestGeometry();
+      needsGeometryUpdate = false;
+    } else if (viewMode === 'rgb') {
+      updateRGBCubeView();
+    } else if (viewMode === 'spidronhedron' && (needsGeometryUpdate || bitsAnimating)) {
+      buildSpidronhedron();
+      needsGeometryUpdate = false;
+    }
+
+    renderer.render(scene, camera);
+  }
+
+  // ============================================================================
+  // 6. DOM FELÜLET ÉS SZÍNTANI IGAZSÁG PANEL FRISSÍTÉSE
+  // ============================================================================
+  function svgHexGlyph(b) {
+    let rects = '';
+    for (let i = 0; i < 6; i++) {
+      const y = (5 - i) * 7;
+      if (b[i]) {
+        rects += `<rect x="2" y="${y}" width="36" height="4.5" rx="1"/>`;
+      } else {
+        rects += `<rect x="2" y="${y}" width="15.5" height="4.5" rx="1"/><rect x="22.5" y="${y}" width="15.5" height="4.5" rx="1"/>`;
+      }
+    }
+    return `<svg viewBox="0 0 40 40" class="w-5 h-5 fill-current">${rects}</svg>`;
+  }
+
+  function renderUI() {
+    const h = H[sel];
+    const compH = H[cuoComp(sel)];
+    const mainRGB = rgbOf(h);
+    const compRGB = rgbOf(compH);
+    const mainHex = toHex(mainRGB);
+    const compHex = toHex(compRGB);
+
+    const loRGB = trgRGB(h.lo);
+    const upRGB = trgRGB(h.up);
+    const loHex = toHex(loRGB);
+    const upHex = toHex(upRGB);
+
+    // 1. Top-left 3D Overlay
+    document.getElementById('overlayHexBadge').style.backgroundColor = mainHex;
+    document.getElementById('overlayTitle').textContent = `${h.k + 1}. ${h.nm[0]} ${h.nm[1]} – ${h.nm[2]}`;
+    document.getElementById('overlaySub').textContent = `Bitek: ${h.b.join('')} · Fu Xi #${h.fx} · Kodon: ${h.codon} (${AAN[h.aa]})`;
+    document.getElementById('overlayEquation').textContent = `Spidron: ${h.yang} Yang / ${6 - h.yang} Yin · 錯 pár: #${compH.k + 1} ${compH.nm[0]} (${compHex})`;
+
+    // 2. Floating Belt Pills (1..6)
+    const beltPills = document.getElementById('beltPills');
+    beltPills.innerHTML = h.b.map((bit, k) => {
+      const activeCls = bit ? 'border-[#c9a54e] text-[#ece6d6]' : 'border-[#332d24] text-[#9e9585]';
+      return `<button data-toggle-line="${k}" data-hover-belt="${k}" class="px-2.5 py-1 rounded-lg bg-[#191713] border ${activeCls} text-[11px] mono flex items-center gap-1.5 hover:border-[#d9503f] cursor-pointer transition">
+        <span class="w-2 h-2 rounded-full" style="background:${LINE_COLORS[k]}"></span>
+        <span>${k + 1}. öv: ${bit ? 'YANG ↺' : 'yin ↻'}</span>
+      </button>`;
+    }).join('');
+
+    // 3. Right Panel Header & 6 Interactive Lines (top line 6 down to bottom line 1)
+    document.getElementById('hexMetaNum').textContent = `KING WEN #${h.k + 1} · FU XI #${h.fx}`;
+    document.getElementById('hexZh').textContent = h.nm[0];
+    document.getElementById('hexNameHu').textContent = `${h.nm[1]} – ${h.nm[2]}`;
+    document.getElementById('hexCodonInfo').textContent = `DNS Kodon: ${h.codon} · ${AAN[h.aa]} (${h.aa})`;
+    document.getElementById('hexMiniPreview').style.backgroundColor = mainHex;
+
+    const linesContainer = document.getElementById('interactiveLines');
+    let linesHTML = '';
+    for (let i = 5; i >= 0; i--) {
+      const isYang = h.b[i] === 1;
+      const neighborCode = sel ^ (1 << i);
+      const neighborH = H[neighborCode];
+      const neighborHex = toHex(rgbOf(neighborH));
+      linesHTML += `
+        <button data-toggle-line="${i}" data-hover-belt="${i}" class="line-bar w-full flex items-center gap-3 p-1.5 px-2.5 rounded-lg bg-[#191713] border border-[#332d24] cursor-pointer text-left">
+          <span class="mono text-[11px] text-[#9e9585] w-12">${i + 1}. vonal</span>
+          <div class="flex-1 flex items-center justify-between h-3.5">
+            ${isYang
+              ? `<div class="w-full h-full rounded-sm shadow-sm" style="background:${LINE_COLORS[i]}"></div>`
+              : `<div class="w-[44%] h-full rounded-sm opacity-75" style="background:${LINE_COLORS[i]}"></div>
+                 <div class="w-[44%] h-full rounded-sm opacity-75" style="background:${LINE_COLORS[i]}"></div>`
+            }
+          </div>
+          <span class="mono text-[11px] w-14 text-right ${isYang ? 'text-[#ece6d6] font-semibold' : 'text-[#9e9585]'}">
+            ${isYang ? 'YANG (1)' : 'YIN (0)'}
+          </span>
+          <span class="w-3.5 h-3.5 rounded-full border border-white/20 shrink-0" style="background:${neighborHex}" title="Mutáció erre: #${neighborH.k + 1} ${neighborH.nm[2]}"></span>
+        </button>
+      `;
+    }
+    linesContainer.innerHTML = linesHTML;
+
+    // 4. Trigram Synthesis & Cuo Complementarity Proof
+    const loT = TG[h.lo], upT = TG[h.up];
+    document.getElementById('swatchLower').style.backgroundColor = loHex;
+    document.getElementById('txtLowerTrig').textContent = `${loT[2]} ${loT[0]} ${loT[1]} (${WX[loT[3]].hu})`;
+    document.getElementById('rgbLowerTrig').textContent = `${loHex} · RGB(${loRGB.join(',')})`;
+
+    document.getElementById('swatchUpper').style.backgroundColor = upHex;
+    document.getElementById('txtUpperTrig').textContent = `${upT[2]} ${upT[0]} ${upT[1]} (${WX[upT[3]].hu})`;
+    document.getElementById('rgbUpperTrig').textContent = `${upHex} · RGB(${upRGB.join(',')})`;
+
+    const boxMain = document.getElementById('boxMainColor');
+    const boxComp = document.getElementById('boxCompColor');
+    boxMain.style.backgroundColor = mainHex;
+    boxMain.style.color = relLum(mainRGB) > 0.52 ? '#12110e' : '#fbf8f1';
+    document.getElementById('hexCodeMain').textContent = mainHex;
+    document.getElementById('rgbCodeMain').textContent = `RGB(${mainRGB.join(', ')})`;
+
+    boxComp.style.backgroundColor = compHex;
+    boxComp.style.color = relLum(compRGB) > 0.52 ? '#12110e' : '#fbf8f1';
+    boxComp.dataset.jump = compH.c;
+    document.getElementById('hexCodeComp').textContent = `${compHex} (${compH.nm[0]})`;
+    document.getElementById('rgbCodeComp').textContent = `RGB(${compRGB.join(', ')})`;
+
+    document.getElementById('cuoGradientBar').style.background = `linear-gradient(90deg, ${mainHex} 0%, #7F7F7F 50%, ${compHex} 100%)`;
+
+    // 5. Wavelength & Wu Xing Acoustic Resonance
+    const lam = wavelengthOf(mainRGB);
+    document.getElementById('wavelengthBadge').textContent = lam ? `λ ≈ ${Math.round(lam)} nm (Spektrális)` : `λ ≈ Bíbor / Akromatikus`;
+
+    const fLo = getTrigramFreq(h.lo);
+    const fUp = getTrigramFreq(h.up);
+    const fBinA = baseFreq * Math.pow(2, h.fx / 64);
+    const fBinB = baseFreq * Math.pow(2, (63 - h.fx) / 64);
+
+    const resRows = document.getElementById('resonanceRows');
+    resRows.innerHTML = `
+      <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#191713] border border-[#332d24]">
+        <div class="text-xs">
+          <div class="font-medium text-[#ece6d6]">五音 Wu Xing Trigram Pár (${WX[loT[3]].zh} + ${WX[upT[3]].zh})</div>
+          <div class="mono text-[11px] text-[#9e9585]">${fLo.toFixed(1)} Hz (bal) + ${fUp.toFixed(1)} Hz (jobb) · Δ ${Math.abs(fLo - fUp).toFixed(1)} Hz</div>
+        </div>
+        <button data-play-f1="${fLo}" data-play-f2="${fUp}" class="btn-pill w-9 h-9 rounded-full flex items-center justify-center text-sm cursor-pointer">▶</button>
+      </div>
+      <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#191713] border border-[#332d24]">
+        <div class="text-xs">
+          <div class="font-medium text-[#ece6d6]">錯 Bináris Tükör Oktáv (${h.fx}. ↔ ${63 - h.fx}. fok)</div>
+          <div class="mono text-[11px] text-[#9e9585]">${fBinA.toFixed(1)} Hz + ${fBinB.toFixed(1)} Hz · Mértani közép: ${(Math.sqrt(fBinA * fBinB)).toFixed(1)} Hz</div>
+        </div>
+        <button data-play-f1="${fBinA}" data-play-f2="${fBinB}" class="btn-pill w-9 h-9 rounded-full flex items-center justify-center text-sm cursor-pointer">▶</button>
+      </div>
+    `;
+
+    // 6. Harmonic 8-Color Palette (6 Hamming neighbors + Cuo + Hu Nuclear)
+    const paletteItems = [];
+    for (let i = 0; i < 6; i++) {
+      const nc = sel ^ (1 << i);
+      paletteItems.push({ c: nc, label: `${i + 1}. öv mutáció`, role: `--sjk-line-${i + 1}` });
+    }
+    paletteItems.push({ c: cuoComp(sel), label: '錯 Komplementer', role: '--sjk-cuo-comp' });
+    paletteItems.push({ c: huNuc(sel), label: '互 Belső Mag', role: '--sjk-hu-nuclear' });
+
+    const palGrid = document.getElementById('harmonicPaletteGrid');
+    palGrid.innerHTML = paletteItems.map(item => {
+      const ph = H[item.c];
+      const pRGB = rgbOf(ph);
+      const pHex = toHex(pRGB);
+      const textCol = relLum(pRGB) > 0.52 ? '#12110e' : '#fbf8f1';
+      return `
+        <button data-jump="${ph.c}" class="group rounded-xl p-2.5 border border-[#332d24] hover:border-[#ece6d6] transition flex flex-col justify-between min-h-[82px] text-left cursor-pointer shadow-sm" style="background:${pHex}; color:${textCol}">
+          <div class="flex items-center justify-between w-full text-[10px] mono opacity-85">
+            <span>#${ph.k + 1} ${ph.nm[0]}</span>
+            <span>${ph.b.join('')}</span>
+          </div>
+          <div class="my-1 font-semibold text-xs truncate">${ph.nm[2]}</div>
+          <div class="flex items-center justify-between w-full text-[11px] mono">
+            <b>${pHex}</b>
+            <span class="text-[10px] opacity-80">${item.label}</span>
+          </div>
+        </button>
+      `;
+    }).join('');
+
+    // 7. Update 8x8 King Wen Matrix active & neighbor highlights
+    document.querySelectorAll('#kwGrid button').forEach(btn => {
+      const c = Number(btn.dataset.jump);
+      const xor = c ^ sel;
+      const isNeighbor = xor !== 0 && (xor & (xor - 1)) === 0;
+      btn.className = `p-1.5 rounded-md border flex flex-col items-center justify-center transition cursor-pointer ${
+        c === sel
+          ? 'bg-[#ece6d6] text-[#12110e] border-[#ece6d6] font-bold scale-105 z-10'
+          : isNeighbor
+          ? 'bg-[#191713] text-[#ece6d6] border-[#d9503f]'
+          : 'bg-[#191713] text-[#9e9585] border-[#332d24] hover:border-[#c9a54e]'
+      }`;
+    });
+  }
+
+  function initKWGrid() {
+    const kwGrid = document.getElementById('kwGrid');
+    kwGrid.innerHTML = KW.map((_, kIdx) => {
+      const h = H.find(x => x.k === kIdx);
+      const hexCol = toHex(rgbOf(h));
+      return `
+        <button data-jump="${h.c}" title="${kIdx + 1}. ${h.nm[0]} ${h.nm[2]} (${hexCol})" style="border-bottom: 3px solid ${hexCol}">
+          ${svgHexGlyph(h.b)}
+          <span class="mono text-[9px] mt-0.5">${kIdx + 1}</span>
+        </button>
+      `;
+    }).join('');
+  }
+
+  function selectHexagram(newCode) {
+    sel = newCode & 63;
+    needsGeometryUpdate = true;
+    renderUI();
+    if (soundEnabled) {
+      const h = H[sel];
+      playHarmonicChord(getTrigramFreq(h.lo), getTrigramFreq(h.up));
+    }
+  }
+
+  // ============================================================================
+  // 7. ESEMÉNYKEZELŐK (EVENT LISTENERS)
+  // ============================================================================
+  document.addEventListener('click', (e) => {
+    const toggleBtn = e.target.closest('[data-toggle-line]');
+    if (toggleBtn) {
+      const lineIdx = Number(toggleBtn.dataset.toggleLine);
+      selectHexagram(sel ^ (1 << lineIdx));
+      return;
+    }
+
+    const jumpBtn = e.target.closest('[data-jump]');
+    if (jumpBtn) {
+      selectHexagram(Number(jumpBtn.dataset.jump));
+      return;
+    }
+
+    const playBtn = e.target.closest('[data-play-f1]');
+    if (playBtn) {
+      playHarmonicChord(Number(playBtn.dataset.playF1), Number(playBtn.dataset.playF2));
+      return;
+    }
+
+    const viewBtn = e.target.closest('.view-btn');
+    if (viewBtn) {
+      viewMode = viewBtn.dataset.view;
+      document.querySelectorAll('.view-btn').forEach(b => b.classList.toggle('active', b === viewBtn));
+      needsGeometryUpdate = true;
+      return;
+    }
+  });
+
+  // Hover highlight on belts
+  document.addEventListener('pointerover', (e) => {
+    const beltEl = e.target.closest('[data-hover-belt]');
+    const newBelt = beltEl ? Number(beltEl.dataset.hoverBelt) : -1;
+    if (newBelt !== highlightBelt) {
+      highlightBelt = newBelt;
+      needsGeometryUpdate = true;
+    }
+  });
+
+  document.getElementById('btnCurved').addEventListener('click', function() {
+    curvedMode = !curvedMode;
+    this.setAttribute('aria-pressed', curvedMode);
+    needsGeometryUpdate = true;
+  });
+
+  document.getElementById('btnBreath').addEventListener('click', function() {
+    breathMode = !breathMode;
+    this.setAttribute('aria-pressed', breathMode);
+  });
+
+  document.getElementById('btnSpin').addEventListener('click', function() {
+    spinMode = !spinMode;
+    this.setAttribute('aria-pressed', spinMode);
+  });
+
+  document.getElementById('btnAudioToggle').addEventListener('click', function() {
+    soundEnabled = !soundEnabled;
+    this.setAttribute('aria-pressed', soundEnabled);
+    const dot = document.getElementById('audioDot');
+    dot.className = `w-2 h-2 rounded-full ${soundEnabled ? 'bg-[#d9503f] animate-ping' : 'bg-[#9e9585]'}`;
+    if (soundEnabled) {
+      const h = H[sel];
+      playHarmonicChord(getTrigramFreq(h.lo), getTrigramFreq(h.up));
+    }
+  });
+
+  document.getElementById('btnRandom').addEventListener('click', () => {
+    selectHexagram(Math.floor(Math.random() * 64));
+  });
+
+  document.getElementById('slFold').addEventListener('input', (e) => {
+    breathMode = false;
+    document.getElementById('btnBreath').setAttribute('aria-pressed', 'false');
+    foldAmount = Number(e.target.value) / 100;
+    document.getElementById('valFold').textContent = `${e.target.value}%`;
+    needsGeometryUpdate = true;
+  });
+
+  document.getElementById('slTwist').addEventListener('input', (e) => {
+    twistAngle = Number(e.target.value) / 100;
+    document.getElementById('valTwist').textContent = `${(twistAngle * 50).toFixed(1)}°`;
+    needsGeometryUpdate = true;
+  });
+
+  document.getElementById('slColorMode').addEventListener('change', (e) => {
+    colorMode = e.target.value;
+    needsGeometryUpdate = true;
+  });
+
+  // Copy CSS variables to clipboard
+  document.getElementById('btnCopyCSS').addEventListener('click', () => {
+    const h = H[sel];
+    const compH = H[cuoComp(sel)];
+    let cssText = `:root {\n  /* SJK-Chroma Engine v1.3 - Hexagram #${h.k + 1} ${h.nm[0]} (${h.nm[2]}) */\n`;
+    cssText += `  --sjk-primary: ${toHex(rgbOf(h))};\n`;
+    cssText += `  --sjk-cuo-complement: ${toHex(rgbOf(compH))};\n`;
+    cssText += `  --sjk-neutral-invariant: #7F7F7F;\n`;
+    for (let i = 0; i < 6; i++) {
+      const nc = sel ^ (1 << i);
+      cssText += `  --sjk-hamming-belt-${i + 1}: ${toHex(rgbOf(H[nc]))};\n`;
+    }
+    cssText += `}`;
+
+    const ta = document.createElement('textarea');
+    ta.value = cssText;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+
+    const toast = document.getElementById('toast');
+    toast.style.opacity = '1';
+    setTimeout(() => { toast.style.opacity = '0'; }, 2400);
+  });
+
+  // Initialize
+  initKWGrid();
+  renderUI();
+  requestAnimationFrame(animate);
+})();
+</script>
+</body>
+</html>

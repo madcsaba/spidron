@@ -10,7 +10,10 @@ Interaktív, böngészőben futó prototípusok egy közös, 6 bites állapotté
 |---|---|
 | `index.html` | Nyitóoldal |
 | `iching.html` | **A változások tere:** a 64 hexagram 3D térben (4×4×4 kocka, 6D vetület, Fu Hszi négyzet és kör, Wen király sorrend); párok, 錯, 綜, 互, szomszédok, azonos aminosav; változó vonalak és a fő szöveg Csu Hszi szabálya szerint; szövegrétegek (原文, magyar, Legge, 彖/象); jelenet, spidron (2D / 3D), hajtogatási minta (SVG), jelenet-leírás (JSON), idővonal, 64 szín, opcionális képgenerálás saját API-kulccsal |
+| `chroma.html` | **SJK-Chroma Engine v1.3** (magyar nyelvű, three.js): 3D spidron-fészek (6 öv = 6 vonal), RGB-színkocka a 錯 komplementer tengellyel, spidronhedron (8 trigram-csúcs); színtani panel, 五音 hangrezonancia (Web Audio), Hamming-szomszédsági paletta CSS-exporttal, 8×8 King Wen mátrix |
 | `spidron-lab.html` | **Spidron-labor:** SJK-mozaik (hatszögű LBP vs. gradiens-szabály), SJK-UI demó (spidron-gomb, mutáció + időgörbe, spirális menü), színek (spidron-színkör HSL/OKLCH-ban, harmóniák, hexagram mint paletta, 64 szín) |
+
+A `chroma.html` saját hozzárendelést használ: a színt a két trigramból számolja (az R csatornát az 1. és 4. vonal adja, azaz ⅔ alsó + ⅓ felső trigram), a kodont pedig Krakowski kódolásával. A 錯 itt is a kiegészítő szín. A többi oldal a vonalpáros (1–2 = R, 3–4 = G, 5–6 = B) hozzárendelést használja.
 
 ## Futtatás
 
@@ -24,7 +27,7 @@ Utána: `http://localhost:8000/`
 
 ## Felépítés
 
-- Minden CSS és JS az oldalakon belül van; nincs külső betűtípus, CDN vagy követőkód.
+- Nincs külső betűtípus, CDN vagy követőkód. Az `index.html`, `iching.html` és `spidron-lab.html` minden CSS-t és JS-t az oldalon belül tartalmaz; a `chroma.html` a helyi `chroma.css`-t (Tailwind CSS 3.4-gyel előre fordítva, csak a használt osztályok) és a helyi `vendor/three.min.js`-t (three.js r128) tölti be.
 - Kétnyelvű (HU/EN) oldalak: a szövegek `<span class="hu">` / `<span class="en">` párokban; a választott nyelv a `localStorage["sjk-lang"]` kulcsban, a nyelvváltáskor `sjk:lang` esemény fut.
 - Böngészőben tárolva (csak az adott gépen): nyelv, idővonal (`iching-log`), képgenerálási beállítások (`iching-img`; a kulcs csak kifejezett kérésre).
 - A képgenerálás az egyetlen hely, ahol az oldal külső szolgáltatást hív: csak kattintásra, a felhasználó saját kulcsával, közvetlenül a böngészőből.
@@ -45,6 +48,7 @@ Ezek választott megfeleltetések, nem felfedezések.
 - A magyar fordítás (ítéletek, képek, vonalak, 彖/象) saját munka a kínai eredetiből, Legge-t segédletként használva; lektorálásra vár.
 - A 4×4×4-es kocka-szemlélet S. H. Cullinane finitegeometry.org oldalaiból ihletődik; a koordináta-hozzárendelés saját.
 - Oklab / OKLCH: Björn Ottosson.
+- [three.js](https://threejs.org/) r128 (MIT), helyi másolat: `vendor/three.min.js`, licenc: `vendor/three.LICENSE`.
 
 ## Licenc
 
