@@ -178,8 +178,10 @@ document.documentElement.setAttribute("data-lang",l);document.documentElement.la
     <div id="transform"></div>
 
     <h3><span class="hu">Jelenet</span><span class="en">Scene</span></h3>
+    <div class="bar"><button class="t" data-scene="photo"><span class="hu">📷 Fotó</span><span class="en">📷 Photo</span></button><button class="t" data-scene="draw"><span class="hu">✏️ Rajz</span><span class="en">✏️ Drawing</span></button></div>
     <canvas id="scene" width="720" height="360"></canvas>
     <div class="cap" id="cap"></div>
+    <div class="gen-note" id="photoCredit"></div>
     <div class="gen-note"><span class="hu">A jelenet és az analógia generált réteg (trigram-képek + vonalhelyek sablonja), nem a klasszikus szöveg része.</span><span class="en">The scene and analogy are a generated layer (trigram images + line-position templates), not part of the classical text.</span></div>
 
     <h3>Spidron</h3>
@@ -561,10 +563,21 @@ const DRAW={
    sx.beginPath();sx.moveTo(r.x+r.w*.2+off,yy);sx.lineTo(r.x+r.w*.8+off-i*4,yy);sx.stroke();}
    sx.fillStyle="rgba(255,255,255,.7)";sx.beginPath();sx.ellipse(r.x+r.w*.3,r.y+r.h*.35,r.w*.05,r.h*.025,0,0,7);sx.fill();}
 };
+/* trigram photos (Wikimedia Commons, free licences; credits shown under the scene) */
+const PHOTO={"111": {"file": "img/trigrams/heaven.jpg", "title": "Quill-shaped cirrus cloud.jpg", "page": "https://commons.wikimedia.org/wiki/File:Quill-shaped_cirrus_cloud.jpg", "artist": "W.carter", "license": "CC0", "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"}, "110": {"file": "img/trigrams/lake.jpg", "title": "Friars' Crag Derwentwater Lake District 2022 01.jpg", "page": "https://commons.wikimedia.org/wiki/File:Friars%27_Crag_Derwentwater_Lake_District_2022_01.jpg", "artist": "Julian Herzog", "license": "CC BY 4.0", "licenseUrl": "https://creativecommons.org/licenses/by/4.0"}, "101": {"file": "img/trigrams/fire.jpg", "title": "Campfire flames at night.jpg", "page": "https://commons.wikimedia.org/wiki/File:Campfire_flames_at_night.jpg", "artist": "Marc-Lautenbacher", "license": "CC BY-SA 4.0", "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"}, "100": {"file": "img/trigrams/thunder.jpg", "title": "2013-08-07 04-23-26-foudre-belfort.jpg", "page": "https://commons.wikimedia.org/wiki/File:2013-08-07_04-23-26-foudre-belfort.jpg", "artist": "Thomas Bresson", "license": "CC BY 3.0", "licenseUrl": "https://creativecommons.org/licenses/by/3.0"}, "011": {"file": "img/trigrams/wind.jpg", "title": "Haltern am See, Naturpark Hohe Mark, Weizenfeld -- 2024 -- 4442.jpg", "page": "https://commons.wikimedia.org/wiki/File:Haltern_am_See,_Naturpark_Hohe_Mark,_Weizenfeld_--_2024_--_4442.jpg", "artist": "Dietmar Rabich", "license": "CC BY-SA 4.0", "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"}, "010": {"file": "img/trigrams/water.jpg", "title": "Порог Корней на реке Поньгома.jpg", "page": "https://commons.wikimedia.org/wiki/File:%D0%9F%D0%BE%D1%80%D0%BE%D0%B3_%D0%9A%D0%BE%D1%80%D0%BD%D0%B5%D0%B9_%D0%BD%D0%B0_%D1%80%D0%B5%D0%BA%D0%B5_%D0%9F%D0%BE%D0%BD%D1%8C%D0%B3%D0%BE%D0%BC%D0%B0.jpg", "artist": "Vsatinet", "license": "CC0", "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"}, "001": {"file": "img/trigrams/mountain.jpg", "title": "Puez peaks from Odla de Valdusa.jpg", "page": "https://commons.wikimedia.org/wiki/File:Puez_peaks_from_Odla_de_Valdusa.jpg", "artist": "Wolfgang Moroder", "license": "CC BY-SA 3.0", "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"}, "000": {"file": "img/trigrams/earth.jpg", "title": "Plowed field drying after rain.jpg", "page": "https://commons.wikimedia.org/wiki/File:Plowed_field_drying_after_rain.jpg", "artist": "W.carter", "license": "CC0", "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"}};
+const PIMG={};Object.keys(PHOTO).forEach(k=>{const im=new Image();im.src=PHOTO[k].file;PIMG[k]=im;});
+let scenePhoto=(()=>{try{return localStorage.getItem("iching-scene")!=="draw";}catch(e){return true;}})();
+function drawPhoto(tri,r,t,seed){const im=PIMG[tri];if(!im||!im.complete||!im.naturalWidth)return false;
+  const iw=im.naturalWidth,ih=im.naturalHeight,ra=r.w/r.h;let cw=iw,ch=iw/ra;if(ch>ih){ch=ih;cw=ih*ra;}
+  const ox=(iw-cw)*(.5+.4*Math.sin(t/11000+seed*2)),oy=(ih-ch)*(.5+.45*Math.sin(t/9000+seed));
+  sx.drawImage(im,ox,oy,cw,ch,r.x,r.y,r.w,r.h);
+  if(tri==="100"&&(Math.sin(t/180)+Math.sin(t/77))>1.5){sx.fillStyle="rgba(255,255,255,.22)";sx.fillRect(r.x,r.y,r.w,r.h);}
+  return true;}
 function paintHex(h,t,alpha){
   sx.globalAlpha=alpha;
   const top={x:0,y:0,w:SW,h:SH/2},bot={x:0,y:SH/2,w:SW,h:SH/2};
-  DRAW[h.b.slice(3)](top,t);DRAW[h.b.slice(0,3)](bot,t);
+  if(!(scenePhoto&&drawPhoto(h.b.slice(3),top,t,1)))DRAW[h.b.slice(3)](top,t);
+  if(!(scenePhoto&&drawPhoto(h.b.slice(0,3),bot,t,2)))DRAW[h.b.slice(0,3)](bot,t);
   const g=sx.createLinearGradient(0,SH/2-30,0,SH/2+30);g.addColorStop(0,"rgba(255,255,255,0)");g.addColorStop(.5,"rgba(255,255,255,.35)");g.addColorStop(1,"rgba(255,255,255,0)");
   sx.fillStyle=g;sx.fillRect(0,SH/2-30,SW,60);sx.globalAlpha=1;
 }
@@ -704,7 +717,17 @@ function renderCaption(){
     const roles=S.chg.map((c,k)=>c?(h.b[k]==="1"?T(`${POS[k][0]}: a tevékeny elcsendesedik`,`${POS[k][1]}: the active grows still`):T(`${POS[k][0]}: a befogadó megmozdul`,`${POS[k][1]}: the receptive starts to move`)):null).filter(Boolean);
     s+=`<br><b>→ ${t.zh}</b> – ${parts.join("; ")}. <span class="small">${roles.join(" · ")}</span>`;}
   $("#cap").innerHTML=s;
+  renderCredits();
 }
+function renderCredits(){
+  document.querySelectorAll("[data-scene]").forEach(b=>b.classList.toggle("on",(b.dataset.scene==="photo")===scenePhoto));
+  if(!scenePhoto){$("#photoCredit").innerHTML="";return;}
+  const h=S.sel,t=target(),keys=[];[h,t].forEach(x=>{if(!x)return;[x.b.slice(3),x.b.slice(0,3)].forEach(k=>{if(!keys.includes(k))keys.push(k);});});
+  $("#photoCredit").innerHTML=T("Fotók (Wikimedia Commons): ","Photos (Wikimedia Commons): ")+keys.map(k=>{const p=PHOTO[k],tr=TRI[k];
+    return `${tr.s} ${T(tr.hu,tr.en)}: <a href="${esc(p.page)}" target="_blank" rel="noopener">${esc(p.title)}</a> – ${esc(p.artist)}, <a href="${esc(p.licenseUrl)}" target="_blank" rel="noopener">${esc(p.license)}</a>`;}).join(" · ");
+}
+document.querySelectorAll("[data-scene]").forEach(b=>b.addEventListener("click",()=>{scenePhoto=b.dataset.scene==="photo";
+  try{localStorage.setItem("iching-scene",scenePhoto?"photo":"draw");}catch(e){}renderCredits();}));
 
 /* ---------- controls ---------- */
 function setLayout(n){S.layout=n;H.forEach((h,i)=>{tgt[i]=layout(n,h);});

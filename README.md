@@ -55,6 +55,7 @@ Ezek választott megfeleltetések, nem felfedezések.
 - A magyar fordítás (ítéletek, képek, vonalak, 彖/象) saját munka a kínai eredetiből, Legge-t segédletként használva; lektorálásra vár.
 - A 4×4×4-es kocka-szemlélet S. H. Cullinane finitegeometry.org oldalaiból ihletődik; a koordináta-hozzárendelés saját.
 - Oklab / OKLCH: Björn Ottosson.
+- Az `iching.html` jelenetének nyolc trigram-fotója a Wikimedia Commonsról való (CC0, CC BY, CC BY-SA); szerzők és licencek: [`img/trigrams/CREDITS.md`](img/trigrams/CREDITS.md), és a jelenet alatt is.
 - [three.js](https://threejs.org/) r128 (MIT), helyi másolat: `vendor/three.min.js`, licenc: `vendor/three.LICENSE`.
 
 ## Licenc
