@@ -1,15 +1,20 @@
 <!DOCTYPE html>
-<html lang="hu" data-theme="dark">
+<html lang="hu" data-theme="dark" data-lang="hu">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SJK-Chroma Engine v1.3 – Geometriai és Színtani Igazság Laboratórium</title>
-<meta name="description" content="SJK-Chroma Engine: 3D spidron-fészek, RGB-színkocka és spidronhedron; a 錯 komplementer színinvariáns, 五音 hangrezonancia és Hamming-szomszédsági paletta a 64 hexagramra.">
+<title>SJK-Chroma Engine v1.3 – Színtani laboratórium / Colour Lab</title>
+<meta name="description" content="SJK-Chroma Engine: 3D spidron-fészek, RGB-színkocka és spidronhedron; a 錯 komplementer színinvariáns, 五音 hangrezonancia és Hamming-szomszédsági paletta a 64 hexagramra. / 3D spidron nest, RGB colour cube and spidronhedron; the 錯 complementary colour invariant, 五音 sound resonance and a Hamming-neighbour palette for the 64 hexagrams.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="SJK-Chroma Engine v1.3">
-<meta property="og:description" content="Spidron · Ji King · DNS színtani szintézis – 3D labor.">
+<meta property="og:description" content="Spidron · Ji King · DNS színtani szintézis – 3D labor. / Spidron · I Ching · DNA colour synthesis – 3D lab.">
 <meta property="og:url" content="https://madcsaba.github.io/spidron/chroma.html">
 <link rel="stylesheet" href="chroma.css">
+<script>
+(function(){var l;try{l=localStorage.getItem("sjk-lang")}catch(e){}
+if(l!=="hu"&&l!=="en")l=(navigator.language||"").toLowerCase().indexOf("hu")===0?"hu":"en";
+document.documentElement.setAttribute("data-lang",l);document.documentElement.lang=l;})();
+</script>
 <script src="vendor/three.min.js"></script>
 <style>
   :root {
@@ -23,6 +28,12 @@
     --gold: #c9a54e;
     --cyan: #4fa89f;
   }
+  html[data-lang="hu"] .en { display: none; }
+  html[data-lang="en"] .hu { display: none; }
+  .langsw { display: flex; border: 1px solid var(--line); border-radius: 999px; padding: 2px; background: var(--panel); }
+  .langsw button { border: 0; background: none; color: var(--mute); font: 600 12px ui-sans-serif, system-ui, sans-serif; padding: 6px 10px; border-radius: 999px; cursor: pointer; min-height: 30px; }
+  .langsw button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+  .langsw button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
   * { box-sizing: border-box; min-width: 0; }
   body {
     margin: 0;
@@ -108,16 +119,16 @@
 <!-- TOP HEADER -->
 <header class="border-b border-[#332d24] px-4 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4 bg-[#151310]/90 backdrop-blur-md sticky top-0 z-30">
   <div class="flex items-center gap-3.5">
-    <a href="index.html" title="Vissza a nyitóoldalra" aria-label="Vissza a nyitóoldalra" class="w-10 h-10 rounded-lg bg-[#d9503f] text-[#fbf8f1] flex items-center justify-center serif text-2xl font-bold shadow-inner border border-white/20 select-none no-underline">
+    <a href="index.html" title="Nyitóoldal / Home" aria-label="Nyitóoldal / Home" class="w-10 h-10 rounded-lg bg-[#d9503f] text-[#fbf8f1] flex items-center justify-center serif text-2xl font-bold shadow-inner border border-white/20 select-none no-underline">
       易
     </a>
     <div>
       <div class="flex items-center gap-2.5">
         <span class="mono text-[11px] uppercase tracking-widest px-2 py-0.5 rounded bg-[#211e19] text-[#c9a54e] border border-[#332d24]">SJK-Chroma Engine v1.3</span>
-        <span class="text-xs text-[#9e9585] hidden sm:inline">Spidron · Ji King · DNS Színtani Szintézis · <a href="index.html" class="underline hover:text-[#c9a54e]">nyitóoldal</a> · <a href="spidron-lab.html" class="underline hover:text-[#c9a54e]">Spidron-labor</a></span>
+        <span class="text-xs text-[#9e9585] hidden sm:inline"><span class="hu">Spidron · Ji King · DNS Színtani Szintézis</span><span class="en">Spidron · I Ching · DNA Colour Synthesis</span> · <a href="index.html" class="underline hover:text-[#c9a54e]"><span class="hu">nyitóoldal</span><span class="en">home</span></a> · <a href="spidron-lab.html" class="underline hover:text-[#c9a54e]"><span class="hu">Spidron-labor</span><span class="en">Spidron Lab</span></a></span>
       </div>
       <h1 class="serif text-xl sm:text-2xl font-semibold tracking-tight text-[#ece6d6] mt-0.5">
-        Geometriai és Színtani Igazság Laboratórium
+        <span class="hu">Geometriai és Színtani Igazság Laboratórium</span><span class="en">Laboratory of Geometric and Colour Truth</span>
       </h1>
     </div>
   </div>
@@ -127,18 +138,19 @@
     <div class="hidden xl:flex items-center gap-3 px-3.5 py-1.5 rounded-lg bg-[#191713] border border-[#332d24] text-xs mono text-[#9e9585]">
       <span>z(θ) = a·e<sup class="text-[#c9a54e]">bθ</sup></span>
       <span class="text-[#332d24]">|</span>
-      <span>C<sub class="text-[#4fa89f]">hex</sub> = ⅔·T<sub class="text-[#d9503f]">alsó</sub> + ⅓·T<sub class="text-[#c9a54e]">felső</sub></span>
+      <span>C<sub class="text-[#4fa89f]">hex</sub> = ⅔·T<sub class="text-[#d9503f]"><span class="hu">alsó</span><span class="en">lower</span></sub> + ⅓·T<sub class="text-[#c9a54e]"><span class="hu">felső</span><span class="en">upper</span></sub></span>
       <span class="text-[#332d24]">|</span>
       <span>錯(C) + C = <b class="text-[#ece6d6]">#7F7F7F</b></span>
     </div>
 
     <button id="btnAudioToggle" aria-pressed="false" class="btn-pill px-3.5 py-2 rounded-full text-xs flex items-center gap-2 cursor-pointer">
       <span id="audioDot" class="w-2 h-2 rounded-full bg-[#9e9585]"></span>
-      <span>五音 Hangrezonancia</span>
+      <span>五音 <span class="hu">Hangrezonancia</span><span class="en">Sound resonance</span></span>
     </button>
-    <button id="btnRandom" class="btn-pill px-3.5 py-2 rounded-full text-xs cursor-pointer" title="Véletlen hexagram ugrás">
-      🎲 Mutáció
+    <button id="btnRandom" class="btn-pill px-3.5 py-2 rounded-full text-xs cursor-pointer" data-title-hu="Véletlen hexagram ugrás" data-title-en="Jump to a random hexagram">
+      🎲 <span class="hu">Mutáció</span><span class="en">Mutation</span>
     </button>
+    <div class="langsw" role="group" aria-label="Nyelv / Language"><button type="button" data-l="hu">HU</button><button type="button" data-l="en">EN</button></div>
   </div>
 </header>
 
@@ -150,27 +162,27 @@
     
     <!-- Mode & View Toolbar -->
     <div class="p-3 px-4 border-b border-[#332d24] bg-[#191713] flex flex-wrap items-center justify-between gap-2">
-      <div class="flex flex-wrap items-center gap-1.5" role="group" aria-label="3D Nézet Mód">
+      <div class="flex flex-wrap items-center gap-1.5" role="group" aria-label="3D nézet / 3D view">
         <button data-view="nest" class="view-btn btn-pill active px-3.5 py-1.5 rounded-full text-xs cursor-pointer">
-          1. Spidron-fészek (6 Öv = 6 Vonal)
+          1. <span class="hu">Spidron-fészek (6 Öv = 6 Vonal)</span><span class="en">Spidron nest (6 belts = 6 lines)</span>
         </button>
         <button data-view="rgb" class="view-btn btn-pill px-3.5 py-1.5 rounded-full text-xs cursor-pointer">
-          2. RGB Színkocka &amp; 錯 Komplementer Tengely
+          2. <span class="hu">RGB Színkocka &amp; 錯 Komplementer Tengely</span><span class="en">RGB colour cube &amp; 錯 complementary axis</span>
         </button>
         <button data-view="spidronhedron" class="view-btn btn-pill px-3.5 py-1.5 rounded-full text-xs cursor-pointer">
-          3. Spidronhedron (8 Trigram Csúcs)
+          3. <span class="hu">Spidronhedron (8 Trigram Csúcs)</span><span class="en">Spidronhedron (8 trigram vertices)</span>
         </button>
       </div>
 
       <div class="flex items-center gap-1.5">
-        <button id="btnCurved" aria-pressed="true" class="btn-pill px-3 py-1.5 rounded-full text-xs cursor-pointer" title="SpHidron logaritmikus íveltség">
-          SpHidron Ív
+        <button id="btnCurved" aria-pressed="true" class="btn-pill px-3 py-1.5 rounded-full text-xs cursor-pointer" data-title-hu="SpHidron logaritmikus íveltség" data-title-en="SpHidron logarithmic curvature">
+          <span class="hu">SpHidron Ív</span><span class="en">SpHidron curve</span>
         </button>
-        <button id="btnBreath" aria-pressed="false" class="btn-pill px-3 py-1.5 rounded-full text-xs cursor-pointer" title="Folytonos Yin-Yang kinematikus lélegzés">
-          Lélegzés
+        <button id="btnBreath" aria-pressed="false" class="btn-pill px-3 py-1.5 rounded-full text-xs cursor-pointer" data-title-hu="Folytonos Yin-Yang kinematikus lélegzés" data-title-en="Continuous yin-yang kinematic breathing">
+          <span class="hu">Lélegzés</span><span class="en">Breathing</span>
         </button>
         <button id="btnSpin" aria-pressed="true" class="btn-pill px-3 py-1.5 rounded-full text-xs cursor-pointer">
-          Forgás
+          <span class="hu">Forgás</span><span class="en">Spin</span>
         </button>
       </div>
     </div>
@@ -200,7 +212,7 @@
         </div>
 
         <div class="bg-[#12110e]/85 backdrop-blur-md border border-[#332d24] rounded-xl px-3 py-2 text-[11px] mono text-[#9e9585]">
-          Húzás: 3D forgatás · Görgő: Zoom · Kattints egy övre a mutációhoz
+          <span class="hu">Húzás: 3D forgatás · Görgő: Zoom · Kattints egy övre a mutációhoz</span><span class="en">Drag: rotate in 3D · Wheel: zoom · Click a belt to mutate</span>
         </div>
       </div>
     </div>
@@ -209,32 +221,32 @@
     <div class="p-4 border-t border-[#332d24] bg-[#191713] grid grid-cols-1 sm:grid-cols-3 gap-4">
       <div class="flex flex-col gap-1.5">
         <div class="flex justify-between text-xs">
-          <label for="slFold" class="text-[#9e9585]">Spidron Hajtogatási Feszültség (Fold)</label>
+          <label for="slFold" class="text-[#9e9585]"><span class="hu">Spidron Hajtogatási Feszültség (Fold)</span><span class="en">Spidron fold tension</span></label>
           <span id="valFold" class="mono text-[#ece6d6]">72%</span>
         </div>
         <input id="slFold" type="range" min="0" max="100" value="72">
-        <span class="text-[11px] text-[#9e9585]">Yang (1) = kiemelkedő él · Yin (0) = 3D bemélyedés</span>
+        <span class="text-[11px] text-[#9e9585]"><span class="hu">Yang (1) = kiemelkedő él · Yin (0) = 3D bemélyedés</span><span class="en">Yang (1) = raised ridge · Yin (0) = 3D recess</span></span>
       </div>
 
       <div class="flex flex-col gap-1.5">
         <div class="flex justify-between text-xs">
-          <label for="slTwist" class="text-[#9e9585]">Logaritmikus Spirál Fázisszög (θ)</label>
+          <label for="slTwist" class="text-[#9e9585]"><span class="hu">Logaritmikus Spirál Fázisszög (θ)</span><span class="en">Logarithmic spiral phase angle (θ)</span></label>
           <span id="valTwist" class="mono text-[#c9a54e]">30.0°</span>
         </div>
         <input id="slTwist" type="range" min="0" max="100" value="60">
-        <span class="text-[11px] text-[#9e9585]">Arány: r<sub>k</sub> = r<sub>0</sub> · (1/√3)<sup>k</sup> csavarodás</span>
+        <span class="text-[11px] text-[#9e9585]"><span class="hu">Arány</span><span class="en">Ratio</span>: r<sub>k</sub> = r<sub>0</sub> · (1/√3)<sup>k</sup> <span class="hu">csavarodás</span><span class="en">twist</span></span>
       </div>
 
       <div class="flex flex-col gap-1.5">
         <div class="flex justify-between text-xs">
-          <label for="slColorMode" class="text-[#9e9585]">Öv Színleképezési Igazság</label>
+          <label for="slColorMode" class="text-[#9e9585]"><span class="hu">Öv Színleképezési Igazság</span><span class="en">Belt colour mapping</span></label>
           <span class="mono text-[11px] text-[#4fa89f]">SJK-SDF</span>
         </div>
         <select id="slColorMode" class="bg-[#211e19] border border-[#332d24] rounded-lg px-2.5 py-1.5 text-xs text-[#ece6d6] outline-none focus:border-[#c9a54e]">
-          <option value="trigram_blend">Színtani Igazság (Trigram RGB + 錯 Mag)</option>
-          <option value="mantra_lines">6 Vonal Spektrum (OM-MA-NI-PAD-ME-HUM)</option>
-          <option value="wuxing">五行 Wu Xing (Öt Elem Harmónia)</option>
-          <option value="tension">Mechanikai Feszültség (Yang Arany / Yin Lazúr)</option>
+          <option value="trigram_blend" data-hu="Színtani Igazság (Trigram RGB + 錯 Mag)" data-en="Colour truth (trigram RGB + 錯 core)">Színtani Igazság (Trigram RGB + 錯 Mag)</option>
+          <option value="mantra_lines" data-hu="6 Vonal Spektrum (OM-MA-NI-PAD-ME-HUM)" data-en="6-line spectrum (OM-MA-NI-PAD-ME-HUM)">6 Vonal Spektrum (OM-MA-NI-PAD-ME-HUM)</option>
+          <option value="wuxing" data-hu="五行 Wu Xing (Öt Elem Harmónia)" data-en="五行 Wu Xing (five-element harmony)">五行 Wu Xing (Öt Elem Harmónia)</option>
+          <option value="tension" data-hu="Mechanikai Feszültség (Yang Arany / Yin Lazúr)" data-en="Mechanical tension (yang gold / yin azure)">Mechanikai Feszültség (Yang Arany / Yin Lazúr)</option>
         </select>
       </div>
     </div>
@@ -244,14 +256,14 @@
       <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
         <div>
           <h2 class="serif text-lg font-medium text-[#ece6d6] flex items-center gap-2">
-            <span>Kényszerített Harmonikus Paletta (Q6 Hiperkocka Szomszédság)</span>
+            <span><span class="hu">Kényszerített Harmonikus Paletta (Q6 Hiperkocka Szomszédság)</span><span class="en">Constrained harmonic palette (Q6 hypercube neighbourhood)</span></span>
           </h2>
           <p class="text-xs text-[#9e9585]">
-            A kiválasztott hexagram 6 közvetlen Hamming-szomszédja (1 bit mutáció) + a 錯 Komplementer és 互 Mag automatikusan disszonancia-mentes palettát alkot.
+            <span class="hu">A kiválasztott hexagram 6 közvetlen Hamming-szomszédja (1 bit mutáció) + a 錯 Komplementer és 互 Mag automatikusan disszonancia-mentes palettát alkot.</span><span class="en">The selected hexagram's 6 direct Hamming neighbours (1-bit mutation) plus its 錯 complement and 互 nucleus form a dissonance-free palette.</span>
           </p>
         </div>
         <button id="btnCopyCSS" class="btn-pill px-3.5 py-1.5 rounded-lg text-xs mono flex items-center gap-1.5 cursor-pointer">
-          <span>📋 CSS Változók Másolása</span>
+          <span>📋 <span class="hu">CSS Változók Másolása</span><span class="en">Copy CSS variables</span></span>
         </button>
       </div>
 
@@ -281,8 +293,8 @@
       </div>
 
       <div class="text-[11px] text-[#9e9585] mb-2 flex justify-between">
-        <span>Kattints bármelyik vonalra (övre) a Yang ↔ Yin átfordításhoz:</span>
-        <span class="mono text-[#ece6d6]">Felső ☰ / Alsó ☰</span>
+        <span><span class="hu">Kattints bármelyik vonalra (övre) a Yang ↔ Yin átfordításhoz:</span><span class="en">Click any line (belt) to flip yang ↔ yin:</span></span>
+        <span id="trigPair" class="mono text-[#ece6d6]">Felső ☰ / Alsó ☰</span>
       </div>
 
       <!-- 6 Interactive Lines (6 down to 1) -->
@@ -295,9 +307,9 @@
     <div class="bg-[#211e19] border border-[#332d24] rounded-xl p-4 flex flex-col gap-3.5">
       <div class="flex items-center justify-between">
         <h3 class="text-xs font-semibold uppercase tracking-wider text-[#c9a54e]">
-          I. Színtani Igazság: 錯 (Cuo) Invariáns
+          I. <span class="hu">Színtani Igazság: 錯 (Cuo) Invariáns</span><span class="en">Colour truth: the 錯 (Cuo) invariant</span>
         </h3>
-        <span class="mono text-[11px] text-[#9e9585]">C ⊕ 63 = Komplementer</span>
+        <span class="mono text-[11px] text-[#9e9585]">C ⊕ 63 = <span class="hu">Komplementer</span><span class="en">complement</span></span>
       </div>
 
       <!-- Trigram 2/3 + 1/3 Breakdown -->
@@ -305,7 +317,7 @@
         <div class="p-2.5 rounded-lg bg-[#191713] border border-[#332d24] flex items-center gap-2.5">
           <div id="swatchLower" class="w-8 h-8 rounded-md border border-white/20 shrink-0"></div>
           <div class="text-xs leading-tight">
-            <div class="text-[#9e9585] text-[10px] mono">ALSÓ TRIGRAM (⅔ súly)</div>
+            <div class="text-[#9e9585] text-[10px] mono"><span class="hu">ALSÓ TRIGRAM (⅔ súly)</span><span class="en">LOWER TRIGRAM (⅔ weight)</span></div>
             <div id="txtLowerTrig" class="font-medium text-[#ece6d6] mt-0.5">☰ 乾 Ég</div>
             <div id="rgbLowerTrig" class="mono text-[10px] text-[#9e9585]">RGB(255, 255, 255)</div>
           </div>
@@ -314,7 +326,7 @@
         <div class="p-2.5 rounded-lg bg-[#191713] border border-[#332d24] flex items-center gap-2.5">
           <div id="swatchUpper" class="w-8 h-8 rounded-md border border-white/20 shrink-0"></div>
           <div class="text-xs leading-tight">
-            <div class="text-[#9e9585] text-[10px] mono">FELSŐ TRIGRAM (⅓ súly)</div>
+            <div class="text-[#9e9585] text-[10px] mono"><span class="hu">FELSŐ TRIGRAM (⅓ súly)</span><span class="en">UPPER TRIGRAM (⅓ weight)</span></div>
             <div id="txtUpperTrig" class="font-medium text-[#ece6d6] mt-0.5">☰ 乾 Ég</div>
             <div id="rgbUpperTrig" class="mono text-[10px] text-[#9e9585]">RGB(255, 255, 255)</div>
           </div>
@@ -325,19 +337,19 @@
       <div class="rounded-lg overflow-hidden border border-[#332d24]">
         <div class="grid grid-cols-3 text-center text-xs mono">
           <div id="boxMainColor" class="p-3 flex flex-col justify-between min-h-[76px] transition-colors">
-            <span class="text-[10px] uppercase opacity-80">Aktív Hexagram</span>
+            <span class="text-[10px] uppercase opacity-80"><span class="hu">Aktív Hexagram</span><span class="en">Active hexagram</span></span>
             <b id="hexCodeMain" class="text-sm">#FFFFFF</b>
             <span id="rgbCodeMain" class="text-[10px] opacity-85">255, 255, 255</span>
           </div>
 
           <div id="boxMidpoint" class="p-3 flex flex-col justify-between min-h-[76px] bg-[#7f7f7f] text-[#12110e] border-x border-black/20">
-            <span class="text-[10px] uppercase font-semibold">Mértani Közép</span>
+            <span class="text-[10px] uppercase font-semibold"><span class="hu">Mértani Közép</span><span class="en">Midpoint</span></span>
             <b class="text-sm">#7F7F7F</b>
-            <span class="text-[10px] font-medium">Abszolút Semleges</span>
+            <span class="text-[10px] font-medium"><span class="hu">Abszolút Semleges</span><span class="en">Absolute neutral</span></span>
           </div>
 
-          <div id="boxCompColor" class="p-3 flex flex-col justify-between min-h-[76px] cursor-pointer transition-colors" title="Kattints a 錯 komplementer hexagramra ugráshoz">
-            <span class="text-[10px] uppercase opacity-80">錯 Ellentett ↗</span>
+          <div id="boxCompColor" class="p-3 flex flex-col justify-between min-h-[76px] cursor-pointer transition-colors" data-title-hu="Kattints a 錯 komplementer hexagramra ugráshoz" data-title-en="Click to jump to the 錯 complementary hexagram">
+            <span class="text-[10px] uppercase opacity-80">錯 <span class="hu">Ellentett</span><span class="en">Opposite</span> ↗</span>
             <b id="hexCodeComp" class="text-sm">#000000</b>
             <span id="rgbCodeComp" class="text-[10px] opacity-85">0, 0, 0</span>
           </div>
@@ -347,7 +359,7 @@
       </div>
 
       <p class="text-[11px] text-[#9e9585] leading-relaxed m-0">
-        <b>Matematikai bizonyíték:</b> Bármely hexagram 6 bitjét megfordítva (<code class="text-[#ece6d6]">c ^ 63</code>) az RGB-kocka pontosan átellenes csúcsát kapjuk. A két szín vektorösszege minden esetben <code class="text-[#ece6d6]">(255, 255, 255)</code>, felezőpontja pedig a tökéletes akromatikus szürke.
+        <span class="hu"><b>Matematikai bizonyíték:</b> Bármely hexagram 6 bitjét megfordítva (<code class="text-[#ece6d6]">c ^ 63</code>) az RGB-kocka pontosan átellenes csúcsát kapjuk. A két szín vektorösszege minden esetben <code class="text-[#ece6d6]">(255, 255, 255)</code>, felezőpontja pedig a tökéletes akromatikus szürke.</span><span class="en"><b>Proof:</b> flipping all 6 bits of any hexagram (<code class="text-[#ece6d6]">c ^ 63</code>) gives the exactly opposite point of the RGB cube. The two colours always sum to <code class="text-[#ece6d6]">(255, 255, 255)</code>, and their midpoint is a perfect achromatic grey.</span>
       </p>
     </div>
 
@@ -355,10 +367,10 @@
     <div class="bg-[#211e19] border border-[#332d24] rounded-xl p-4 flex flex-col gap-3">
       <div class="flex items-center justify-between">
         <h3 class="text-xs font-semibold uppercase tracking-wider text-[#c9a54e]">
-          II. Fény-Oktáv &amp; 五音 Hangrezonancia
+          II. <span class="hu">Fény-Oktáv &amp; 五音 Hangrezonancia</span><span class="en">Light octave &amp; 五音 sound resonance</span>
         </h3>
         <span id="wavelengthBadge" class="mono text-[11px] px-2 py-0.5 rounded bg-[#191713] text-[#4fa89f] border border-[#332d24]">
-          λ ≈ Akromatikus
+          λ ≈ <span class="hu">Akromatikus</span><span class="en">Achromatic</span>
         </span>
       </div>
 
@@ -371,9 +383,9 @@
     <div class="bg-[#211e19] border border-[#332d24] rounded-xl p-4 flex flex-col gap-2.5">
       <div class="flex items-center justify-between">
         <h3 class="text-xs font-semibold uppercase tracking-wider text-[#c9a54e]">
-          III. 64 Hexagram Színtér-Mátrix (King Wen)
+          III. <span class="hu">64 Hexagram Színtér-Mátrix (King Wen)</span><span class="en">64-hexagram colour matrix (King Wen)</span>
         </h3>
-        <span class="text-[11px] text-[#9e9585]">Piros keret = 1 bit szomszéd</span>
+        <span class="text-[11px] text-[#9e9585]"><span class="hu">Piros keret = 1 bit szomszéd</span><span class="en">Red border = 1-bit neighbour</span></span>
       </div>
       <div id="kwGrid" class="grid grid-cols-8 gap-1">
         <!-- 64 buttons populated by JS -->
@@ -385,7 +397,7 @@
 
 <!-- Notification Toast -->
 <div id="toast" class="fixed bottom-5 right-5 bg-[#ece6d6] text-[#12110e] px-4 py-2.5 rounded-xl shadow-2xl mono text-xs font-medium opacity-0 pointer-events-none transition-opacity duration-300 z-50">
-  CSS változók a vágólapra másolva!
+  <span class="hu">CSS változók a vágólapra másolva!</span><span class="en">CSS variables copied to the clipboard!</span>
 </div>
 
 <script>
@@ -393,6 +405,11 @@
   // ============================================================================
   // 1. ADATSTRUKTÚRÁK: 64 HEXAGRAM, TRIGRAMOK, WU XING, DNS ÉS SZÍNTAN
   // ============================================================================
+  const L = () => document.documentElement.getAttribute('data-lang') === 'en' ? 'en' : 'hu';
+  const T = (hu, en) => L() === 'en' ? en : hu;
+  const NM_EN = ["Creative", "Receptive", "Difficulty at the Beginning", "Youthful Folly", "Waiting", "Conflict", "The Army", "Holding Together", "Small Taming", "Treading", "Peace", "Standstill", "Fellowship", "Great Possession", "Modesty", "Enthusiasm", "Following", "Repairing the Spoiled", "Approach", "Contemplation", "Biting Through", "Grace", "Splitting Apart", "Return", "Innocence", "Great Taming", "Nourishment", "Great Exceeding", "The Abysmal", "The Clinging", "Influence", "Duration", "Retreat", "Great Power", "Progress", "Darkening of the Light", "The Family", "Opposition", "Obstruction", "Deliverance", "Decrease", "Increase", "Breakthrough", "Coming to Meet", "Gathering", "Pushing Upward", "Oppression", "The Well", "Revolution", "The Cauldron", "The Arousing", "Keeping Still", "Gradual Development", "The Marrying Maiden", "Abundance", "The Wanderer", "The Gentle", "The Joyous", "Dispersion", "Limitation", "Inner Truth", "Small Exceeding", "After Completion", "Before Completion"];
+  const nmName = (h) => T(h.nm[2], NM_EN[h.k]);
+
   const KW = [
     '111111','000000','100010','010001','111010','010111','010000','000010',
     '111011','110111','111000','000111','101111','111101','001000','000100',
@@ -425,23 +442,23 @@
 
   // 8 Trigrams: [Zh, Hu, Symbol, ElementKey]
   const TG = {
-    7: ['乾','Ég','☰','m'],
-    6: ['兌','Tó','☱','m'],
-    5: ['離','Tűz','☲','f'],
-    4: ['震','Mennydörgés','☳','w'],
-    3: ['巽','Szél','☴','w'],
-    2: ['坎','Víz','☵','a'],
-    1: ['艮','Hegy','☶','e'],
-    0: ['坤','Föld','☷','e']
+    7: ['乾','Ég','☰','m','Heaven'],
+    6: ['兌','Tó','☱','m','Lake'],
+    5: ['離','Tűz','☲','f','Fire'],
+    4: ['震','Mennydörgés','☳','w','Thunder'],
+    3: ['巽','Szél','☴','w','Wind'],
+    2: ['坎','Víz','☵','a','Water'],
+    1: ['艮','Hegy','☶','e','Mountain'],
+    0: ['坤','Föld','☷','e','Earth']
   };
 
   // Wu Xing (Five Elements) + Pentatonic Ratio + Color
   const WX = {
-    w: { zh: '木', hu: 'Fa', note: '角 jué (81/64)', ratio: 81/64, col: '#4fa89f' },
-    f: { zh: '火', hu: 'Tűz', note: '徵 zhǐ (3/2)', ratio: 3/2, col: '#e0604c' },
-    e: { zh: '土', hu: 'Föld', note: '宮 gōng (1/1)', ratio: 1, col: '#e8b04a' },
-    m: { zh: '金', hu: 'Fém', note: '商 shāng (9/8)', ratio: 9/8, col: '#ece4d0' },
-    a: { zh: '水', hu: 'Víz', note: '羽 yǔ (27/16)', ratio: 27/16, col: '#6b93dc' }
+    w: { zh: '木', hu: 'Fa', en: 'Wood', note: '角 jué (81/64)', ratio: 81/64, col: '#4fa89f' },
+    f: { zh: '火', hu: 'Tűz', en: 'Fire', note: '徵 zhǐ (3/2)', ratio: 3/2, col: '#e0604c' },
+    e: { zh: '土', hu: 'Föld', en: 'Earth', note: '宮 gōng (1/1)', ratio: 1, col: '#e8b04a' },
+    m: { zh: '金', hu: 'Fém', en: 'Metal', note: '商 shāng (9/8)', ratio: 9/8, col: '#ece4d0' },
+    a: { zh: '水', hu: 'Víz', en: 'Water', note: '羽 yǔ (27/16)', ratio: 27/16, col: '#6b93dc' }
   };
 
   const LINE_COLORS = ['#ece4d0', '#5fb085', '#e8b04a', '#6b93dc', '#e0604c', '#9b8fc4'];
@@ -456,6 +473,12 @@
     P:'Prolin', H:'Hisztidin', Q:'Glutamin', R:'Arginin', I:'Izoleucin', M:'Metionin',
     T:'Treonin', N:'Aszparagin', K:'Lizin', V:'Valin', A:'Alanin', D:'Aszparaginsav', E:'Glutaminsav', G:'Glicin'
   };
+  const AAN_EN = {
+    F:'Phenylalanine', L:'Leucine', S:'Serine', Y:'Tyrosine', '*':'STOP', C:'Cysteine', W:'Tryptophan',
+    P:'Proline', H:'Histidine', Q:'Glutamine', R:'Arginine', I:'Isoleucine', M:'Methionine',
+    T:'Threonine', N:'Asparagine', K:'Lysine', V:'Valine', A:'Alanine', D:'Aspartic acid', E:'Glutamic acid', G:'Glycine'
+  };
+  const aaName = (a) => T(AAN[a], AAN_EN[a]);
 
   // Build 64 Hexagram objects indexed by binary code c (0..63)
   const H = [];
@@ -1135,9 +1158,9 @@
 
     // 1. Top-left 3D Overlay
     document.getElementById('overlayHexBadge').style.backgroundColor = mainHex;
-    document.getElementById('overlayTitle').textContent = `${h.k + 1}. ${h.nm[0]} ${h.nm[1]} – ${h.nm[2]}`;
-    document.getElementById('overlaySub').textContent = `Bitek: ${h.b.join('')} · Fu Xi #${h.fx} · Kodon: ${h.codon} (${AAN[h.aa]})`;
-    document.getElementById('overlayEquation').textContent = `Spidron: ${h.yang} Yang / ${6 - h.yang} Yin · 錯 pár: #${compH.k + 1} ${compH.nm[0]} (${compHex})`;
+    document.getElementById('overlayTitle').textContent = `${h.k + 1}. ${h.nm[0]} ${h.nm[1]} – ${nmName(h)}`;
+    document.getElementById('overlaySub').textContent = `${T('Bitek','Bits')}: ${h.b.join('')} · Fu Xi #${h.fx} · ${T('Kodon','Codon')}: ${h.codon} (${aaName(h.aa)})`;
+    document.getElementById('overlayEquation').textContent = `Spidron: ${h.yang} Yang / ${6 - h.yang} Yin · 錯 ${T('pár','pair')}: #${compH.k + 1} ${compH.nm[0]} (${compHex})`;
 
     // 2. Floating Belt Pills (1..6)
     const beltPills = document.getElementById('beltPills');
@@ -1145,15 +1168,16 @@
       const activeCls = bit ? 'border-[#c9a54e] text-[#ece6d6]' : 'border-[#332d24] text-[#9e9585]';
       return `<button data-toggle-line="${k}" data-hover-belt="${k}" class="px-2.5 py-1 rounded-lg bg-[#191713] border ${activeCls} text-[11px] mono flex items-center gap-1.5 hover:border-[#d9503f] cursor-pointer transition">
         <span class="w-2 h-2 rounded-full" style="background:${LINE_COLORS[k]}"></span>
-        <span>${k + 1}. öv: ${bit ? 'YANG ↺' : 'yin ↻'}</span>
+        <span>${T(`${k + 1}. öv`, `Belt ${k + 1}`)}: ${bit ? 'YANG ↺' : 'yin ↻'}</span>
       </button>`;
     }).join('');
 
     // 3. Right Panel Header & 6 Interactive Lines (top line 6 down to bottom line 1)
     document.getElementById('hexMetaNum').textContent = `KING WEN #${h.k + 1} · FU XI #${h.fx}`;
     document.getElementById('hexZh').textContent = h.nm[0];
-    document.getElementById('hexNameHu').textContent = `${h.nm[1]} – ${h.nm[2]}`;
-    document.getElementById('hexCodonInfo').textContent = `DNS Kodon: ${h.codon} · ${AAN[h.aa]} (${h.aa})`;
+    document.getElementById('hexNameHu').textContent = `${h.nm[1]} – ${nmName(h)}`;
+    document.getElementById('hexCodonInfo').textContent = `${T('DNS Kodon','DNA codon')}: ${h.codon} · ${aaName(h.aa)} (${h.aa})`;
+    document.getElementById('trigPair').textContent = `${T('Felső','Upper')} ${TG[h.up][2]} / ${T('Alsó','Lower')} ${TG[h.lo][2]}`;
     document.getElementById('hexMiniPreview').style.backgroundColor = mainHex;
 
     const linesContainer = document.getElementById('interactiveLines');
@@ -1165,7 +1189,7 @@
       const neighborHex = toHex(rgbOf(neighborH));
       linesHTML += `
         <button data-toggle-line="${i}" data-hover-belt="${i}" class="line-bar w-full flex items-center gap-3 p-1.5 px-2.5 rounded-lg bg-[#191713] border border-[#332d24] cursor-pointer text-left">
-          <span class="mono text-[11px] text-[#9e9585] w-12">${i + 1}. vonal</span>
+          <span class="mono text-[11px] text-[#9e9585] w-12">${T(`${i + 1}. vonal`, `Line ${i + 1}`)}</span>
           <div class="flex-1 flex items-center justify-between h-3.5">
             ${isYang
               ? `<div class="w-full h-full rounded-sm shadow-sm" style="background:${LINE_COLORS[i]}"></div>`
@@ -1176,7 +1200,7 @@
           <span class="mono text-[11px] w-14 text-right ${isYang ? 'text-[#ece6d6] font-semibold' : 'text-[#9e9585]'}">
             ${isYang ? 'YANG (1)' : 'YIN (0)'}
           </span>
-          <span class="w-3.5 h-3.5 rounded-full border border-white/20 shrink-0" style="background:${neighborHex}" title="Mutáció erre: #${neighborH.k + 1} ${neighborH.nm[2]}"></span>
+          <span class="w-3.5 h-3.5 rounded-full border border-white/20 shrink-0" style="background:${neighborHex}" title="${T('Mutáció erre','Mutates to')}: #${neighborH.k + 1} ${nmName(neighborH)}"></span>
         </button>
       `;
     }
@@ -1185,11 +1209,11 @@
     // 4. Trigram Synthesis & Cuo Complementarity Proof
     const loT = TG[h.lo], upT = TG[h.up];
     document.getElementById('swatchLower').style.backgroundColor = loHex;
-    document.getElementById('txtLowerTrig').textContent = `${loT[2]} ${loT[0]} ${loT[1]} (${WX[loT[3]].hu})`;
+    document.getElementById('txtLowerTrig').textContent = `${loT[2]} ${loT[0]} ${T(loT[1], loT[4])} (${T(WX[loT[3]].hu, WX[loT[3]].en)})`;
     document.getElementById('rgbLowerTrig').textContent = `${loHex} · RGB(${loRGB.join(',')})`;
 
     document.getElementById('swatchUpper').style.backgroundColor = upHex;
-    document.getElementById('txtUpperTrig').textContent = `${upT[2]} ${upT[0]} ${upT[1]} (${WX[upT[3]].hu})`;
+    document.getElementById('txtUpperTrig').textContent = `${upT[2]} ${upT[0]} ${T(upT[1], upT[4])} (${T(WX[upT[3]].hu, WX[upT[3]].en)})`;
     document.getElementById('rgbUpperTrig').textContent = `${upHex} · RGB(${upRGB.join(',')})`;
 
     const boxMain = document.getElementById('boxMainColor');
@@ -1209,7 +1233,7 @@
 
     // 5. Wavelength & Wu Xing Acoustic Resonance
     const lam = wavelengthOf(mainRGB);
-    document.getElementById('wavelengthBadge').textContent = lam ? `λ ≈ ${Math.round(lam)} nm (Spektrális)` : `λ ≈ Bíbor / Akromatikus`;
+    document.getElementById('wavelengthBadge').textContent = lam ? `λ ≈ ${Math.round(lam)} nm (${T('Spektrális','spectral')})` : `λ ≈ ${T('Bíbor / Akromatikus','Purple / achromatic')}`;
 
     const fLo = getTrigramFreq(h.lo);
     const fUp = getTrigramFreq(h.up);
@@ -1220,15 +1244,15 @@
     resRows.innerHTML = `
       <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#191713] border border-[#332d24]">
         <div class="text-xs">
-          <div class="font-medium text-[#ece6d6]">五音 Wu Xing Trigram Pár (${WX[loT[3]].zh} + ${WX[upT[3]].zh})</div>
-          <div class="mono text-[11px] text-[#9e9585]">${fLo.toFixed(1)} Hz (bal) + ${fUp.toFixed(1)} Hz (jobb) · Δ ${Math.abs(fLo - fUp).toFixed(1)} Hz</div>
+          <div class="font-medium text-[#ece6d6]">五音 Wu Xing ${T('Trigram Pár','trigram pair')} (${WX[loT[3]].zh} + ${WX[upT[3]].zh})</div>
+          <div class="mono text-[11px] text-[#9e9585]">${fLo.toFixed(1)} Hz (${T('bal','left')}) + ${fUp.toFixed(1)} Hz (${T('jobb','right')}) · Δ ${Math.abs(fLo - fUp).toFixed(1)} Hz</div>
         </div>
         <button data-play-f1="${fLo}" data-play-f2="${fUp}" class="btn-pill w-9 h-9 rounded-full flex items-center justify-center text-sm cursor-pointer">▶</button>
       </div>
       <div class="flex items-center justify-between p-2.5 rounded-lg bg-[#191713] border border-[#332d24]">
         <div class="text-xs">
-          <div class="font-medium text-[#ece6d6]">錯 Bináris Tükör Oktáv (${h.fx}. ↔ ${63 - h.fx}. fok)</div>
-          <div class="mono text-[11px] text-[#9e9585]">${fBinA.toFixed(1)} Hz + ${fBinB.toFixed(1)} Hz · Mértani közép: ${(Math.sqrt(fBinA * fBinB)).toFixed(1)} Hz</div>
+          <div class="font-medium text-[#ece6d6]">錯 ${T('Bináris Tükör Oktáv','binary mirror octave')} (${h.fx}. ↔ ${63 - h.fx}. ${T('fok','step')})</div>
+          <div class="mono text-[11px] text-[#9e9585]">${fBinA.toFixed(1)} Hz + ${fBinB.toFixed(1)} Hz · ${T('Mértani közép','Geometric mean')}: ${(Math.sqrt(fBinA * fBinB)).toFixed(1)} Hz</div>
         </div>
         <button data-play-f1="${fBinA}" data-play-f2="${fBinB}" class="btn-pill w-9 h-9 rounded-full flex items-center justify-center text-sm cursor-pointer">▶</button>
       </div>
@@ -1238,10 +1262,10 @@
     const paletteItems = [];
     for (let i = 0; i < 6; i++) {
       const nc = sel ^ (1 << i);
-      paletteItems.push({ c: nc, label: `${i + 1}. öv mutáció`, role: `--sjk-line-${i + 1}` });
+      paletteItems.push({ c: nc, label: T(`${i + 1}. öv mutáció`, `Belt ${i + 1} mutation`), role: `--sjk-line-${i + 1}` });
     }
-    paletteItems.push({ c: cuoComp(sel), label: '錯 Komplementer', role: '--sjk-cuo-comp' });
-    paletteItems.push({ c: huNuc(sel), label: '互 Belső Mag', role: '--sjk-hu-nuclear' });
+    paletteItems.push({ c: cuoComp(sel), label: `錯 ${T('Komplementer','complement')}`, role: '--sjk-cuo-comp' });
+    paletteItems.push({ c: huNuc(sel), label: `互 ${T('Belső Mag','nucleus')}`, role: '--sjk-hu-nuclear' });
 
     const palGrid = document.getElementById('harmonicPaletteGrid');
     palGrid.innerHTML = paletteItems.map(item => {
@@ -1255,7 +1279,7 @@
             <span>#${ph.k + 1} ${ph.nm[0]}</span>
             <span>${ph.b.join('')}</span>
           </div>
-          <div class="my-1 font-semibold text-xs truncate">${ph.nm[2]}</div>
+          <div class="my-1 font-semibold text-xs truncate">${nmName(ph)}</div>
           <div class="flex items-center justify-between w-full text-[11px] mono">
             <b>${pHex}</b>
             <span class="text-[10px] opacity-80">${item.label}</span>
@@ -1285,7 +1309,7 @@
       const h = H.find(x => x.k === kIdx);
       const hexCol = toHex(rgbOf(h));
       return `
-        <button data-jump="${h.c}" title="${kIdx + 1}. ${h.nm[0]} ${h.nm[2]} (${hexCol})" style="border-bottom: 3px solid ${hexCol}">
+        <button data-jump="${h.c}" title="${kIdx + 1}. ${h.nm[0]} ${nmName(h)} (${hexCol})" style="border-bottom: 3px solid ${hexCol}">
           ${svgHexGlyph(h.b)}
           <span class="mono text-[9px] mt-0.5">${kIdx + 1}</span>
         </button>
@@ -1399,7 +1423,7 @@
   document.getElementById('btnCopyCSS').addEventListener('click', () => {
     const h = H[sel];
     const compH = H[cuoComp(sel)];
-    let cssText = `:root {\n  /* SJK-Chroma Engine v1.3 - Hexagram #${h.k + 1} ${h.nm[0]} (${h.nm[2]}) */\n`;
+    let cssText = `:root {\n  /* SJK-Chroma Engine v1.3 - Hexagram #${h.k + 1} ${h.nm[0]} (${nmName(h)}) */\n`;
     cssText += `  --sjk-primary: ${toHex(rgbOf(h))};\n`;
     cssText += `  --sjk-cuo-complement: ${toHex(rgbOf(compH))};\n`;
     cssText += `  --sjk-neutral-invariant: #7F7F7F;\n`;
@@ -1421,7 +1445,26 @@
     setTimeout(() => { toast.style.opacity = '0'; }, 2400);
   });
 
+  // Language: titles, select options, switcher, re-render
+  function applyLang() {
+    const l = L();
+    document.querySelectorAll('[data-title-hu]').forEach(el => { el.title = el.dataset[l === 'en' ? 'titleEn' : 'titleHu']; });
+    document.querySelectorAll('#slColorMode option').forEach(o => { o.textContent = o.dataset[l]; });
+    document.querySelectorAll('.langsw button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.l === l)));
+  }
+  document.querySelectorAll('.langsw button').forEach(b => b.addEventListener('click', () => {
+    const l = b.dataset.l;
+    try { localStorage.setItem('sjk-lang', l); } catch (e) {}
+    document.documentElement.setAttribute('data-lang', l);
+    document.documentElement.lang = l;
+    applyLang();
+    initKWGrid();
+    renderUI();
+    window.dispatchEvent(new CustomEvent('sjk:lang', { detail: l }));
+  }));
+
   // Initialize
+  applyLang();
   initKWGrid();
   renderUI();
   requestAnimationFrame(animate);
