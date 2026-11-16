@@ -2,7 +2,7 @@
 
 Interaktív, böngészőben futó prototípusok egy közös, 6 bites állapottérről, amely három nézetből olvasható: **hexagram** (Ji csing), **kodon** (genetikai kód) és **spidron** (Erdély Dániel formája).
 
-Élő változat: https://madcsaba.github.io/spidron/
+Élő változat (GitHub Pages): https://madcsaba.github.io/spidron/
 
 ## Oldalak
 
@@ -45,6 +45,12 @@ Ezek választott megfeleltetések, nem felfedezések.
 - A magyar fordítás (ítéletek, képek, vonalak, 彖/象) saját munka a kínai eredetiből, Legge-t segédletként használva; lektorálásra vár.
 - A 4×4×4-es kocka-szemlélet S. H. Cullinane finitegeometry.org oldalaiból ihletődik; a koordináta-hozzárendelés saját.
 - Oklab / OKLCH: Björn Ottosson.
+
+## Licenc
+
+- **Kód** (HTML, CSS, JavaScript): MIT, lásd [`LICENSE`](LICENSE).
+- **Magyar fordítások és magyarázó szövegek:** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) – szabadon felhasználható a forrás (`madcsaba/spidron`) megnevezésével.
+- **A 周易 kínai szövege és Legge fordítása:** közkincs.
 
 ## Eredet
 
