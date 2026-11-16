@@ -33,7 +33,7 @@ Utána: `http://localhost:8000/`
 ## Felépítés
 
 - Nincs külső betűtípus, CDN vagy követőkód. Az `index.html`, `iching.html` és `spidron-lab.html` minden CSS-t és JS-t az oldalon belül tartalmaz; a `spidron-cube.html` minden CSS-t az oldalon belül tartalmaz, a three.js-t a helyi `vendor/three.min.js`-ből tölti; a `chroma.html` és a `harmonia.html` a saját helyi CSS-ét (`chroma.css`, `harmonia.css`: Tailwind CSS 3.4-gyel előre fordítva, csak a használt osztályok) és a helyi `vendor/three.min.js`-t (three.js r128) tölti be. A `kodonfeszek/` oldal a közös `vendor/three.min.js` másolatot használja.
-- A hat fő oldal kétnyelvű (HU/EN): a szövegek `<span class="hu">` / `<span class="en">` párokban; a választott nyelv a `localStorage["sjk-lang"]` kulcsban, a nyelvváltáskor `sjk:lang` esemény fut. Kivétel: a `kodonfeszek/` csak magyarul érhető el.
+- Mind a hét oldal kétnyelvű (HU/EN), a `kodonfeszek/` is: a szövegek `<span class="hu">` / `<span class="en">` párokban; a választott nyelv a `localStorage["sjk-lang"]` kulcsban, a nyelvváltáskor `sjk:lang` esemény fut. A `kodonfeszek/` README-je és adattáblái magyarul vannak.
 - Böngészőben tárolva (csak az adott gépen): nyelv, idővonal (`iching-log`), képgenerálási beállítások (`iching-img`; a kulcs csak kifejezett kérésre).
 - A képgenerálás az egyetlen hely, ahol az oldal külső szolgáltatást hív: csak kattintásra, a felhasználó saját kulcsával, közvetlenül a böngészőből.
 

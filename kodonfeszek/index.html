@@ -3,7 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kodonfészek</title>
+<title>Kodonfészek / Codon Nest</title>
+<script>
+(function(){var l;try{l=localStorage.getItem("sjk-lang")}catch(e){}
+if(l!=="hu"&&l!=="en")l=(navigator.language||"").toLowerCase().indexOf("hu")===0?"hu":"en";
+document.documentElement.setAttribute("data-lang",l);document.documentElement.lang=l;})();
+</script>
 <style>
 /* VOICE everyday learning explorer, calm and exact
    IDEA a light table in a dark lab: the specimen glows, the index card beside it explains
@@ -75,6 +80,10 @@ aside{grid-row:2/4;grid-column:2;border-left:1px solid var(--line);overflow:auto
 .help{font-size:14px;color:#d8d6ec}.help summary{cursor:pointer;font-weight:600;color:var(--ink);min-height:32px}.help p,.help ul,.help ol{margin:6px 0}.help li{margin:3px 0}
 .err{font-size:13px;color:#ff8f8f;width:100%}
 .note{font-size:13px;color:var(--mute)}
+html[data-lang="hu"] .en{display:none}html[data-lang="en"] .hu{display:none}
+.langsw{display:flex;border:1px solid var(--line);border-radius:999px;padding:2px;background:var(--panel2)}
+.langsw button{border:0;min-height:30px;border-radius:999px;padding:0 10px;font-weight:600;font-size:13px;background:none;color:var(--mute)}
+.langsw button[aria-pressed=true]{background:var(--pur);color:#0f0e1c}
 @media(max-width:1000px){html,body{height:auto}.app{display:block}.stage{height:86svh;min-height:560px}.stage canvas{height:58%}.story{left:8px;right:8px;bottom:8px;max-width:none;max-height:40%;overflow:auto}aside{border-left:0;border-top:1px solid var(--line)}header h1{font-size:22px}}
 @media(max-width:600px){.legend{display:none}.base{width:48px;height:54px;font-size:28px}.story{left:8px;bottom:8px}}
 </style>
@@ -82,63 +91,64 @@ aside{grid-row:2/4;grid-column:2;border-left:1px solid var(--line);overflow:auto
 <body>
 <div class="app">
 <header>
-<h1>Kodonfészek<small>DNS × I Ching × spidron, mozgásban</small></h1>
+<h1><span class="hu">Kodonfészek</span><span class="en">Codon Nest</span><small><span class="hu">DNS × I Ching × spidron, mozgásban</span><span class="en">DNA × I Ching × spidron, in motion</span> · <a href="../index.html"><span class="hu">← nyitóoldal</span><span class="en">← home</span></a></small></h1>
 <div class="grp">
 <button id="bPlay" aria-label="Szünet">❚❚</button>
-<button id="bPrev" aria-label="Előző kodon">‹</button>
-<button id="bNext" aria-label="Következő kodon">›</button>
-<button id="bFlip">Szemközti szál</button>
-<label class="lbl" for="spd">Sebesség</label><input type="range" id="spd" min="0.2" max="2" step="0.1" value="0.7">
+<button id="bPrev" data-aria-hu="Előző kodon" data-aria-en="Previous codon" aria-label="Előző kodon">‹</button>
+<button id="bNext" data-aria-hu="Következő kodon" data-aria-en="Next codon" aria-label="Következő kodon">›</button>
+<button id="bFlip"><span class="hu">Szemközti szál</span><span class="en">Opposite strand</span></button>
+<label class="lbl" for="spd"><span class="hu">Sebesség</span><span class="en">Speed</span></label><input type="range" id="spd" min="0.2" max="2" step="0.1" value="0.7">
 </div>
 <div class="grp">
-<button id="lWob" aria-pressed="true">Remegés</button>
-<button id="lSpine" aria-pressed="true">Gerinc</button>
-<button id="lPairs" aria-pressed="false">應-párok</button>
-<button id="lBond" aria-pressed="true">Kötés</button>
-<button id="lSoft" aria-pressed="true">Lágy fény</button>
+<button id="lWob" aria-pressed="true"><span class="hu">Remegés</span><span class="en">Wobble</span></button>
+<button id="lSpine" aria-pressed="true"><span class="hu">Gerinc</span><span class="en">Spine</span></button>
+<button id="lPairs" aria-pressed="false"><span class="hu">應-párok</span><span class="en">應 pairs</span></button>
+<button id="lBond" aria-pressed="true"><span class="hu">Kötés</span><span class="en">Bonds</span></button>
+<button id="lSoft" aria-pressed="true"><span class="hu">Lágy fény</span><span class="en">Soft glow</span></button>
 </div>
 <div class="grp">
-<label class="lbl" for="rel">Dombormű</label><input type="range" id="rel" min="0" max="0.22" step="0.01" value="0">
-<select id="mapSel" aria-label="Kiosztás">
-<option value="r00">Kiosztás: alap</option><option value="r01">amino-polaritás fordítva</option><option value="r10">gyűrű-polaritás fordítva</option><option value="r11">mindkét polaritás fordítva</option>
-<option value="a00">trigramok felcserélve</option><option value="a01">cserélve, amino fordítva</option><option value="a10">cserélve, gyűrű fordítva</option><option value="a11">cserélve, mindkettő fordítva</option>
+<label class="lbl" for="rel"><span class="hu">Dombormű</span><span class="en">Relief</span></label><input type="range" id="rel" min="0" max="0.22" step="0.01" value="0">
+<select id="mapSel" aria-label="Kiosztás / Assignment">
+<option value="r00" data-hu="Kiosztás: alap" data-en="Assignment: default">Kiosztás: alap</option><option value="r01" data-hu="amino-polaritás fordítva" data-en="amino polarity reversed">amino-polaritás fordítva</option><option value="r10" data-hu="gyűrű-polaritás fordítva" data-en="ring polarity reversed">gyűrű-polaritás fordítva</option><option value="r11" data-hu="mindkét polaritás fordítva" data-en="both polarities reversed">mindkét polaritás fordítva</option>
+<option value="a00" data-hu="trigramok felcserélve" data-en="trigrams swapped">trigramok felcserélve</option><option value="a01" data-hu="cserélve, amino fordítva" data-en="swapped, amino reversed">cserélve, amino fordítva</option><option value="a10" data-hu="cserélve, gyűrű fordítva" data-en="swapped, ring reversed">cserélve, gyűrű fordítva</option><option value="a11" data-hu="cserélve, mindkettő fordítva" data-en="swapped, both reversed">cserélve, mindkettő fordítva</option>
 </select>
 </div>
 <div class="grp">
-<span class="lbl">Szintek</span>
+<span class="lbl"><span class="hu">Szintek</span><span class="en">Levels</span></span>
 <button class="tier" data-t="1" aria-pressed="false">1</button>
 <button class="tier" data-t="2" aria-pressed="false">1–2</button>
-<button class="tier" data-t="3" aria-pressed="true">mind</button>
+<button class="tier" data-t="3" aria-pressed="true"><span class="hu">mind</span><span class="en">all</span></button>
 </div>
 <div class="grp">
 <button id="bSnd" aria-pressed="false">🔈 Hang: ki</button>
-<button id="bStory" aria-pressed="true">Vezetett út</button>
-<button id="bFull">Teljes képernyő</button>
+<button id="bStory" aria-pressed="true"><span class="hu">Vezetett út</span><span class="en">Guided tour</span></button>
+<button id="bFull"><span class="hu">Teljes képernyő</span><span class="en">Full screen</span></button>
 </div>
+<div class="langsw" role="group" aria-label="Nyelv / Language"><button type="button" data-l="hu">HU</button><button type="button" data-l="en">EN</button></div>
 </header>
 
 <div class="stage" id="stage">
 <div class="legend">
-<span>gyűrű: purin / pirimidin<i style="background:var(--pur)"></i><i style="background:var(--tea)"></i></span>
+<span><span class="hu">gyűrű: purin / pirimidin</span><span class="en">ring: purine / pyrimidine</span><i style="background:var(--pur)"></i><i style="background:var(--tea)"></i></span>
 <span>amino / keto<i style="background:var(--up1)"></i><i style="background:var(--up0)"></i></span>
-<span>erős kötés (G, C): fényes él<i style="background:#e57fb0"></i></span>
-<span>kiemelés<i style="background:var(--amb)"></i></span>
+<span><span class="hu">erős kötés (G, C): fényes él</span><span class="en">strong bond (G, C): bright edge</span><i style="background:#e57fb0"></i></span>
+<span><span class="hu">kiemelés</span><span class="en">highlight</span><i style="background:var(--amb)"></i></span>
 </div>
 <div class="story" id="story">
 <h3 id="sT"></h3>
 <p id="sX"></p>
-<div class="nav"><button id="sPrev">Vissza</button><button id="sNext">Tovább</button><span id="sN"></span></div>
+<div class="nav"><button id="sPrev"><span class="hu">Vissza</span><span class="en">Back</span></button><button id="sNext"><span class="hu">Tovább</span><span class="en">Next</span></button><span id="sN"></span></div>
 </div>
 </div>
 
 <div class="ribbon">
-<div class="chips" id="chips" aria-label="Szekvencia kodonjai"></div>
-<input type="text" id="seq" value="AUGGCCCUGUGGAUGCGCCUCCUGCCCCUGCUGGCGCUGCUGGCCCUCUGGGGACCUGACCCAGCCGCAGCCUUUGUGAACCAACACCUGUGCGGCUCACACCUGGUGGAAGCUCUCUACCUAGUGUGCGGGGAACGAGGCUUCUUCUACACACCCAAGACCCGCCGGGAGGCAGAGGACCUGCAGGUGGGGCAGGUGGAGCUGGGCGGGGGCCCUGGUGCAGGCAGCCUGCAGCCCUUGGCCCUGGAGGGGUCCCUGCAGAAGCGUGGCAUUGUGGAACAAUGCUGUACCAGCAUCUGCUCCCUCUACCAGCUGGAGAACUACUGCAACUAG" aria-label="Szekvencia" style="flex:1 1 220px">
-<button id="bLoad">Betöltés</button>
-<button id="pIns">Inzulin</button>
-<button id="pDemo">Rövid minta</button>
+<div class="chips" id="chips" aria-label="Kodonok / Codons"></div>
+<input type="text" id="seq" value="AUGGCCCUGUGGAUGCGCCUCCUGCCCCUGCUGGCGCUGCUGGCCCUCUGGGGACCUGACCCAGCCGCAGCCUUUGUGAACCAACACCUGUGCGGCUCACACCUGGUGGAAGCUCUCUACCUAGUGUGCGGGGAACGAGGCUUCUUCUACACACCCAAGACCCGCCGGGAGGCAGAGGACCUGCAGGUGGGGCAGGUGGAGCUGGGCGGGGGCCCUGGUGCAGGCAGCCUGCAGCCCUUGGCCCUGGAGGGGUCCCUGCAGAAGCGUGGCAUUGUGGAACAAUGCUGUACCAGCAUCUGCUCCCUCUACCAGCUGGAGAACUACUGCAACUAG" aria-label="Szekvencia / Sequence" style="flex:1 1 220px">
+<button id="bLoad"><span class="hu">Betöltés</span><span class="en">Load</span></button>
+<button id="pIns"><span class="hu">Inzulin</span><span class="en">Insulin</span></button>
+<button id="pDemo"><span class="hu">Rövid minta</span><span class="en">Short sample</span></button>
 <div class="err" id="err"></div>
-<div class="note">Alapértelmezés: az emberi inzulin (preproinzulin) kódoló szakasza, 110 kodon és a stop (GenBank AH002844.2); a rövid minta kitalált bemutatósor. Szóköz: lejátszás, nyilak: léptetés, C: szemközti szál, F: teljes képernyő. Hang: a kártyán a „Mire jó a hang” részben. Szín: bázisonként egy RGB-csatorna (A 3, G 2, C 1, U 0).</div>
+<div class="note"><span class="hu">Alapértelmezés: az emberi inzulin (preproinzulin) kódoló szakasza, 110 kodon és a stop (GenBank AH002844.2); a rövid minta kitalált bemutatósor. Szóköz: lejátszás, nyilak: léptetés, C: szemközti szál, F: teljes képernyő. Hang: a kártyán a „Mire jó a hang” részben. Szín: bázisonként egy RGB-csatorna (A 3, G 2, C 1, U 0).</span><span class="en">Default: the coding region of human insulin (preproinsulin), 110 codons and the stop (GenBank AH002844.2); the short sample is an invented demo sequence. Space: play, arrows: step, C: opposite strand, F: full screen. Sound: see “What is the sound for” on the card. Colour: one RGB channel level per base (A 3, G 2, C 1, U 0).</span></div>
 </div>
 
 <aside>
@@ -148,8 +158,8 @@ aside{grid-row:2/4;grid-column:2;border-left:1px solid var(--line);overflow:auto
 <div class="aa" id="aa" style="margin-top:8px"></div>
 <div class="sw" id="sw"></div>
 <div class="report" id="report"></div>
-<div class="grp" style="margin-top:6px"><span class="lbl">Hang:</span><button class="smode" data-m="read" aria-pressed="true">Olvasott szál</button><button class="smode" data-m="pair" aria-pressed="false">Párja</button><button class="smode" data-m="both" aria-pressed="false">Mindkettő</button></div>
-<details class="help" style="margin-top:8px"><summary>Mire jó a hang, és hogyan használd?</summary>
+<div class="grp" style="margin-top:6px"><span class="lbl"><span class="hu">Hang:</span><span class="en">Sound:</span></span><button class="smode" data-m="read" aria-pressed="true"><span class="hu">Olvasott szál</span><span class="en">Read strand</span></button><button class="smode" data-m="pair" aria-pressed="false"><span class="hu">Párja</span><span class="en">Its pair</span></button><button class="smode" data-m="both" aria-pressed="false"><span class="hu">Mindkettő</span><span class="en">Both</span></button></div>
+<details class="help hu" style="margin-top:8px"><summary>Mire jó a hang, és hogyan használd?</summary>
 <p>A hang a kodon szerkezetét teszi hallhatóvá, hogy a kép nélkül, fül alapján is követni tudd. Jelölés, nem fizikai kapcsolat: a DNS-re nem hat, és nem gyógyít.</p>
 <p><b>Indítás:</b> kapcsold be a fejlécben a Hang gombot, majd lépkedj a nyilakkal vagy a ‹ › gombokkal. Minden lépésnél megszólal a kodon három hangja. Végig halkan szól egy mély D: ez a tükörtengely.</p>
 <ul>
@@ -168,8 +178,27 @@ aside{grid-row:2/4;grid-column:2;border-left:1px solid var(--line);overflow:auto
 <p>Lejátszás közben a háttérben √3 arányú Shepard-hang szól: a fészek nagyításának hangja, amely mindig emelkedik, mégis önmagába tér vissza.</p>
 <p class="note">A ±2 és ±7 félhangos távolság választás; a szerkezet más szimmetrikus hangközökkel is ugyanígy működne.</p>
 </details>
-<div class="grp" style="margin-top:6px"><button id="bUndo">Visszavonás</button><button id="bReset">Alaphelyzet</button></div>
-<div class="lbl" style="margin-top:10px">Ismert inzulinváltozatok (jelölés: NM_000207.3; a hatást a szekvenciából számolja)</div>
+<details class="help en" style="margin-top:8px"><summary>What is the sound for, and how to use it?</summary>
+<p>The sound makes the structure of the codon audible, so you can follow it by ear, without the picture. It is notation, not a physical link: it does not act on DNA and it does not heal.</p>
+<p><b>Start:</b> switch on the Sound button in the header, then step with the arrow keys or the ‹ › buttons. At each step the codon's three notes sound. A low D sounds softly throughout: that is the mirror axis.</p>
+<ul>
+<li><b>Above or below the axis:</b> purine (A, G) or pyrimidine (C, U).</li>
+<li><b>Near to or far from the axis:</b> a strong (G, C, three bonds) or weak (A, U, two bonds) base.</li>
+<li><b>Two long notes, one short:</b> changing one of the first two bases almost always gives another amino acid (96 and 100%), changing the third rarely does (31%).</li>
+<li><b>A trembling third note:</b> the place of the looser wobble pairing (switch it with the Wobble button).</li>
+<li><b>If the middle note is the lowest (the note G, i.e. base U):</b> the amino acid is always hydrophobic, 16 codons out of 16.</li>
+</ul>
+<p><b>Three experiments:</b></p>
+<ol>
+<li><b>Both:</b> the two strands sound together, left and right. A narrow interval (major third) marks a strong pair, a wide one (major ninth) a weak pair. These three intervals are the bond trigram, the same on both strands.</li>
+<li><b>Mutation:</b> click the third base. If the note stays on the same side of the axis (U↔C or A↔G), the amino acid almost always stays the same (60 of 64 codons). If it jumps to the other side (U↔G or C↔A), it changes about every second time (30 of 64).</li>
+<li><b>Opposite strand:</b> after pressing the button the melody plays as a crab mirror: mirrored and backwards, as the other strand is read in its own direction.</li>
+</ol>
+<p>During playback a √3-ratio Shepard tone sounds in the background: the sound of the nest's zoom, always rising yet returning to itself.</p>
+<p class="note">The ±2 and ±7 semitone distances are a choice; the structure would work the same with other symmetric intervals.</p>
+</details>
+<div class="grp" style="margin-top:6px"><button id="bUndo"><span class="hu">Visszavonás</span><span class="en">Undo</span></button><button id="bReset"><span class="hu">Alaphelyzet</span><span class="en">Reset</span></button></div>
+<div class="lbl" style="margin-top:10px"><span class="hu">Ismert inzulinváltozatok (jelölés: NM_000207.3; a hatást a szekvenciából számolja)</span><span class="en">Known insulin variants (notation: NM_000207.3; the effect is computed from the sequence)</span></div>
 <div class="grp" id="vars" style="margin-top:6px"></div>
 </div>
 <div class="hex" id="hex"></div>
@@ -177,18 +206,18 @@ aside{grid-row:2/4;grid-column:2;border-left:1px solid var(--line);overflow:auto
 <div><h2 class="hname" id="hname"></h2></div>
 <ul class="tiers" id="tiers"></ul>
 <div>
-<div class="lbl" style="margin-bottom:6px">A 64 kodon: oszlop az alsó, sor a felső trigram (Fu Xi-sorrend). Kattintásra beírja a kodont.</div>
+<div class="lbl" style="margin-bottom:6px"><span class="hu">A 64 kodon: oszlop az alsó, sor a felső trigram (Fu Xi-sorrend). Kattintásra beírja a kodont.</span><span class="en">The 64 codons: column = lower, row = upper trigram (Fu Xi order). Click to enter that codon.</span></div>
 <div class="map" id="map"></div>
 <div class="note" id="mapInfo" style="margin-top:6px">&nbsp;</div>
 </div>
 <div>
-<div class="lbl">Összehasonlítás egy második szekvenciával, kodononként</div>
-<input type="text" id="seqB" aria-label="Második szekvencia" style="width:100%;margin-top:6px" placeholder="AUGGCU...">
-<div class="grp" style="margin-top:6px"><button id="bSyn">Szinonim átirat készítése</button><button id="bCmp">Összehasonlítás</button></div>
+<div class="lbl"><span class="hu">Összehasonlítás egy második szekvenciával, kodononként</span><span class="en">Compare with a second sequence, codon by codon</span></div>
+<input type="text" id="seqB" aria-label="Második szekvencia / Second sequence" style="width:100%;margin-top:6px" placeholder="AUGGCU...">
+<div class="grp" style="margin-top:6px"><button id="bSyn"><span class="hu">Szinonim átirat készítése</span><span class="en">Make a synonymous rewrite</span></button><button id="bCmp"><span class="hu">Összehasonlítás</span><span class="en">Compare</span></button></div>
 <div class="err" id="errB"></div>
 <div id="cmp" class="note"></div>
 </div>
-<div class="note">Minden név és szint a <a href="data/">data mappa</a> CSV-tábláiból való (leírás: <a href="README.md">README</a>). Spidron: Erdély Dániel geometriája.</div>
+<div class="note"><span class="hu">Minden név és szint a <a href="data/">data mappa</a> CSV-tábláiból való (leírás: <a href="README.md">README</a>). Spidron: Erdély Dániel geometriája.</span><span class="en">All names and levels come from the CSV tables in the <a href="data/">data folder</a> (description: <a href="README.md">README</a>, in Hungarian). Spidron: the geometry of Dániel Erdély.</span></div>
 </aside>
 </div>
 
@@ -201,11 +230,16 @@ const NM=['Qian','Kun','Zhun','Meng','Xu','Song','Shi','Bi','Xiao Chu','Lü','Ta
 const HU=['A teremtő','A befogadó','Kezdeti nehézség','Ifjúi balgaság','Várakozás','Viszály','A sereg','Összetartás','A kicsi szelídítő ereje','Fellépés','Béke','Pangás','Közösség az emberekkel','Nagy birtoklás','Szerénység','Lelkesedés','Követés','A megromlott helyrehozása','Közeledés','Szemlélődés','Átharapás','Kecsesség','Szétesés','Visszatérés','Ártatlanság','A nagy szelídítő ereje','Táplálás','A nagy túlsúlya','A mélység','A tapadó','Hatás','Tartósság','Visszavonulás','A nagy ereje','Haladás','A fény elsötétülése','A család','Ellentét','Akadály','Felszabadulás','Csökkenés','Gyarapodás','Áttörés','Találkozás','Gyülekezés','Felemelkedés','Szorongattatás','A kút','Forradalom','Az üst','A felrázó','A nyugalom','Fokozatos fejlődés','A férjhez menő leány','Bőség','A vándor','A szelíd','A derűs','Szétoszlás','Korlátozás','Belső igazság','A kicsi túlsúlya','Beteljesülés után','Beteljesülés előtt'];
 const ZH=["乾", "坤", "屯", "蒙", "需", "訟", "師", "比", "小畜", "履", "泰", "否", "同人", "大有", "謙", "豫", "隨", "蠱", "臨", "觀", "噬嗑", "賁", "剝", "復", "無妄", "大畜", "頤", "大過", "坎", "離", "咸", "恆", "遯", "大壯", "晉", "明夷", "家人", "睽", "蹇", "解", "損", "益", "夬", "姤", "萃", "升", "困", "井", "革", "鼎", "震", "艮", "漸", "歸妹", "豐", "旅", "巽", "兌", "渙", "節", "中孚", "小過", "既濟", "未濟"];
 const GL=["teremtő erő, kitartó cselekvés", "befogadás, odaadó követés", "nehéz kezdet, csírázás", "tapasztalatlanság, tanulás", "türelmes várakozás", "vita, peres ügy", "fegyelem, szervezett sokaság", "összefogás, szövetség", "a kis erő visszatart, finom fékezés", "óvatos lépés, helyes viselkedés", "béke, ég és föld összhangja", "megrekedés, elzáródás", "közösség, egyetértés", "bőséges birtoklás", "szerénység", "lelkesedés, készenlét", "követés, alkalmazkodás", "a megromlott helyrehozása", "közeledés, felügyelet", "szemlélődés, rálátás", "átharapás, az akadály eltávolítása", "díszítés, kecsesség", "lehámlás, szétesés", "visszatérés, fordulópont", "ártatlanság, a váratlan", "a nagy erő felhalmozása", "táplálás, gondoskodás", "túlterhelés, a nagy túlsúlya", "mélység, ismétlődő veszély", "tapadó fény, világosság", "kölcsönös hatás, vonzás", "tartósság, állandóság", "visszavonulás", "a nagy ereje", "haladás, felkelő nap", "a fény elsötétülése", "család, háznép", "ellentét, eltávolodás", "akadály, nehéz út", "feloldás, megkönnyebbülés", "csökkenés, lemondás", "gyarapodás", "áttörés, határozott döntés", "váratlan találkozás", "gyülekezés", "felemelkedés", "szorongatottság, kimerülés", "kút, közös forrás", "gyökeres változás", "üst, átalakítás és táplálás", "megrázkódtatás, mennydörgés", "nyugalom, megállás", "fokozatos fejlődés", "a férjhez menő leány, alárendelt helyzet", "bőség, tetőpont", "vándor, úton lét", "szelíd behatolás, szél", "derű, öröm", "szétoszlás, feloldódás", "korlátozás, mérték", "belső igazság, bizalom", "a kicsi túlsúlya, apró lépések", "beteljesülés után, rend", "beteljesülés előtt, átmenet"];
-const TRI={7:['☰','Ég'],6:['☱','Tó'],5:['☲','Tűz'],4:['☳','Mennydörgés'],3:['☴','Szél'],2:['☵','Víz'],1:['☶','Hegy'],0:['☷','Föld']};
+const L=()=>document.documentElement.getAttribute('data-lang')==='en'?'en':'hu',T=(hu,en)=>L()==='en'?en:hu;
+const HU_EN=["Creative", "Receptive", "Difficulty at the Beginning", "Youthful Folly", "Waiting", "Conflict", "The Army", "Holding Together", "Small Taming", "Treading", "Peace", "Standstill", "Fellowship", "Great Possession", "Modesty", "Enthusiasm", "Following", "Repairing the Spoiled", "Approach", "Contemplation", "Biting Through", "Grace", "Splitting Apart", "Return", "Innocence", "Great Taming", "Nourishment", "Great Exceeding", "The Abysmal", "The Clinging", "Influence", "Duration", "Retreat", "Great Power", "Progress", "Darkening of the Light", "The Family", "Opposition", "Obstruction", "Deliverance", "Decrease", "Increase", "Breakthrough", "Coming to Meet", "Gathering", "Pushing Upward", "Oppression", "The Well", "Revolution", "The Cauldron", "The Arousing", "Keeping Still", "Gradual Development", "The Marrying Maiden", "Abundance", "The Wanderer", "The Gentle", "The Joyous", "Dispersion", "Limitation", "Inner Truth", "Small Exceeding", "After Completion", "Before Completion"];
+const GL_EN=["creative force, persistent action", "receptivity, devoted following", "difficult beginning, sprouting", "inexperience, learning", "patient waiting", "dispute, lawsuit", "discipline, an organised multitude", "union, alliance", "the small restrains, gentle braking", "careful step, right conduct", "peace, harmony of heaven and earth", "stagnation, closing off", "fellowship, agreement", "abundant possession", "modesty", "enthusiasm, readiness", "following, adapting", "repairing what has been spoiled", "approach, oversight", "contemplation, overview", "biting through, removing the obstacle", "adornment, grace", "peeling off, falling apart", "return, turning point", "innocence, the unexpected", "accumulating great strength", "nourishment, care", "overload, preponderance of the great", "the abyss, repeated danger", "clinging light, clarity", "mutual influence, attraction", "duration, constancy", "retreat", "the power of the great", "progress, the rising sun", "darkening of the light", "family, household", "opposition, estrangement", "obstruction, a hard road", "release, relief", "decrease, renunciation", "increase", "breakthrough, firm decision", "unexpected meeting", "gathering", "pushing upward", "oppression, exhaustion", "the well, a shared source", "radical change", "the cauldron, transformation and nourishment", "shock, thunder", "stillness, stopping", "gradual development", "the marrying maiden, a subordinate position", "abundance, zenith", "the wanderer, being on the road", "gentle penetration, wind", "joy, cheerfulness", "dispersion, dissolving", "limitation, measure", "inner truth, trust", "small preponderance, small steps", "after completion, order", "before completion, transition"];
+const TRI={7:['☰','Ég','Heaven'],6:['☱','Tó','Lake'],5:['☲','Tűz','Fire'],4:['☳','Mennydörgés','Thunder'],3:['☴','Szél','Wind'],2:['☵','Víz','Water'],1:['☶','Hegy','Mountain'],0:['☷','Föld','Earth']};
+const TN=k=>T(TRI[k][1],TRI[k][2]),HN=n=>T(HU[n-1],HU_EN[n-1]),GLN=n=>T(GL[n-1],GL_EN[n-1]);
 const AAS='FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG';
-const A3={F:['Phe','fenilalanin'],L:['Leu','leucin'],S:['Ser','szerin'],Y:['Tyr','tirozin'],'*':['Stop','stopjel'],C:['Cys','cisztein'],W:['Trp','triptofán'],P:['Pro','prolin'],H:['His','hisztidin'],Q:['Gln','glutamin'],R:['Arg','arginin'],I:['Ile','izoleucin'],M:['Met','metionin'],T:['Thr','treonin'],N:['Asn','aszparagin'],K:['Lys','lizin'],V:['Val','valin'],A:['Ala','alanin'],D:['Asp','aszparaginsav'],E:['Glu','glutaminsav'],G:['Gly','glicin']};
-const GRP=a=>'AVLIPFMWG'.includes(a)?['apoláris','#8d8c86']:'STCYNQ'.includes(a)?['poláris','#2bb38a']:'KRH'.includes(a)?['bázikus','#4f9cf0']:'DE'.includes(a)?['savas','#f07a4f']:['stop','#ef5b5b'];
-const POET={UUU:'Az elsőként megfejtett kodon (1961: poli-U → fenilalanin), és a csupa jin hexagram.',AAA:'Csupa jang: A teremtő. A poli-A a korai kísérletekben lizint adott.',CCC:'12. Pangás: a prolin megtöri a fehérjék α-hélixét.',GGG:'11. Béke, a CCC (12. Pangás) teljes ellentéte.'};
+const A3={F:['Phe','fenilalanin','phenylalanine'],L:['Leu','leucin','leucine'],S:['Ser','szerin','serine'],Y:['Tyr','tirozin','tyrosine'],'*':['Stop','stopjel','stop signal'],C:['Cys','cisztein','cysteine'],W:['Trp','triptofán','tryptophan'],P:['Pro','prolin','proline'],H:['His','hisztidin','histidine'],Q:['Gln','glutamin','glutamine'],R:['Arg','arginin','arginine'],I:['Ile','izoleucin','isoleucine'],M:['Met','metionin','methionine'],T:['Thr','treonin','threonine'],N:['Asn','aszparagin','asparagine'],K:['Lys','lizin','lysine'],V:['Val','valin','valine'],A:['Ala','alanin','alanine'],D:['Asp','aszparaginsav','aspartic acid'],E:['Glu','glutaminsav','glutamic acid'],G:['Gly','glicin','glycine']};
+const AN=a=>T(A3[a][1],A3[a][2]);
+const GRP=a=>'AVLIPFMWG'.includes(a)?[T('apoláris','nonpolar'),'#8d8c86']:'STCYNQ'.includes(a)?[T('poláris','polar'),'#2bb38a']:'KRH'.includes(a)?[T('bázikus','basic'),'#4f9cf0']:'DE'.includes(a)?[T('savas','acidic'),'#f07a4f']:['stop','#ef5b5b'];
+const POET={UUU:['Az elsőként megfejtett kodon (1961: poli-U → fenilalanin), és a csupa jin hexagram.','The first codon ever deciphered (1961: poly-U → phenylalanine), and the all-yin hexagram.'],AAA:['Csupa jang: A teremtő. A poli-A a korai kísérletekben lizint adott.','All yang: The Creative. Poly-A gave lysine in the early experiments.'],CCC:['12. Pangás: a prolin megtöri a fehérjék α-hélixét.','12. Standstill: proline breaks the α-helix of proteins.'],GGG:['11. Béke, a CCC (12. Pangás) teljes ellentéte.','11. Peace, the complete opposite of CCC (12. Standstill).']};
 const CH={A:{r:1,a:1},G:{r:1,a:0},C:{r:0,a:1},U:{r:0,a:0}},MP={low:'r',pr:0,pa:0},upP=()=>MP.low==='r'?'a':'r',pol=p=>p==='r'?MP.pr:MP.pa,rb=b=>[CH[b][MP.low]^pol(MP.low),CH[b][upP()]^pol(upP())],lprop=j=>j<=3?MP.low:upP(),isDef=()=>MP.low==='r'&&!MP.pr&&!MP.pa,CP={A:'U',U:'A',G:'C',C:'G'},CYC={A:'G',G:'C',C:'U',U:'A'};
 const aaL=c=>AAS['UCAG'.indexOf(c[0])*16+'UCAG'.indexOf(c[1])*4+'UCAG'.indexOf(c[2])];
 const lines=c=>{const r=[...c].map(rb);return[r[0][0],r[1][0],r[2][0],r[0][1],r[1][1],r[2][1]]};
@@ -271,28 +305,28 @@ function recolor(step,snap){tris.forEach(o=>{const c=cods[mod(step-o.n,cods.leng
 function hiLines(){const s=new Set(hiBase<0?[]:[hiBase+1,hiBase+4]);return s}
 
 function card(){const c=shown(),l=lines(c),[lo,up]=tri(l),n=hn(l),a=aaL(c),g=GRP(a),hs=hiLines();
-$('strand').textContent=(comp?'Olvasott kodon, szemközti szál a saját irányában':'Olvasott kodon, kódoló szál')+' · kattints egy bázisra az átíráshoz';
-$('bases').innerHTML=[...c].map((b,i)=>`<button class="base${hiBase===i?' hi':''}" data-i="${i}" aria-label="${i+1}. bázis: ${b}, átírás">${b}</button>`).join('');
-$('aa').innerHTML=`<b>${A3[a][0]}</b> · ${A3[a][1]} · <span style="color:${g[1]}">${g[0]}</span>${c==='AUG'&&!comp?' · startkodon':''}`;
+$('strand').textContent=(comp?T('Olvasott kodon, szemközti szál a saját irányában','Codon being read, opposite strand in its own direction'):T('Olvasott kodon, kódoló szál','Codon being read, coding strand'))+T(' · kattints egy bázisra az átíráshoz',' · click a base to rewrite it');
+$('bases').innerHTML=[...c].map((b,i)=>`<button class="base${hiBase===i?' hi':''}" data-i="${i}" aria-label="${T(`${i+1}. bázis: ${b}, átírás`,`base ${i+1}: ${b}, rewrite`)}">${b}</button>`).join('');
+$('aa').innerHTML=`<b>${A3[a][0]}</b> · ${AN(a)} · <span style="color:${g[1]}">${g[0]}</span>${c==='AUG'&&!comp?T(' · startkodon',' · start codon'):''}`;
 $('report').textContent=report;
 const lv={A:3,G:2,C:1,U:0},rgb=[...c].map(b=>lv[b]*85);
-$('sw').innerHTML=`<span style="background:rgb(${rgb})"></span>a kodon színe<span style="background:rgb(${rgb.map(v=>255-v)})"></span>a párosodó bázisoké: a negatív`;
-const pn=q=>q==='r'?'gyűrű':'amino',lab=[1,2,3,4,5,6].map(j=>`${(j-1)%3+1}. bázis ${pn(lprop(j))}`),sl=MP.low==='r'?6:3,wl=9-sl;
+$('sw').innerHTML=`<span style="background:rgb(${rgb})"></span>${T('a kodon színe',"the codon's colour")}<span style="background:rgb(${rgb.map(v=>255-v)})"></span>${T('a párosodó bázisoké: a negatív','of the pairing bases: the negative')}`;
+const pn=q=>q==='r'?T('gyűrű','ring'):'amino',lab=[1,2,3,4,5,6].map(j=>T(`${(j-1)%3+1}. bázis ${pn(lprop(j))}`,`base ${(j-1)%3+1} ${pn(lprop(j))}`)),sl=MP.low==='r'?6:3,wl=9-sl;
 $('hex').innerHTML=l.map((b,i)=>{const col=COLH(i+1,b),bar=b?`<span style="background:${col}"></span>`:`<span style="background:${col}"></span><span style="background:${col}"></span>`;
-return `<div data-l="${i+1}" class="row${hs.has(i+1)?' hi':''}${i===3?' gap':''}"><div class="bar">${bar}</div><em>${i+1}. vonal · ${lab[i]}${i===1||i===4?' · közép':''}${i+1===sl?' · wobble, többnyire néma':i+1===wl?' · gyenge wobble':''}</em></div>`}).join('');
-$('hname').innerHTML=`${n}. ${ZH[n-1]} ${NM[n-1]}: ${HU[n-1]}<small>Hagyományos jelentés: ${GL[n-1]}.<br>${up===lo?'Kettőzött '+TRI[up][1].toLowerCase():TRI[up][1]+(TRI[lo][1]==='Ég'?' az ':' a ')+TRI[lo][1].toLowerCase()+' fölött'} · lent ${TRI[lo][0]} ${TRI[lo][1]}, fent ${TRI[up][0]} ${TRI[up][1]}</small>`;
+return `<div data-l="${i+1}" class="row${hs.has(i+1)?' hi':''}${i===3?' gap':''}"><div class="bar">${bar}</div><em>${T(`${i+1}. vonal`,`line ${i+1}`)} · ${lab[i]}${i===1||i===4?T(' · közép',' · centre'):''}${i+1===sl?T(' · wobble, többnyire néma',' · wobble, mostly silent'):i+1===wl?T(' · gyenge wobble',' · weak wobble'):''}</em></div>`}).join('');
+$('hname').innerHTML=`${n}. ${ZH[n-1]} ${NM[n-1]}: ${HN(n)}<small>${T('Hagyományos jelentés','Traditional meaning')}: ${GLN(n)}.<br>${L()==='en'?(up===lo?'Doubled '+TRI[up][2].toLowerCase():TRI[up][2]+' over '+TRI[lo][2].toLowerCase()):(up===lo?'Kettőzött '+TRI[up][1].toLowerCase():TRI[up][1]+(TRI[lo][1]==='Ég'?' az ':' a ')+TRI[lo][1].toLowerCase()+' fölött')} · ${T('lent','below')} ${TRI[lo][0]} ${TN(lo)}, ${T('fent','above')} ${TRI[up][0]} ${TN(up)}</small>`;
 const bb=[...c].map(b=>'GC'.includes(b)?1:0),bt=bb[0]*4+bb[1]*2+bb[2];
-$('bond').innerHTML=`<div class="lbl">Kötés-trigram ${TRI[bt][0]} ${TRI[bt][1]} · ${6+bb[0]+bb[1]+bb[2]} hidrogénkötés · a két szálon ugyanaz</div><div class="hex" style="margin-top:6px">`+bb.map((b,i)=>`<div class="row"><div class="bar">${b?'<span style="background:#e57fb0"></span>':'<span style="background:#7a4a62"></span><span style="background:#7a4a62"></span>'}</div><em>${i+1}. bázis · ${b?'erős, 3 kötés':'gyenge, 2 kötés'}</em></div>`).join('')+'</div>';
-const inv=hn(l.map(x=>1-x)),c6=c.slice(0,2)+{U:'C',C:'U',A:'G',G:'A'}[c[2]],a6=aaL(c6),T=[];
-T.push([1,`A szemközti szál minden vonalat megfordít: ${inv}. ${NM[inv-1]} (${HU[inv-1]}).`]);
-T.push([1,'Hangban a másik szál a saját irányában olvasva a motívum rák-tükre; színben a negatív.']);
-T.push([1,`Kötés-trigram ${TRI[bt][0]} ${TRI[bt][1]}: bázisonként a két vonal „kizáró vagy"-a, a hidrogénkötés ereje. A párosodás nem változtat rajta, ezért a két szálon közös (a másik irányból olvasva fordított sorrendben).`]);
-T.push([1,`Bázisonként két vonal: az 1–4., 2–5., 3–6. pár; a fészekben két szemközti kar.`]);
-if(c[1]==='U')T.push([2,'A középső bázis U (a 2. és az 5. vonal), ezért az aminosav víztaszító. A tény a genetikai kódé; hogy éppen a két középső vonalra esik, az az elrendezésből következik.']);
-if(!isDef())T.push([1,'Ez nem az alapkiosztás: a hexagramok mások, a szerkezet ugyanaz. A költői megjegyzések csak az alapkiosztásban állnak.']);
-T.push([2,a6===a?`A ${sl}. vonal néma: ${c6} is ${A3[a][0]}.`:`Itt a ${sl}. vonal kivételesen számít: ${c6} → ${A3[a6][0]}.`]);
-if(POET[c]&&isDef())T.push([3,POET[c]]);
-$('tiers').innerHTML=T.filter(x=>x[0]<=tierMax).map(x=>`<li><span class="tag t${x[0]}">${x[0]}. szint</span>${x[1]}</li>`).join('');
+$('bond').innerHTML=`<div class="lbl">${T('Kötés-trigram','Bond trigram')} ${TRI[bt][0]} ${TN(bt)} · ${6+bb[0]+bb[1]+bb[2]} ${T('hidrogénkötés · a két szálon ugyanaz','hydrogen bonds · the same on both strands')}</div><div class="hex" style="margin-top:6px">`+bb.map((b,i)=>`<div class="row"><div class="bar">${b?'<span style="background:#e57fb0"></span>':'<span style="background:#7a4a62"></span><span style="background:#7a4a62"></span>'}</div><em>${T(`${i+1}. bázis`,`base ${i+1}`)} · ${b?T('erős, 3 kötés','strong, 3 bonds'):T('gyenge, 2 kötés','weak, 2 bonds')}</em></div>`).join('')+'</div>';
+const inv=hn(l.map(x=>1-x)),c6=c.slice(0,2)+{U:'C',C:'U',A:'G',G:'A'}[c[2]],a6=aaL(c6),TT=[];
+TT.push([1,T(`A szemközti szál minden vonalat megfordít: ${inv}. ${NM[inv-1]} (${HU[inv-1]}).`,`The opposite strand flips every line: ${inv}. ${NM[inv-1]} (${HU_EN[inv-1]}).`)]);
+TT.push([1,T('Hangban a másik szál a saját irányában olvasva a motívum rák-tükre; színben a negatív.','In sound the other strand, read in its own direction, is the crab mirror of the motif; in colour, the negative.')]);
+TT.push([1,T(`Kötés-trigram ${TRI[bt][0]} ${TRI[bt][1]}: bázisonként a két vonal „kizáró vagy"-a, a hidrogénkötés ereje. A párosodás nem változtat rajta, ezért a két szálon közös (a másik irányból olvasva fordított sorrendben).`,`Bond trigram ${TRI[bt][0]} ${TRI[bt][2]}: per base the “exclusive or” of the two lines, the strength of the hydrogen bond. Pairing does not change it, so both strands share it (read from the other direction, in reverse order).`)]);
+TT.push([1,T(`Bázisonként két vonal: az 1–4., 2–5., 3–6. pár; a fészekben két szemközti kar.`,`Two lines per base: the pairs 1–4, 2–5, 3–6; in the nest, two opposite arms.`)]);
+if(c[1]==='U')TT.push([2,T('A középső bázis U (a 2. és az 5. vonal), ezért az aminosav víztaszító. A tény a genetikai kódé; hogy éppen a két középső vonalra esik, az az elrendezésből következik.','The middle base is U (lines 2 and 5), so the amino acid is hydrophobic. The fact belongs to the genetic code; that it falls on the two middle lines follows from the arrangement.')]);
+if(!isDef())TT.push([1,T('Ez nem az alapkiosztás: a hexagramok mások, a szerkezet ugyanaz. A költői megjegyzések csak az alapkiosztásban állnak.','This is not the default assignment: the hexagrams differ, the structure is the same. The poetic notes appear only in the default assignment.')]);
+TT.push([2,a6===a?T(`A ${sl}. vonal néma: ${c6} is ${A3[a][0]}.`,`Line ${sl} is silent: ${c6} is also ${A3[a][0]}.`):T(`Itt a ${sl}. vonal kivételesen számít: ${c6} → ${A3[a6][0]}.`,`Here line ${sl} exceptionally matters: ${c6} → ${A3[a6][0]}.`)]);
+if(POET[c]&&isDef())TT.push([3,T(POET[c][0],POET[c][1])]);
+$('tiers').innerHTML=TT.filter(x=>x[0]<=tierMax).map(x=>`<li><span class="tag t${x[0]}">${T(`${x[0]}. szint`,`level ${x[0]}`)}</span>${x[1]}</li>`).join('');
 $('chips').innerHTML=cods.map((k,i)=>`<button class="chip${i===cur()?' cur':''}" data-k="${i}">${k}</button>`).join('');
 const bx=$('chips'),cc=bx.querySelector('.cur');if(cc)bx.scrollLeft=cc.offsetLeft-bx.offsetLeft-bx.clientWidth/2+cc.clientWidth/2;
 map()}
@@ -306,7 +340,7 @@ $('map').innerHTML=h}
 function edit(pos,newShown){const c=shown();const coding=comp?rc(newShown):newShown;const i=cur(),old=cods[i];if(coding===old)return;
 undo.push([i,old]);cods[i]=coding;const a0=aaL(comp?rc(old):old),a1=aaL(newShown),l0=lines(comp?rc(old):old),l1=lines(newShown);
 const fl=l0.map((v,k)=>v!==l1[k]?k+1:0).filter(Boolean);
-report=`${comp?rc(old):old} → ${newShown}: ${fl.length?fl.join(' és ')+'. vonal fordult':'nincs vonalváltozás'}; ${A3[a0][0]} → ${A3[a1][0]}${a0===a1?' (néma)':''}`;
+report=`${comp?rc(old):old} → ${newShown}: ${fl.length?T(fl.join(' és ')+'. vonal fordult',(fl.length>1?'lines ':'line ')+fl.join(' and ')+' flipped'):T('nincs vonalváltozás','no line change')}; ${A3[a0][0]} → ${A3[a1][0]}${a0===a1?T(' (néma)',' (silent)'):''}`;
 recolor(Math.floor(phi+1e-6));card();playMotif()}
 
 $('bases').addEventListener('click',e=>{const b=e.target.closest('.base');if(!b)return;const i=+b.dataset.i,c=shown();hiBase=i;edit(i,c.slice(0,i)+CYC[c[i]]+c.slice(i+1));const nb=$('bases').querySelector(`[data-i="${i}"]`);if(nb)nb.focus()});
@@ -314,36 +348,37 @@ function setHi(i){hiBase=i;document.querySelectorAll('.base').forEach(b=>b.class
 $('bases').addEventListener('mouseover',e=>{const b=e.target.closest('.base');if(b)setHi(+b.dataset.i)});
 $('bases').addEventListener('focusin',e=>{const b=e.target.closest('.base');if(b)setHi(+b.dataset.i)});
 $('map').addEventListener('click',e=>{const b=e.target.closest('.cell');if(!b)return;edit(-1,b.dataset.c)});
-$('map').addEventListener('mouseover',e=>{const b=e.target.closest('.cell');if(!b)return;const cd=b.dataset.c,n=hn(lines(cd));$('mapInfo').textContent=`${cd} · ${A3[aaL(cd)][0]} · ${n}. ${NM[n-1]}: ${HU[n-1]}`});
+$('map').addEventListener('mouseover',e=>{const b=e.target.closest('.cell');if(!b)return;const cd=b.dataset.c,n=hn(lines(cd));$('mapInfo').textContent=`${cd} · ${A3[aaL(cd)][0]} · ${n}. ${NM[n-1]}: ${HN(n)}`});
 $('chips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;phi=+b.dataset.k;lastStep=null;report=''});
-$('bUndo').onclick=()=>{const u=undo.pop();if(!u){report='Nincs visszavonható lépés.';card();return}cods[u[0]]=u[1];report='Visszavonva.';recolor(Math.floor(phi+1e-6));card()};
-$('bReset').onclick=()=>{cods=orig.slice();undo=[];report='Alaphelyzet.';recolor(Math.floor(phi+1e-6));card()};
-const setPlay=p=>{playing=p;$('bPlay').textContent=p?'❚❚':'▶';$('bPlay').setAttribute('aria-label',p?'Szünet':'Lejátszás')};
+$('bUndo').onclick=()=>{const u=undo.pop();if(!u){report=T('Nincs visszavonható lépés.','Nothing to undo.');card();return}cods[u[0]]=u[1];report=T('Visszavonva.','Undone.');recolor(Math.floor(phi+1e-6));card()};
+$('bReset').onclick=()=>{cods=orig.slice();undo=[];report=T('Alaphelyzet.','Reset.');recolor(Math.floor(phi+1e-6));card()};
+const setPlay=p=>{playing=p;$('bPlay').textContent=p?'❚❚':'▶';$('bPlay').setAttribute('aria-label',p?T('Szünet','Pause'):T('Lejátszás','Play'))};
 $('bPlay').onclick=()=>setPlay(!playing);
 const stepBy=d=>{setPlay(false);sa=null;stepTo=Math.round(phi)+d};
 $('bPrev').onclick=()=>stepBy(-1);$('bNext').onclick=()=>stepBy(1);
 const doFlip=()=>{if(flip)return;const v=new THREE.Vector3(0,-1,0).applyAxisAngle(new THREE.Vector3(0,0,1),flowG.rotation.z).applyQuaternion(flipG.quaternion);flip={a:0,axis:v.normalize(),q0:flipG.quaternion.clone(),sw:false}};
 $('bFlip').onclick=doFlip;
-$('bSnd').onclick=()=>{if(!AC)initAudio();if(!AC){report='A hangot ez a nézet nem engedi.';card();return}snd=!snd;if(AC.resume)AC.resume().catch(()=>{});if(!snd)shG.gain.setTargetAtTime(0,AC.currentTime,.05);drone.gain.setTargetAtTime(snd?.05:0,AC.currentTime,.2);$('bSnd').setAttribute('aria-pressed',snd);$('bSnd').textContent=snd?'🔊 Hang: be':'🔈 Hang: ki';report=snd?'Hang bekapcsolva: most a kodon három hangját kell hallanod.':'Hang kikapcsolva.';card();playMotif();if(snd)setTimeout(()=>{if(AC.state!=='running'){report='A böngésző ebben a nézetben letiltja a hangot. Nyisd meg az oldalt külön lapon.';card()}},600)};
+const sndLabel=()=>{$('bSnd').textContent=snd?T('🔊 Hang: be','🔊 Sound: on'):T('🔈 Hang: ki','🔈 Sound: off')};
+$('bSnd').onclick=()=>{if(!AC)initAudio();if(!AC){report=T('A hangot ez a nézet nem engedi.','This view does not allow sound.');card();return}snd=!snd;if(AC.resume)AC.resume().catch(()=>{});if(!snd)shG.gain.setTargetAtTime(0,AC.currentTime,.05);drone.gain.setTargetAtTime(snd?.05:0,AC.currentTime,.2);$('bSnd').setAttribute('aria-pressed',snd);sndLabel();report=snd?T('Hang bekapcsolva: most a kodon három hangját kell hallanod.',"Sound on: you should now hear the codon's three notes."):T('Hang kikapcsolva.','Sound off.');card();playMotif();if(snd)setTimeout(()=>{if(AC.state!=='running'){report=T('A böngésző ebben a nézetben letiltja a hangot. Nyisd meg az oldalt külön lapon.','The browser blocks sound in this view. Open the page in its own tab.');card()}},600)};
 $('rel').oninput=e=>relief=+e.target.value;
-$('mapSel').onchange=e=>{const v=e.target.value;MP.low=v[0];MP.pr=+v[1];MP.pa=+v[2];recolor(Math.floor(phi+1e-6));report=isDef()?'Alapkiosztás.':'Másik érvényes kiosztás: a szemközti szál itt is a teljes ellentét.';card()};
-const VARS=[[3,'A','c.3G>A','a startkodon elvész; a forrás kórosként jelöli'],[25,'U','c.25C>T','a forrás szerint Pro9Ser, bizonytalan jelentőségű'],[215,'U','c.215C>T','a besorolását nem láttam a forrásban'],[279,'G','c.279A>G','a forrás szerint Glu93=, valószínűleg ártalmatlan']];
+$('mapSel').onchange=e=>{const v=e.target.value;MP.low=v[0];MP.pr=+v[1];MP.pa=+v[2];recolor(Math.floor(phi+1e-6));report=isDef()?T('Alapkiosztás.','Default assignment.'):T('Másik érvényes kiosztás: a szemközti szál itt is a teljes ellentét.','Another valid assignment: here too the opposite strand is the full opposite.');card()};
+const VARS=[[3,'A','c.3G>A','a startkodon elvész; a forrás kórosként jelöli','the start codon is lost; the source marks it as pathogenic'],[25,'U','c.25C>T','a forrás szerint Pro9Ser, bizonytalan jelentőségű','per the source Pro9Ser, of uncertain significance'],[215,'U','c.215C>T','a besorolását nem láttam a forrásban','I did not see its classification in the source'],[279,'G','c.279A>G','a forrás szerint Glu93=, valószínűleg ártalmatlan','per the source Glu93=, probably benign']];
 $('vars').innerHTML=VARS.map((v,i)=>`<button data-v="${i}">${v[2]}</button>`).join('');
 $('vars').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const v=VARS[+b.dataset.v];
 if(orig.join('')!==start){cods=start.match(/.{3}/g);orig=cods.slice();undo=[];$('seq').value=start}
 const i=Math.floor((v[0]-1)/3),j=(v[0]-1)%3,old=orig[i],nw=old.slice(0,j)+v[1]+old.slice(j+1);if(cods[i]!==nw){undo.push([i,cods[i]]);cods[i]=nw}
 const l0=lines(old),l1=lines(nw),fl=l0.map((x,k)=>x!==l1[k]?k+1:0).filter(Boolean);setPlay(false);stepTo=null;sa=null;phi=i;lastStep=null;
-report=`${v[2]}, ${i+1}. kodon: ${old} → ${nw}; ${fl.join(' és ')}. vonal fordult; ${A3[aaL(old)][0]} → ${A3[aaL(nw)][0]}${aaL(old)===aaL(nw)?' (néma)':''}; ${v[3]}.`});
+report=T(`${v[2]}, ${i+1}. kodon: ${old} → ${nw}; ${fl.join(' és ')}. vonal fordult; ${A3[aaL(old)][0]} → ${A3[aaL(nw)][0]}${aaL(old)===aaL(nw)?' (néma)':''}; ${v[3]}.`,`${v[2]}, codon ${i+1}: ${old} → ${nw}; ${fl.length>1?'lines':'line'} ${fl.join(' and ')} flipped; ${A3[aaL(old)][0]} → ${A3[aaL(nw)][0]}${aaL(old)===aaL(nw)?' (silent)':''}; ${v[4]}.`)});
 const SYN={};Object.keys(CH).forEach(a=>Object.keys(CH).forEach(b=>Object.keys(CH).forEach(c=>{const k=a+b+c;(SYN[aaL(k)]=SYN[aaL(k)]||[]).push(k)})));
 $('bSyn').onclick=()=>{$('seqB').value=cods.map(c=>{const L=SYN[aaL(c)];return L[(L.indexOf(c)+1)%L.length]}).join('');$('bCmp').click()};
 $('bCmp').onclick=()=>{const v=$('seqB').value.toUpperCase().replace(/T/g,'U').replace(/\s/g,'');
-if(!/^[ACGU]+$/.test(v)||v.length<3){$('errB').textContent='Adj meg egy A, C, G, U vagy T betűkből álló szekvenciát, vagy készíts szinonim átiratot.';return}
+if(!/^[ACGU]+$/.test(v)||v.length<3){$('errB').textContent=T('Adj meg egy A, C, G, U vagy T betűkből álló szekvenciát, vagy készíts szinonim átiratot.','Enter a sequence of the letters A, C, G, U or T, or make a synonymous rewrite.');return}
 $('errB').textContent='';const B2=v.match(/.{3}/g)||[],n=Math.min(cods.length,B2.length);let sc=0,sa2=0,sb=0,slo=0,sup=0;const bt=c=>[...c].map(x=>'GC'.includes(x)?1:0).join('');
 const col=c=>`rgb(${[...c].map(x=>({A:3,G:2,C:1,U:0})[x]*85)})`;let r1='',r2='',r3='';
 for(let i=0;i<n;i++){const a=cods[i],b=B2[i],ta=tri(lines(a)),tb=tri(lines(b)),same=aaL(a)===aaL(b);sc+=a===b;sa2+=same;sb+=bt(a)===bt(b);slo+=ta[0]===tb[0];sup+=ta[1]===tb[1];
 r1+=`<span style="background:${col(a)}"></span>`;r2+=`<span style="background:${col(b)}"></span>`;r3+=`<span style="background:${same?'transparent':'#ef5b5b'}"></span>`}
 const pc=x=>`${x}/${n} (${Math.round(100*x/n)}%)`;
-$('cmp').innerHTML=`<div class="strip">${r1}</div><div class="strip">${r2}</div><div class="strip">${r3}</div>Felül a betöltött, alatta a második szekvencia kodonszínei; a piros sáv az eltérő aminosavakat jelöli.<br>Azonos aminosav: ${pc(sa2)} · azonos kodon és hexagram: ${pc(sc)} · azonos alsó trigram: ${pc(slo)} · azonos felső trigram: ${pc(sup)} · azonos kötés-trigram: ${pc(sb)}`};
+$('cmp').innerHTML=`<div class="strip">${r1}</div><div class="strip">${r2}</div><div class="strip">${r3}</div>${T('Felül a betöltött, alatta a második szekvencia kodonszínei; a piros sáv az eltérő aminosavakat jelöli.','Top: the codon colours of the loaded sequence, below: of the second; the red strip marks differing amino acids.')}<br>${T('Azonos aminosav','Same amino acid')}: ${pc(sa2)} · ${T('azonos kodon és hexagram','same codon and hexagram')}: ${pc(sc)} · ${T('azonos alsó trigram','same lower trigram')}: ${pc(slo)} · ${T('azonos felső trigram','same upper trigram')}: ${pc(sup)} · ${T('azonos kötés-trigram','same bond trigram')}: ${pc(sb)}`};
 $('seqB').addEventListener('input',()=>$('errB').textContent='');
 document.querySelectorAll('.smode').forEach(b=>b.onclick=()=>{sndMode=b.dataset.m;document.querySelectorAll('.smode').forEach(x=>x.setAttribute('aria-pressed',x===b));if(!snd)$('bSnd').click();else playMotif()});
 $('spd').oninput=e=>speed=+e.target.value;
@@ -351,10 +386,10 @@ const tog=(id,fn)=>{$(id).onclick=()=>{const v=$(id).getAttribute('aria-pressed'
 tog('lWob',v=>wob=v);tog('lSpine',v=>spineOn=v);tog('lPairs',v=>pairsOn=v);tog('lBond',v=>bondOn=v);
 tog('lSoft',v=>{soft=v;glow.style.display=v?'':'none';eN.opacity=v?.18:.6;tris.forEach(o=>{o.m.material.vertexColors=v;o.m.material.needsUpdate=true})});
 document.querySelectorAll('.tier').forEach(b=>b.onclick=()=>{tierMax=+b.dataset.t;document.querySelectorAll('.tier').forEach(x=>x.setAttribute('aria-pressed',x===b));card()});
-$('bFull').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch(e){report='A teljes képernyőt ez a nézet nem engedi; nyisd meg az oldalt külön lapon.';card()}};
+$('bFull').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch(e){report=T('A teljes képernyőt ez a nézet nem engedi; nyisd meg az oldalt külön lapon.','This view does not allow full screen; open the page in its own tab.');card()}};
 $('bLoad').onclick=()=>{let v=$('seq').value.toUpperCase().replace(/T/g,'U').replace(/\s/g,'');
-if(!/^[ACGU]+$/.test(v)){$('err').textContent='Csak A, C, G, U vagy T betűt adj meg.';return}
-if(v.length%3||v.length<3||v.length>1500){$('err').textContent='3–1500 betű, hárommal osztható hosszúság kell.';return}
+if(!/^[ACGU]+$/.test(v)){$('err').textContent=T('Csak A, C, G, U vagy T betűt adj meg.','Use only the letters A, C, G, U or T.');return}
+if(v.length%3||v.length<3||v.length>1500){$('err').textContent=T('3–1500 betű, hárommal osztható hosszúság kell.','3–1500 letters, with a length divisible by three.');return}
 $('err').textContent='';cods=v.match(/.{3}/g);orig=cods.slice();undo=[];phi=0;lastStep=null;report=''};
 $('seq').addEventListener('input',()=>$('err').textContent='');
 $('pIns').onclick=()=>{$('seq').value=start;$('bLoad').click()};
@@ -371,7 +406,8 @@ const STEPS=[
 ['A fészek domborművé csavarodik','A spidron különlegessége, hogy a háromszögei torzulás nélkül térbe hajlanak: a hatszögek csúcsai felváltva emelkednek és süllyednek, a belső övek egyre jobban elfordulnak. Itt minden képkocka kiszámolt, merev hajtás. A DNS-hez ez 3. szintű kép: a feltekeredés hasonlata.',{hi:-1,play:true,rel:.16}],
 ['Próbáld ki','Kattints a kártyán egy bázisra: átírja a kodont. Látod, melyik vonal fordul, és változik-e az aminosav. A táblára kattintva bármely kodont beírhatod.',{hi:-1,play:false}],
 ['Mi biztos, mi költői','1. szint: a szabályból következik. 2. szint: a genetikai kód valódi tulajdonsága, olyan helyen, amelyet a mi elrendezésünk jelöl ki, tehát a hely megállapodás. 3. szint: szép egybecsengés, de nem bizonyíték. A fenti szűrővel elrejtheted a 3. szintet.',{hi:-1,play:true}]];
-function showStory(){const s=STEPS[story];$('sT').textContent=s[0];$('sX').textContent=s[1];$('sN').textContent=`${story+1} / ${STEPS.length}`;
+const STEPS_EN=[["A base is two lines", "Every base has two yes/no properties: two rings or one (purine or pyrimidine), and an amino or a keto group. These become two lines. The two highlighted arms and the two rows on the card are the same first base."], ["A codon is a hexagram", "Three bases make six lines. The lower trigram is the ring pattern of the three bases, the upper their amino/keto pattern. So the 64 codons are exactly the 64 hexagrams."], ["The opposite strand is the mirror image", "A–U and G–C pairing flips both properties: every line turns into its opposite. Meanwhile the nest turns over in space, and its flow reverses, as the antiparallel strand does."], ["The third trigram connects", "Bases have a third property: the strength of the hydrogen bond (G and C three bonds, A and U two). This is the “exclusive or” of the two lines, and pairing does not change it. So there is a third trigram, shared by both strands. In the nest these are the bright edges: when it turns over, the faces change colour and the edges stay."], ["The centre is the axis", "Lines 2 and 5, the two centres of tradition, are the middle base. This is the axis: it stays still when the nest turns over. The middle base decides most about what kind the amino acid is."], ["The third base trembles", "Lines 3 and 6 are the third base, where pairing on the ribosome is looser (wobble). Flipping line 6 is silent for 60 of 64 codons, so it trembles strongly. Line 3 only for 34, so it trembles less. On the first two bases a change switches the amino acid 96–100% of the time."], ["The series moves on", "The infinite nest maps onto itself with a √3 zoom and a 30° turn. The form repeats, the content moves on: every belt is the next codon."], ["The nest twists into a relief", "What makes the spidron special is that its triangles fold into space without distortion: the hexagon vertices rise and sink in turn, and the inner belts turn more and more. Every frame here is a computed, rigid fold. For DNA this is a level-3 image: an analogy of coiling."], ["Try it", "Click a base on the card: it rewrites the codon. You see which line flips and whether the amino acid changes. Clicking the table you can enter any codon."], ["What is certain, what is poetic", "Level 1: follows from the rule. Level 2: a real property of the genetic code, at a place our arrangement marks out, so the place is a convention. Level 3: a beautiful coincidence, but no proof. With the filter above you can hide level 3."]];
+function showStory(){const s=STEPS[story],se=STEPS_EN[story];$('sT').textContent=T(s[0],se[0]);$('sX').textContent=T(s[1],se[1]);$('sN').textContent=`${story+1} / ${STEPS.length}`;
 const o=s[2];hiBase=o.hi;if('play' in o)setPlay(o.play&&!matchMedia('(prefers-reduced-motion: reduce)').matches);
 if(o.pairs!==undefined){pairsOn=o.pairs;$('lPairs').setAttribute('aria-pressed',o.pairs)}
 if(o.spine){spineOn=true;$('lSpine').setAttribute('aria-pressed',true)}
@@ -410,7 +446,13 @@ spine.visible=spineOn;pairs.forEach((p,i)=>{p.visible=pairsOn;p.material.color.s
 if(flip){flip.a=Math.min(Math.PI,flip.a+dt*Math.PI/2.2);flipG.quaternion.copy(new THREE.Quaternion().setFromAxisAngle(flip.axis,Math.PI*ease(flip.a/Math.PI)).multiply(flip.q0));
 if(!flip.sw&&flip.a>=Math.PI/2){flip.sw=true;comp=!comp;dir=-dir;recolor(step);card();playMotif()}if(flip.a>=Math.PI)flip=null}
 ren.render(scene,cam);if(soft){gx.clearRect(0,0,glow.width,glow.height);gx.drawImage(ren.domElement,0,0,glow.width,glow.height)}requestAnimationFrame(loop)}
-recolor(0,1);showStory();setPlay(false);requestAnimationFrame(loop);
+function applyLang(){const l=L();document.querySelectorAll('option[data-hu]').forEach(o=>{o.textContent=o.dataset[l]});
+document.querySelectorAll('[data-aria-hu]').forEach(el=>el.setAttribute('aria-label',el.dataset[l==='en'?'ariaEn':'ariaHu']));
+document.querySelectorAll('.langsw button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.l===l)));
+sndLabel();setPlay(playing);$('sT').textContent=T(STEPS[story][0],STEPS_EN[story][0]);$('sX').textContent=T(STEPS[story][1],STEPS_EN[story][1]);card()}
+document.querySelectorAll('.langsw button').forEach(b=>b.addEventListener('click',()=>{const l=b.dataset.l;try{localStorage.setItem('sjk-lang',l)}catch(e){}
+document.documentElement.setAttribute('data-lang',l);document.documentElement.lang=l;report='';applyLang();window.dispatchEvent(new CustomEvent('sjk:lang',{detail:l}))}));
+recolor(0,1);showStory();setPlay(false);applyLang();requestAnimationFrame(loop);
 }
 </script>
 </body>
