@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="hu" class="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spidron Harmónia Laboratórium – Geometria, Fény és Hang Szintézise</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+  :root {
+    --bg: #0b0f17;
+    --panel: #111827;
+    --panel-alt: #1e293b;
+    --border: #263248;
+    --ink: #f1f5f9;
+    --mute: #94a3b8;
+    --cyan: #38bdf8;
+    --amber: #f59e0b;
+    --emerald: #10b981;
+    --rose: #f43f5e;
+  }
+  * { box-sizing: border-box; min-width: 0; }
+  body {
+    margin: 0;
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+  }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+
+  /* Range Sliders */
+  input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: #1e293b;
+    height: 6px;
+    border-radius: 999px;
+    outline: none;
+    border: 1px solid #334155;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--cyan);
+    cursor: pointer;
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+    transition: transform 0.15s ease, background-color 0.15s ease;
+  }
+  input[type=range]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    background: var(--amber);
+  }
+
+  .lab-btn {
+    border: 1px solid var(--border);
+    background: rgba(30, 41, 59, 0.7);
+    color: var(--ink);
+    transition: all 0.18s ease;
+  }
+  .lab-btn:hover {
+    border-color: var(--cyan);
+    background: rgba(56, 189, 248, 0.12);
+  }
+  .lab-btn.active, .lab-btn[aria-pressed="true"] {
+    background: var(--cyan);
+    color: #0b0f17;
+    border-color: var(--cyan);
+    font-weight: 600;
+    box-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
+  }
+
+  .step-card {
+    border: 1px solid var(--border);
+    background: rgba(17, 24, 39, 0.75);
+    transition: all 0.2s ease;
+  }
+  .step-card.active {
+    border-color: var(--amber);
+    background: rgba(245, 158, 11, 0.08);
+    box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.25);
+  }
+
+  .stage-bg {
+    background:
+      radial-gradient(circle at 50% 45%, rgba(30, 41, 59, 0.55) 0%, rgba(11, 15, 23, 0.95) 80%),
+      linear-gradient(to right, rgba(38, 50, 72, 0.2) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(38, 50, 72, 0.2) 1px, transparent 1px);
+    background-size: 100% 100%, 28px 28px, 28px 28px;
+  }
+
+  .spectrum-bar {
+    background: linear-gradient(90deg,
+      #ef4444 0%,
+      #f97316 18%,
+      #eab308 34%,
+      #22c55e 52%,
+      #06b6d4 68%,
+      #3b82f6 82%,
+      #8b5cf6 100%
+    );
+  }
+</style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-sky-400 selection:text-slate-950">
+
+<!-- HEADER -->
+<header class="border-b border-[#263248] px-4 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4 bg-[#0b0f17]/90 backdrop-blur-md sticky top-0 z-40">
+  <div class="flex items-center gap-3.5">
+    <!-- Geometric Spidron Hexagon SVG Icon -->
+    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-400 via-cyan-500 to-amber-500 p-[1px] shadow-lg shadow-sky-500/10">
+      <div class="w-full h-full bg-[#0b0f17] rounded-[11px] flex items-center justify-center">
+        <svg viewBox="-24 -24 48 48" class="w-7 h-7 stroke-sky-400 fill-none" stroke-width="1.8">
+          <polygon points="0,-20 17.3,-10 17.3,10 0,20 -17.3,10 -17.3,-10" class="stroke-amber-400/80"/>
+          <polygon points="0,-11.5 11.5,0 0,11.5 -11.5,0" class="stroke-sky-400"/>
+          <circle r="3" class="fill-amber-400 stroke-none"/>
+        </svg>
+      </div>
+    </div>
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="mono text-[11px] uppercase tracking-widest px-2 py-0.5 rounded bg-sky-500/10 text-sky-400 border border-sky-500/30">
+          Erdély Dániel Spidron-geometriája
+        </span>
+        <span class="text-xs text-slate-400 hidden sm:inline">Akusztikai &amp; Optikai Rezonancia Modell</span>
+      </div>
+      <h1 class="text-lg sm:text-xl font-bold tracking-tight text-slate-100 mt-0.5">
+        Spidron Harmónia Laboratórium: Geometria, Fény és Hang Szintézise
+      </h1>
+    </div>
+  </div>
+
+  <!-- Core Mathematical Equations & Audio Trigger -->
+  <div class="flex flex-wrap items-center gap-2.5">
+    <div class="hidden xl:flex items-center gap-3 px-3.5 py-1.5 rounded-lg bg-[#111827] border border-[#263248] text-xs mono text-slate-300">
+      <span title="Geometriai kicsinyítési arány">r<sub>k</sub> = r<sub>0</sub>·(1/√3)<sup>k</sup></span>
+      <span class="text-slate-600">|</span>
+      <span title="40 oktávos hang-fény transzponálás">f<sub>fény</sub> = f<sub>hang</sub> · 2<sup>40</sup></span>
+      <span class="text-slate-600">|</span>
+      <span title="Hullámhossz számítás">λ = c / f<sub>fény</sub></span>
+    </div>
+
+    <button id="btnPlaySpiral" class="lab-btn px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 cursor-pointer border-amber-500/50 text-amber-300 hover:bg-amber-500/15">
+      <span id="spiralIcon">▶</span>
+      <span>Spirális Futam Lejátszása</span>
+    </button>
+
+    <button id="btnAudioMute" aria-pressed="true" class="lab-btn px-3.5 py-2 rounded-lg text-xs flex items-center gap-2 cursor-pointer">
+      <span id="muteDot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span>WebAudio Szintetizátor: AKTÍV</span>
+    </button>
+  </div>
+</header>
+
+<!-- MAIN CONTENT GRID -->
+<main class="flex-1 grid grid-cols-1 lg:grid-cols-12">
+
+  <!-- LEFT / CENTER VISUALIZATION STAGE (7 cols on lg, 8 on xl) -->
+  <section class="lg:col-span-7 xl:col-span-8 flex flex-col border-b lg:border-b-0 lg:border-r border-[#263248]">
+
+    <!-- Top Mode Switcher: 2D Unrolled vs 3D Space Folding vs Dual Split -->
+    <div class="p-3 px-4 border-b border-[#263248] bg-[#111827] flex flex-wrap items-center justify-between gap-2">
+      <div class="flex flex-wrap items-center gap-1.5" role="group" aria-label="Megjelenítési Mód">
+        <button data-stage="split" class="stage-mode-btn lab-btn active px-3.5 py-1.5 rounded-lg text-xs cursor-pointer">
+          Osztott Labor (2D Kiterített Kar + 3D Térszerkezet)
+        </button>
+        <button data-stage="2d" class="stage-mode-btn lab-btn px-3.5 py-1.5 rounded-lg text-xs cursor-pointer">
+          1. Kiterített Síkbeli Konstrukció (2D)
+        </button>
+        <button data-stage="3d" class="stage-mode-btn lab-btn px-3.5 py-1.5 rounded-lg text-xs cursor-pointer">
+          2. 3D Térbeli Hajtogatás &amp; Relief
+        </button>
+      </div>
+
+      <!-- 3D Structure Sub-mode -->
+      <div class="flex items-center gap-1.5">
+        <label for="sel3DType" class="text-xs text-slate-400">3D Modell:</label>
+        <select id="sel3DType" class="bg-[#1e293b] border border-[#263248] rounded-lg px-2.5 py-1.5 text-xs text-slate-100 outline-none focus:border-sky-400">
+          <option value="single_arm">Egyetlen Spidron-kar (Sík → 3D Spirál)</option>
+          <option value="hex_nest" selected>Hexagonális Spidron-fészek (6 Karos Relief)</option>
+          <option value="dome">Spidron Kupola / Térháló (Poliéderes)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- VISUAL STAGE CONTAINER (Holds 2D Unrolled SVG/Canvas & 3D WebGL Canvas) -->
+    <div id="visualStageGrid" class="flex-1 grid grid-cols-1 xl:grid-cols-2 min-h-[480px] sm:min-h-[540px] stage-bg relative overflow-hidden">
+
+      <!-- PANEL A: 2D UNROLLED SPIDRON ARM & STEP-BY-STEP GEOMETRY (SVG) -->
+      <div id="pane2D" class="relative flex flex-col border-b xl:border-b-0 xl:border-r border-[#263248]/80 min-h-[340px]">
+        <div class="px-3.5 py-2 bg-[#0b0f17]/80 border-b border-[#263248]/60 flex items-center justify-between text-xs">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+            <span class="font-semibold text-slate-200">Síkbeli Kiterített Konstrukció (2D)</span>
+          </div>
+          <span id="lbl2DSub" class="mono text-[11px] text-amber-400">Kattints egy háromszögre a hanghoz!</span>
+        </div>
+
+        <div class="relative flex-1 flex items-center justify-center p-2 select-none overflow-hidden">
+          <svg id="svg2D" viewBox="-260 -220 520 440" class="w-full h-full max-h-[460px]"></svg>
+
+          <!-- 2D Legend Overlay -->
+          <div class="absolute bottom-2.5 left-2.5 right-2.5 pointer-events-none flex flex-wrap items-center justify-between gap-2 text-[11px] mono">
+            <div class="bg-[#0b0f17]/85 backdrop-blur px-2.5 py-1.5 rounded-lg border border-[#263248] text-slate-300 flex items-center gap-3">
+              <span><b class="text-sky-400">A-típus:</b> Szabályos Δ (60°–60°–60°)</span>
+              <span><b class="text-amber-400">B-típus:</b> Egyenlő szárú Δ (30°–120°–30°)</span>
+            </div>
+            <div id="metric2DRatio" class="bg-[#0b0f17]/85 backdrop-blur px-2.5 py-1.5 rounded-lg border border-[#263248] text-sky-400">
+              Skála: 1 / √3 ≈ 0.5774
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL B: 3D THREE.JS FOLDING STAGE -->
+      <div id="pane3D" class="relative flex flex-col min-h-[360px] cursor-grab active:cursor-grabbing">
+        <div class="px-3.5 py-2 bg-[#0b0f17]/80 border-b border-[#263248]/60 flex items-center justify-between text-xs z-10">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+            <span class="font-semibold text-slate-200">3D Térbeli Hajtogatás (WebGL Kinematika)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="btnWireframe" aria-pressed="true" class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-[11px] mono text-slate-300 hover:border-sky-400 cursor-pointer">
+              Élek
+            </button>
+            <button id="btnAutoRotate" aria-pressed="true" class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-[11px] mono text-slate-300 hover:border-sky-400 cursor-pointer">
+              Forgás
+            </button>
+          </div>
+        </div>
+
+        <div id="threeContainer" class="relative flex-1 w-full h-full overflow-hidden">
+          <canvas id="threeCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+
+          <!-- 3D Telemetry Overlay -->
+          <div class="absolute top-2.5 left-2.5 pointer-events-none bg-[#0b0f17]/85 backdrop-blur px-3 py-2 rounded-lg border border-[#263248] text-[11px] mono flex flex-col gap-1">
+            <div class="text-slate-300">Térbeli Kiemelkedés (φ): <b id="hudFoldDeg" class="text-sky-400">65% (52.0°)</b></div>
+            <div class="text-slate-400">Spirális Csavarodás (θ): <b id="hudTwistDeg" class="text-amber-400">30.0° / szint</b></div>
+            <div class="text-slate-400">Aktív Gyűrű (k): <b id="hudActiveRing" class="text-emerald-400">1. szint</b></div>
+          </div>
+
+          <div class="absolute bottom-2.5 right-2.5 pointer-events-none bg-[#0b0f17]/85 backdrop-blur px-2.5 py-1 rounded-lg border border-[#263248] text-[11px] mono text-slate-400">
+            Egér húzás: 3D forgatás · Görgő: Zoom · Kattintás: Hang &amp; Gyűrű
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- KINEMATIC & GEOMETRIC PARAMETER SLIDERS -->
+    <div class="p-4 border-t border-[#263248] bg-[#111827] grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      <!-- Slider 1: 2D to 3D Folding Elevation -->
+      <div class="flex flex-col gap-1.5">
+        <div class="flex justify-between text-xs">
+          <label for="slFold" class="text-slate-300 font-medium">1. Térbeli Hajtogatás (Sík → 3D)</label>
+          <span id="valFold" class="mono text-sky-400 font-semibold">65%</span>
+        </div>
+        <input id="slFold" type="range" min="0" max="100" value="65">
+        <div class="flex justify-between text-[10px] mono text-slate-400">
+          <span>0% (Kiterített 2D sík)</span>
+          <span>100% (Mély 3D relief)</span>
+        </div>
+      </div>
+
+      <!-- Slider 2: Spiral Twist -->
+      <div class="flex flex-col gap-1.5">
+        <div class="flex justify-between text-xs">
+          <label for="slTwist" class="text-slate-300 font-medium">2. Logaritmikus Torzió (Csavarás)</label>
+          <span id="valTwist" class="mono text-amber-400 font-semibold">55%</span>
+        </div>
+        <input id="slTwist" type="range" min="0" max="100" value="55">
+        <div class="flex justify-between text-[10px] mono text-slate-400">
+          <span>0° (Radiális)</span>
+          <span>Spirális z(θ)=a·e<sup>bθ</sup></span>
+        </div>
+      </div>
+
+      <!-- Slider 3: Recursion Depth (Number of Rings k) -->
+      <div class="flex flex-col gap-1.5">
+        <div class="flex justify-between text-xs">
+          <label for="slRings" class="text-slate-300 font-medium">3. Rekurziós Szintek (k övek)</label>
+          <span id="valRings" class="mono text-emerald-400 font-semibold">7 szint</span>
+        </div>
+        <input id="slRings" type="range" min="2" max="10" value="7">
+        <div class="flex justify-between text-[10px] mono text-slate-400">
+          <span>2 (Alap)</span>
+          <span>10 (Mikro-fraktál)</span>
+        </div>
+      </div>
+
+      <!-- Slider 4: Color & Frequency Mapping Law -->
+      <div class="flex flex-col gap-1.5">
+        <div class="flex justify-between text-xs">
+          <label for="selMappingLaw" class="text-slate-300 font-medium">4. Szín–Hang Leképezési Törvény</label>
+          <span class="mono text-[10px] text-sky-400">2<sup>40</sup> Oktáv</span>
+        </div>
+        <select id="selMappingLaw" class="bg-[#1e293b] border border-[#263248] rounded-lg px-2.5 py-1.5 text-xs text-slate-100 outline-none focus:border-sky-400">
+          <option value="sqrt3_harmonic">Geometriai √3 Felhangsor (f₀ · (√3)^(k/2))</option>
+          <option value="just_intonation" selected>Tiszta Akusztikus Hangolás (Just Intonation)</option>
+          <option value="golden_spiral">Logaritmikus Spirál Fázisspektrum</option>
+        </select>
+        <div class="text-[10px] mono text-slate-400 truncate">
+          A 3D hajtogatás a fényerőt és a felhangokat modulálja
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM: INTERACTIVE RING SPECTRUM & RESONANCE TABLE -->
+    <div class="p-4 sm:p-5 border-t border-[#263248] bg-[#0b0f17]">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+        <div>
+          <h2 class="text-sm sm:text-base font-bold text-slate-100 flex items-center gap-2">
+            <span>Koncentrikus Spidron-szintek (k = 0 … N): Geometriai Méret → Hangfrekvencia → Fényhullámhossz</span>
+          </h2>
+          <p class="text-xs text-slate-400">
+            Minden k-adik lépcsőben a háromszög oldalhossza <code class="text-sky-400">1/√3</code> arányban csökken, a húr/rezonátor rövidülése pedig magasabb hangfrekvenciát és rövidebb optikai hullámhosszt eredményez.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <label for="selBaseFreq" class="text-xs text-slate-400 mono">Alaphang (f₀):</label>
+          <select id="selBaseFreq" class="bg-[#111827] border border-[#263248] rounded-lg px-2.5 py-1 text-xs mono text-amber-400">
+            <option value="256">256.0 Hz (Tudományos C4)</option>
+            <option value="261.63">261.63 Hz (Standard C4, A=440)</option>
+            <option value="216">216.0 Hz (Verdi A=432 alap)</option>
+            <option value="194.18">194.18 Hz (Szoláris nap-oktáv)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Continuous Visible Spectrum Reference Bar -->
+      <div class="mb-3">
+        <div class="flex justify-between text-[10px] mono text-slate-400 mb-1">
+          <span>750 nm (Vörös ~400 THz)</span>
+          <span>600 nm (Narancs/Sárga ~500 THz)</span>
+          <span>530 nm (Zöld ~565 THz)</span>
+          <span>470 nm (Kék ~640 THz)</span>
+          <span>390 nm (Ibolya ~770 THz)</span>
+        </div>
+        <div class="h-2.5 w-full rounded-full spectrum-bar relative shadow-inner"></div>
+      </div>
+
+      <!-- Ring Cards Grid -->
+      <div id="ringSpectrumGrid" class="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-7 gap-2.5">
+        <!-- Populated dynamically by JS -->
+      </div>
+    </div>
+
+  </section>
+
+  <!-- RIGHT PANEL: STEP-BY-STEP GEOMETRIC GUIDE & SYNESTHESIA INSPECTOR (5 cols on lg, 4 on xl) -->
+  <aside class="lg:col-span-5 xl:col-span-4 bg-[#111827] p-4 sm:p-5 flex flex-col gap-5">
+
+    <!-- 1. STEP-BY-STEP UNROLLED SPIDRON CONSTRUCTION GUIDE -->
+    <div class="bg-[#0b0f17] border border-[#263248] rounded-xl p-4 flex flex-col gap-3">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-amber-400">
+          I. Síkbeli Konstrukció: A Háromszögtől a Térszerkezetig
+        </h3>
+        <span class="mono text-[11px] text-slate-400">4 építési fázis</span>
+      </div>
+
+      <p class="text-xs text-slate-300 leading-relaxed m-0">
+        Válaszd ki az építési lépést, és figyeld meg a bal oldali <b>2D Kiterített Konstrukciós</b> rajzon, hogyan épül fel a rendszer egyetlen háromszögből:
+      </p>
+
+      <!-- Stepper Buttons -->
+      <div class="grid grid-cols-1 gap-2" id="constructionSteps">
+        <button data-step="1" class="step-card active p-3 rounded-xl text-left cursor-pointer">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-amber-400">1. Lépés: A Kezdeti Háromszög-pár (A + B)</span>
+            <span class="mono text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-300">1 : 1/√3</span>
+          </div>
+          <p class="text-[11px] text-slate-300 mt-1 mb-0 leading-relaxed">
+            Egy <b>szabályos háromszög</b> (60°–60°–60°, oldal = 1) oldalához egy <b>egyenlő szárú tompaszögű háromszöget</b> (30°–120°–30°) illesztünk. A tompaszögű háromszög szárai pontosan <code class="text-sky-400">1/√3 ≈ 0.577</code> hosszúak.
+          </p>
+        </button>
+
+        <button data-step="2" class="step-card p-3 rounded-xl text-left cursor-pointer">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-sky-400">2. Lépés: Kiterített Spidron-félkar (Spirális Sorozat)</span>
+            <span class="mono text-[10px] px-1.5 py-0.5 rounded bg-sky-500/10 text-sky-300">Δθ = 30°</span>
+          </div>
+          <p class="text-[11px] text-slate-300 mt-1 mb-0 leading-relaxed">
+            A 30°–120°–30°-os háromszög rövidebb szárára egy újabb, <code class="text-sky-400">√3</code>-szor kisebb szabályos háromszöget építünk. A váltakozó sorozat minden lépésben <b>30°-kal elfordul</b> és a középpont felé konvergál.
+          </p>
+        </button>
+
+        <button data-step="3" class="step-card p-3 rounded-xl text-left cursor-pointer">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-emerald-400">3. Lépés: Teljes S-alakú Spidron-kar</span>
+            <span class="mono text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-300">2 Félkar</span>
+          </div>
+          <p class="text-[11px] text-slate-300 mt-1 mb-0 leading-relaxed">
+            Két kiterített Spidron-félkart a legnagyobb alapjuk mentén, középpontosan szimmetrikusan (S-alakban) összeillesztünk. Ez Erdély Dániel klasszikus <b>Spidron alapmodulja</b>.
+          </p>
+        </button>
+
+        <button data-step="4" class="step-card p-3 rounded-xl text-left cursor-pointer">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-rose-400">4. Lépés: 6 Karos Hexagonális Spidron-fészek</span>
+            <span class="mono text-[10px] px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-300">6 × 60° = 360°</span>
+          </div>
+          <p class="text-[11px] text-slate-300 mt-1 mb-0 leading-relaxed">
+            Hat darab Spidron-félkart 60°-onként körbeforgatva a háromszögek hézagtalanul kitöltik a szabályos hatszöget. Amikor az élek mentén 3D-be hajtjuk, a gyűrűk egymásba csavarodva emelkednek ki a síkból!
+          </p>
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. SELECTED RING / TRIANGLE LIVE INSPECTOR -->
+    <div class="bg-[#0b0f17] border border-[#263248] rounded-xl p-4 flex flex-col gap-3.5">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-sky-400">
+          II. Aktív Spidron-szint (k) Fizikai Analízise
+        </h3>
+        <span id="inspRingBadge" class="mono text-xs px-2 py-0.5 rounded bg-sky-500/15 text-sky-300 border border-sky-500/30">
+          k = 0 (Külső gyűrű)
+        </span>
+      </div>
+
+      <!-- Color Swatch + Dual Complementary Preview -->
+      <div class="grid grid-cols-2 gap-2.5">
+        <div id="inspColorBox" class="p-3 rounded-xl border border-white/20 flex flex-col justify-between min-h-[84px] transition-colors">
+          <span class="text-[10px] mono uppercase opacity-80">Rezonáns Optikai Szín</span>
+          <b id="inspHexCode" class="mono text-base">#EF4444</b>
+          <span id="inspWavelength" class="mono text-[11px] opacity-90">λ = 650 nm · 461 THz</span>
+        </div>
+
+        <div id="inspCompBox" class="p-3 rounded-xl border border-white/20 flex flex-col justify-between min-h-[84px] transition-colors">
+          <span class="text-[10px] mono uppercase opacity-80">180° Fázis-komplementer</span>
+          <b id="inspCompHex" class="mono text-base">#06B6D4</b>
+          <span id="inspPhaseInfo" class="mono text-[11px] opacity-90">Δθ = +180° (Ellenfázis)</span>
+        </div>
+      </div>
+
+      <!-- Detailed Metrics Table -->
+      <dl class="grid grid-cols-2 gap-y-2 gap-x-3 text-xs border-t border-[#263248] pt-3 m-0">
+        <dt class="text-slate-400">Relatív oldalhossz (r<sub>k</sub>):</dt>
+        <dd id="inspEdgeLen" class="mono text-right text-slate-100 font-medium">(1/√3)⁰ = 1.0000</dd>
+
+        <dt class="text-slate-400">Háromszög terület (A<sub>k</sub>):</dt>
+        <dd id="inspAreaRatio" class="mono text-right text-slate-100 font-medium">(1/3)⁰ = 100.0%</dd>
+
+        <dt class="text-slate-400">Akusztikus alapfrekvencia:</dt>
+        <dd id="inspSoundHz" class="mono text-right text-amber-400 font-semibold">256.00 Hz (C4)</dd>
+
+        <dt class="text-slate-400">3D Hajtogatott Felhang (B-Δ):</dt>
+        <dd id="inspOvertoneHz" class="mono text-right text-sky-400 font-semibold">384.00 Hz (Kvint)</dd>
+
+        <dt class="text-slate-400">Optikai frekvencia (×2<sup>40</sup>):</dt>
+        <dd id="inspLightTHz" class="mono text-right text-emerald-400 font-medium">422.2 THz</dd>
+      </dl>
+
+      <button id="btnPlaySelectedRing" class="lab-btn w-full py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer">
+        <span>🔊 Aktív Szint (k) Akusztikus Megszólaltatása</span>
+      </button>
+    </div>
+
+    <!-- 3. THEORETICAL SYNTHESIS: WHY GEOMETRY = SOUND = COLOR -->
+    <div class="bg-[#0b0f17] border border-[#263248] rounded-xl p-4 flex flex-col gap-2.5 text-xs text-slate-300 leading-relaxed">
+      <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-400 m-0">
+        III. Hogyan kapcsolódik össze a Geometria, a Hang és a Szín?
+      </h3>
+      <p class="m-0">
+        <b>1. Geometriai Húr-arány:</b> Püthagorasz óta tudjuk, hogy egy rezgő húr vagy lemez frekvenciája fordítottan arányos a méretével. A Spidron-karban minden belső gyűrű pontosan <code class="text-sky-400">1/√3</code> arányban rövidül, így a geometria önmagában egy logaritmikus frekvencia-létrát ír le.
+      </p>
+      <p class="m-0">
+        <b>2. A 40 Oktáv Törvénye:</b> A hang mechanikai rezgés, a fény elektromágneses hullám. Ha egy hallható hangfrekvenciát (pl. 384 Hz) 40-szer megduplázunk (<code class="text-amber-400">f · 2⁴⁰ ≈ 422 THz</code>), a rezgésszám belép a látható fény tartományába (~700 nm vörös-narancs).
+      </p>
+      <p class="m-0">
+        <b>3. Térbeli Kiemelkedés = Színtelítettség &amp; Felhangok:</b> Amikor a síkbeli (2D) Spidron-kart a 3D térbe hajtjuk, a szabályos (A) és egyenlő szárú (B) háromszögek egymással bezárt szöge megváltoztatja a beeső fény visszaverődési szögét (optikai kontraszt), akusztikailag pedig megnyitja a felhang-szűrőt.
+      </p>
+    </div>
+
+  </aside>
+
+</main>
+
+<script>
+(() => {
+  // ============================================================================
+  // 1. MATEMAIKAI ÉS FIZIKAI KONSTANSOK (SPIDRON, AKUSZTIKA, OPTIKA)
+  // ============================================================================
+  const SQRT3 = Math.sqrt(3);
+  const INV_SQRT3 = 1 / SQRT3; // ~0.577350269
+  const C_LIGHT = 299792458;   // m/s
+  const OCTAVE_40 = Math.pow(2, 40); // 1,099,511,627,776
+
+  // Just Intonation harmonic ratios within an octave + extension
+  const JUST_RATIOS = [
+    { r: 1/1,   name: 'Alaphang (1:1 Prím)' },
+    { r: 9/8,   name: 'Nagy szekund (9:8)' },
+    { r: 5/4,   name: 'Nagy terc (5:4)' },
+    { r: 4/3,   name: 'Tiszta kvart (4:3)' },
+    { r: 3/2,   name: 'Tiszta kvint (3:2)' },
+    { r: 5/3,   name: 'Nagy szext (5:3)' },
+    { r: 15/8,  name: 'Nagy szeptim (15:8)' },
+    { r: 2/1,   name: 'Oktáv (2:1)' },
+    { r: 9/4,   name: 'Nóna (9:4)' },
+    { r: 5/2,   name: 'Decima (5:2)' }
+  ];
+
+  // Application State
+  let stageView = 'split';      // 'split' | '2d' | '3d'
+  let constructionStep = 1;     // 1: Pair, 2: Half-arm, 3: Full S-arm, 4: 6-arm Hex Nest
+  let model3DType = 'hex_nest'; // 'single_arm' | 'hex_nest' | 'dome'
+  let foldPct = 0.65;           // 0..1 (2D flat to 3D deep fold)
+  let twistPct = 0.55;          // 0..1 (Spiral torsion)
+  let numRings = 7;             // 2..10 concentric levels
+  let mappingLaw = 'just_intonation';
+  let baseFreq = 256.0;         // Hz
+  let selectedRing = 0;         // Currently inspected ring k (0 .. numRings-1)
+  let showWireframe = true;
+  let autoRotate = true;
+  let audioEnabled = true;
+  let spiralPlaying = false;
+
+  // ============================================================================
+  // 2. SZÍN – HANG – HULLÁMHOSSZ KONVERZIÓS MOTOR
+  // ============================================================================
+  function getRingData(k) {
+    const scaleEdge = Math.pow(INV_SQRT3, k);
+    const scaleArea = Math.pow(1 / 3, k);
+
+    let freqHz;
+    let intervalLabel;
+
+    if (mappingLaw === 'sqrt3_harmonic') {
+      // Pure geometric scaling: each step scales frequency by (sqrt(3))^(k/2)
+      freqHz = baseFreq * Math.pow(SQRT3, k * 0.5);
+      intervalLabel = `(√3)^(${k}/2) = ×${Math.pow(SQRT3, k * 0.5).toFixed(2)}`;
+    } else if (mappingLaw === 'just_intonation') {
+      const item = JUST_RATIOS[k % JUST_RATIOS.length];
+      const octBoost = Math.floor(k / JUST_RATIOS.length);
+      freqHz = baseFreq * item.r * Math.pow(2, octBoost);
+      intervalLabel = item.name;
+    } else {
+      // Spiral phase 30-degree steps mapped across octave
+      freqHz = baseFreq * Math.pow(2, (k * 2) / 12);
+      intervalLabel = `Spirál fázis: ${k * 30}°`;
+    }
+
+    // Folded B-triangle (isosceles) overtone frequency modulated by 3D fold angle
+    const overtoneRatio = 1 + 0.5 * (0.3 + 0.7 * foldPct); // shifts toward perfect fifth (1.5x) as it folds into 3D
+    const overtoneHz = freqHz * overtoneRatio;
+
+    // Normalize audible frequency into single octave [baseFreq, baseFreq*2) before 2^40 transposition
+    // so that every octave cleanly maps across the visible spectrum (400 THz - 780 THz)
+    let normFreq = freqHz;
+    while (normFreq >= 760) normFreq *= 0.5;
+    while (normFreq < 380) normFreq *= 2.0;
+
+    const lightTHz = (normFreq * OCTAVE_40) / 1e12; // in THz
+    const wavelengthNm = (C_LIGHT / (lightTHz * 1e12)) * 1e9; // in nm (~380..750)
+
+    // Convert wavelength (nm) + 3D folding elevation into vivid HSL / RGB
+    const rgb = wavelengthToRGB(wavelengthNm, foldPct);
+    const hex = rgbToHex(rgb);
+
+    // 180-degree phase complementary color
+    const compRgb = [255 - rgb[0], 255 - rgb[1], 255 - rgb[2]];
+    const compHex = rgbToHex(compRgb);
+
+    return {
+      k,
+      scaleEdge,
+      scaleArea,
+      freqHz,
+      overtoneHz,
+      intervalLabel,
+      lightTHz,
+      wavelengthNm,
+      rgb,
+      hex,
+      compRgb,
+      compHex
+    };
+  }
+
+  // Approximate physical wavelength (380..750 nm) to sRGB, modulated by 3D fold tension
+  function wavelengthToRGB(nm, foldFactor) {
+    const wl = Math.max(380, Math.min(750, nm));
+    let r = 0, g = 0, b = 0;
+
+    if (wl >= 380 && wl < 440) {
+      r = -(wl - 440) / (440 - 380); g = 0; b = 1;
+    } else if (wl >= 440 && wl < 490) {
+      r = 0; g = (wl - 440) / (490 - 440); b = 1;
+    } else if (wl >= 490 && wl < 510) {
+      r = 0; g = 1; b = -(wl - 510) / (510 - 490);
+    } else if (wl >= 510 && wl < 580) {
+      r = (wl - 510) / (580 - 510); g = 1; b = 0;
+    } else if (wl >= 580 && wl < 645) {
+      r = 1; g = -(wl - 645) / (645 - 580); b = 0;
+    } else {
+      r = 1; g = 0; b = 0;
+    }
+
+    // Slight saturation/brightness boost as the structure folds into 3D space
+    const intensity = 0.72 + 0.28 * foldFactor;
+    const floor = 0.12 * (1 - foldFactor);
+    return [
+      Math.round(Math.min(255, (r * intensity + floor) * 255)),
+      Math.round(Math.min(255, (g * intensity + floor) * 255)),
+      Math.round(Math.min(255, (b * intensity + floor) * 255))
+    ];
+  }
+
+  function rgbToHex(rgb) {
+    return '#' + rgb.map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join('').toUpperCase();
+  }
+
+  function relLum(rgb) {
+    return (0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]) / 255;
+  }
+
+  // ============================================================================
+  // 3. WEB AUDIO API HARMONIKUS SZINTETIZÁTOR
+  // ============================================================================
+  let audioCtx = null;
+
+  function playSpidronTone(k, duration = 1.6) {
+    if (!audioEnabled) return;
+    try {
+      if (!audioCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return;
+        audioCtx = new AC();
+      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+
+      const data = getRingData(k);
+      const now = audioCtx.currentTime + 0.01;
+
+      const masterGain = audioCtx.createGain();
+      masterGain.gain.setValueAtTime(0.0001, now);
+      masterGain.gain.exponentialRampToValueAtTime(0.18, now + 0.03);
+      masterGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+      // Lowpass filter whose cutoff opens up as the Spidron is folded into 3D space
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(400 + foldPct * 4200, now);
+
+      masterGain.connect(filter);
+      filter.connect(audioCtx.destination);
+
+      // 1. Primary Oscillator: Equilateral Triangle A (Fundamental frequency)
+      const oscA = audioCtx.createOscillator();
+      oscA.type = 'triangle';
+      oscA.frequency.setValueAtTime(data.freqHz, now);
+
+      // 2. Secondary Oscillator: Isosceles Triangle B (3D Folded Overtone)
+      const oscB = audioCtx.createOscillator();
+      oscB.type = 'sine';
+      oscB.frequency.setValueAtTime(data.overtoneHz, now);
+
+      const gainB = audioCtx.createGain();
+      gainB.gain.setValueAtTime(0.15 + 0.45 * foldPct, now); // Louder overtone when folded in 3D
+
+      oscA.connect(masterGain);
+      oscB.connect(gainB);
+      gainB.connect(masterGain);
+
+      oscA.start(now);
+      oscB.start(now);
+      oscA.stop(now + duration + 0.05);
+      oscB.stop(now + duration + 0.05);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  // ============================================================================
+  // 4. 2D SÍKBELI KITERÍTETT SPIDRON KONSTRUKCIÓ (INTERAKTÍV SVG)
+  // ============================================================================
+  const svg2D = document.getElementById('svg2D');
+
+  // Helper to get hexagon ring vertex at level k (0..N) and sector i (0..5) in 2D
+  const R2D = 185;
+  function getVertex2D(k, i) {
+    const angle = k * (Math.PI / 6) + i * (Math.PI / 3) - Math.PI / 2;
+    const rad = R2D * Math.pow(INV_SQRT3, k);
+    return [rad * Math.cos(angle), rad * Math.sin(angle)];
+  }
+
+  function render2DConstruction() {
+    let html = '';
+
+    // Background concentric reference circles and axes
+    html += `<g stroke="#1e293b" stroke-width="1" fill="none">`;
+    for (let k = 0; k <= numRings; k++) {
+      const r = (R2D * Math.pow(INV_SQRT3, k)).toFixed(1);
+      html += `<circle r="${r}" stroke-dasharray="${k === selectedRing ? 'none' : '3 3'}" stroke="${k === selectedRing ? '#38bdf8' : '#1e293b'}" stroke-opacity="${k === selectedRing ? '0.6' : '0.45'}"/>`;
+    }
+    for (let i = 0; i < 6; i++) {
+      const a = i * (Math.PI / 3);
+      html += `<line x1="0" y1="0" x2="${(210 * Math.cos(a)).toFixed(1)}" y2="${(210 * Math.sin(a)).toFixed(1)}"/>`;
+    }
+    html += `</g>`;
+
+    // Determine which sectors and rings to draw based on constructionStep (1..4)
+    const maxK = (constructionStep === 1) ? 1 : numRings;
+    const sectors = (constructionStep === 1 || constructionStep === 2)
+      ? [0]
+      : (constructionStep === 3)
+      ? [0, 3]
+      : [0, 1, 2, 3, 4, 5];
+
+    // Draw Triangles
+    for (let k = 0; k < maxK; k++) {
+      const rData = getRingData(k);
+      const isSel = (k === selectedRing);
+      const strokeW = isSel ? 2.0 : 1.0;
+      const strokeCol = isSel ? '#ffffff' : '#0b0f17';
+
+      sectors.forEach(sec => {
+        // Vertices for one Spidron step in sector `sec`
+        const V_k_i   = getVertex2D(k, sec);
+        const V_k_ip1 = getVertex2D(k, sec + 1);
+        const V_kp1_i = getVertex2D(k + 1, sec);
+        const V_kp1_im1 = getVertex2D(k + 1, sec - 1);
+
+        // Triangle A (Equilateral-like core segment) & Triangle B (Isosceles 30-120-30 segment)
+        const ptsIso  = `${V_k_i[0].toFixed(1)},${V_k_i[1].toFixed(1)} ${V_k_ip1[0].toFixed(1)},${V_k_ip1[1].toFixed(1)} ${V_kp1_i[0].toFixed(1)},${V_kp1_i[1].toFixed(1)}`;
+        const ptsEqui = `${V_k_i[0].toFixed(1)},${V_k_i[1].toFixed(1)} ${V_kp1_im1[0].toFixed(1)},${V_kp1_im1[1].toFixed(1)} ${V_kp1_i[0].toFixed(1)},${V_kp1_i[1].toFixed(1)}`;
+
+        const fillEqui = rData.hex;
+        const fillIso  = rData.hex;
+
+        // Equilateral A triangle
+        html += `<polygon data-ring="${k}" points="${ptsEqui}" fill="${fillEqui}" fill-opacity="${isSel ? '0.92' : '0.72'}" stroke="${strokeCol}" stroke-width="${strokeW}" class="cursor-pointer transition-opacity hover:fill-opacity-100"/>`;
+
+        // Isosceles B triangle (slightly lighter/translucent to distinguish A vs B)
+        html += `<polygon data-ring="${k}" points="${ptsIso}" fill="${fillIso}" fill-opacity="${isSel ? '0.65' : '0.42'}" stroke="${strokeCol}" stroke-width="${strokeW}" stroke-dasharray="${constructionStep === 1 ? '4 2' : 'none'}" class="cursor-pointer transition-opacity hover:fill-opacity-90"/>`;
+      });
+    }
+
+    // Step 1 & Step 2 Geometric Angle & Ratio Annotations
+    if (constructionStep === 1 || constructionStep === 2) {
+      const p0 = getVertex2D(0, 0);
+      const p1 = getVertex2D(0, 1);
+      const p2 = getVertex2D(1, 0);
+      const p3 = getVertex2D(1, -1);
+
+      html += `
+        <g class="mono" font-size="11" fill="#f1f5f9" pointer-events="none">
+          <circle cx="${p0[0].toFixed(1)}" cy="${p0[1].toFixed(1)}" r="4" fill="#38bdf8"/>
+          <circle cx="${p1[0].toFixed(1)}" cy="${p1[1].toFixed(1)}" r="4" fill="#f59e0b"/>
+          <circle cx="${p2[0].toFixed(1)}" cy="${p2[1].toFixed(1)}" r="4" fill="#10b981"/>
+          <text x="${(p0[0] - 55).toFixed(1)}" y="${(p0[1] - 10).toFixed(1)}" fill="#38bdf8" font-weight="600">A: 60°–60°–60° (r₀ = 1)</text>
+          <text x="${(p1[0] - 40).toFixed(1)}" y="${(p1[1] - 12).toFixed(1)}" fill="#f59e0b" font-weight="600">B: 30°–120°–30° (1/√3)</text>
+          <text x="${(p2[0] + 10).toFixed(1)}" y="${(p2[1] + 4).toFixed(1)}" fill="#10b981">120° csúcs</text>
+        </g>
+      `;
+    }
+
+    // Center point
+    html += `<circle cx="0" cy="0" r="3.5" fill="#f59e0b" pointer-events="none"/>`;
+
+    svg2D.innerHTML = html;
+  }
+
+  // ============================================================================
+  // 5. 3D THREE.JS SPIDRON KINEMATIKAI SZIMULÁCIÓ (SÍKTÓL A TÉRSZERKEZETIG)
+  // ============================================================================
+  const threeContainer = document.getElementById('threeContainer');
+  const threeCanvas = document.getElementById('threeCanvas');
+  const renderer = new THREE.WebGLRenderer({ canvas: threeCanvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+
+  // Studio Lights
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x0f172a, 0.85));
+  const dLight1 = new THREE.DirectionalLight(0xfffbeb, 0.95);
+  dLight1.position.set(5, 8, 6);
+  scene.add(dLight1);
+  const dLight2 = new THREE.DirectionalLight(0x38bdf8, 0.4);
+  dLight2.position.set(-6, -4, -4);
+  scene.add(dLight2);
+
+  const mainGroup = new THREE.Group();
+  scene.add(mainGroup);
+
+  const meshGeo = new THREE.BufferGeometry();
+  const meshMat = new THREE.MeshStandardMaterial({
+    vertexColors: true,
+    side: THREE.DoubleSide,
+    flatShading: true,
+    roughness: 0.35,
+    metalness: 0.15
+  });
+  const spidronMesh = new THREE.Mesh(meshGeo, meshMat);
+  mainGroup.add(spidronMesh);
+
+  const wireGeo = new THREE.BufferGeometry();
+  const wireMat = new THREE.LineBasicMaterial({ color: 0xe2e8f0, transparent: true, opacity: 0.45 });
+  const wireSegments = new THREE.LineSegments(wireGeo, wireMat);
+  mainGroup.add(wireSegments);
+
+  const R3D = 2.6;
+
+  // Compute 3D vertex for ring level k and sector i
+  function getVertex3D(k, i, zOffsetSign = 1, domeCurvature = 0) {
+    // Twist angle accumulates with ring depth k and user twist slider
+    const twistPerLevel = (Math.PI / 6) * (0.4 + 0.6 * twistPct);
+    const angle = k * twistPerLevel + i * (Math.PI / 3);
+    const rad = R3D * Math.pow(INV_SQRT3, k);
+
+    // Kinematic folding elevation along Y (up/down accordion pleats)
+    // Alternating pleats or spiral stair relief depending on foldPct
+    const pleatPhase = (i % 2 === 0 ? 1 : -1) * zOffsetSign;
+    const ringElevation = foldPct * 1.15 * Math.pow(INV_SQRT3, k * 0.65) * pleatPhase;
+    const spiralDepth = foldPct * 0.28 * (k - numRings * 0.35);
+
+    let x = rad * Math.cos(angle);
+    let z = rad * Math.sin(angle);
+    let y = ringElevation - spiralDepth;
+
+    if (domeCurvature > 0) {
+      const distSq = (x * x + z * z) / (R3D * R3D);
+      y += (1 - distSq) * 1.2 * foldPct;
+    }
+
+    return [x, y, z];
+  }
+
+  function build3DSpidronGeometry() {
+    const positions = [];
+    const colors = [];
+    const lines = [];
+    const ringIndices = []; // store ring k per triangle for raycasting
+
+    const pushTri = (A, B, C, colObj, kIdx) => {
+      positions.push(...A, ...B, ...C);
+      for (let v = 0; v < 3; v++) {
+        colors.push(colObj.r, colObj.g, colObj.b);
+      }
+      lines.push(...A, ...B, ...B, ...C, ...C, ...A);
+      ringIndices.push(kIdx);
+    };
+
+    const buildUnit = (sectorsList, centerOffset, scaleMul, domeCurve) => {
+      for (let k = 0; k < numRings; k++) {
+        const rData = getRingData(k);
+        const baseColor = new THREE.Color(rData.hex);
+        const isSel = (k === selectedRing);
+
+        const colEqui = baseColor.clone().lerp(new THREE.Color(0xffffff), isSel ? 0.32 : 0.08);
+        const colIso  = baseColor.clone().lerp(new THREE.Color(0x000000), isSel ? 0.05 : 0.28);
+
+        sectorsList.forEach(sec => {
+          const V_k_i     = getVertex3D(k, sec * 2, 1, domeCurve);
+          const V_k_ip1   = getVertex3D(k, sec * 2 + 1, -1, domeCurve);
+          const V_kp1_i   = getVertex3D(k + 1, sec * 2, 1, domeCurve);
+          const V_kp1_im1 = getVertex3D(k + 1, sec * 2 - 1, -1, domeCurve);
+
+          const tr = (pt) => [
+            pt[0] * scaleMul + centerOffset[0],
+            pt[1] * scaleMul + centerOffset[1],
+            pt[2] * scaleMul + centerOffset[2]
+          ];
+
+          // Equilateral-type triangle (A) and Isosceles-type triangle (B)
+          pushTri(tr(V_k_i), tr(V_k_ip1), tr(V_kp1_i), colIso, k);
+          pushTri(tr(V_k_i), tr(V_kp1_im1), tr(V_kp1_i), colEqui, k);
+        });
+      }
+    };
+
+    if (model3DType === 'single_arm') {
+      // Single S-arm (2 opposite sectors) so the user clearly sees the unrolled strip folding into 3D
+      buildUnit([0, 3], [0, 0, 0], 1.15, 0);
+    } else if (model3DType === 'hex_nest') {
+      // Full 6-sector hexagonal Spidron nest
+      buildUnit([0, 1, 2, 3, 4, 5], [0, 0, 0], 1.0, 0);
+    } else {
+      // Multi-nest Spidronhedron / Dome cluster
+      buildUnit([0, 1, 2, 3, 4, 5], [0, 0.25, 0], 0.68, 1);
+      for (let s = 0; s < 6; s++) {
+        const ang = s * (Math.PI / 3);
+        const dist = 2.05;
+        buildUnit([0, 1, 2, 3, 4, 5], [Math.cos(ang) * dist, -0.35, Math.sin(ang) * dist], 0.42, 0.6);
+      }
+    }
+
+    meshGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    meshGeo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+    meshGeo.computeVertexNormals();
+    meshGeo.userData.ringIndices = ringIndices;
+
+    wireGeo.setAttribute('position', new THREE.Float32BufferAttribute(lines, 3));
+    wireSegments.visible = showWireframe;
+  }
+
+  // Camera Orbit & Raycasting on 3D Canvas
+  let camTheta = 0.6;
+  let camPhi = 0.95;
+  let camRad = 6.2;
+  let isDragging = false;
+  let prevPt = [0, 0];
+  let dragDist = 0;
+
+  threeContainer.addEventListener('pointerdown', (e) => {
+    isDragging = true;
+    prevPt = [e.clientX, e.clientY];
+    dragDist = 0;
+  });
+
+  window.addEventListener('pointermove', (e) => {
+    if (!isDragging) return;
+    const dx = e.clientX - prevPt[0];
+    const dy = e.clientY - prevPt[1];
+    dragDist += Math.abs(dx) + Math.abs(dy);
+    camTheta -= dx * 0.008;
+    camPhi = Math.max(0.15, Math.min(2.95, camPhi - dy * 0.008));
+    prevPt = [e.clientX, e.clientY];
+  });
+
+  window.addEventListener('pointerup', (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    if (dragDist < 6 && e.target === threeCanvas) {
+      const rect = threeCanvas.getBoundingClientRect();
+      const mouse = new THREE.Vector2(
+        ((e.clientX - rect.left) / rect.width) * 2 - 1,
+        -((e.clientY - rect.top) / rect.height) * 2 + 1
+      );
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(mouse, camera);
+      const hits = raycaster.intersectObject(spidronMesh);
+      if (hits.length > 0 && hits[0].faceIndex !== undefined) {
+        const ringK = meshGeo.userData.ringIndices[hits[0].faceIndex];
+        if (ringK !== undefined) {
+          selectRing(ringK, true);
+        }
+      }
+    }
+  });
+
+  threeContainer.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    camRad = Math.max(2.5, Math.min(14, camRad * (1 + Math.sign(e.deltaY) * 0.08)));
+  }, { passive: false });
+
+  function resizeThree() {
+    const w = threeContainer.clientWidth || 400;
+    const h = threeContainer.clientHeight || 360;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(resizeThree).observe(threeContainer);
+
+  function animateLoop() {
+    requestAnimationFrame(animateLoop);
+    if (autoRotate && !isDragging) {
+      camTheta += 0.0035;
+    }
+    camera.position.set(
+      camRad * Math.sin(camPhi) * Math.sin(camTheta),
+      camRad * Math.cos(camPhi),
+      camRad * Math.sin(camPhi) * Math.cos(camTheta)
+    );
+    camera.lookAt(0, 0, 0);
+    renderer.render(scene, camera);
+  }
+
+  // ============================================================================
+  // 6. UI FRISSÍTÉS ÉS SZINKRONIZÁCIÓ
+  // ============================================================================
+  function updateAllViews() {
+    if (selectedRing >= numRings) selectedRing = numRings - 1;
+
+    render2DConstruction();
+    build3DSpidronGeometry();
+
+    // Update 3D HUD telemetry
+    const foldDeg = (foldPct * 80).toFixed(1);
+    const twistDeg = (twistPct * 54).toFixed(1);
+    document.getElementById('hudFoldDeg').textContent = `${Math.round(foldPct * 100)}% (${foldDeg}°)`;
+    document.getElementById('hudTwistDeg').textContent = `${twistDeg}° / szint`;
+    document.getElementById('hudActiveRing').textContent = `k = ${selectedRing} (${selectedRing + 1}. öv)`;
+
+    // Update Selected Ring Inspector
+    const d = getRingData(selectedRing);
+    document.getElementById('inspRingBadge').textContent = `k = ${d.k} (${d.k + 1}. Spidron-öv)`;
+
+    const cBox = document.getElementById('inspColorBox');
+    cBox.style.backgroundColor = d.hex;
+    cBox.style.color = relLum(d.rgb) > 0.55 ? '#0b0f17' : '#f8fafc';
+    document.getElementById('inspHexCode').textContent = d.hex;
+    document.getElementById('inspWavelength').textContent = `λ ≈ ${Math.round(d.wavelengthNm)} nm · ${d.lightTHz.toFixed(1)} THz`;
+
+    const compBox = document.getElementById('inspCompBox');
+    compBox.style.backgroundColor = d.compHex;
+    compBox.style.color = relLum(d.compRgb) > 0.55 ? '#0b0f17' : '#f8fafc';
+    document.getElementById('inspCompHex').textContent = d.compHex;
+
+    document.getElementById('inspEdgeLen').textContent = `(1/√3)^${d.k} = ${d.scaleEdge.toFixed(4)}`;
+    document.getElementById('inspAreaRatio').textContent = `(1/3)^${d.k} = ${(d.scaleArea * 100).toFixed(2)}%`;
+    document.getElementById('inspSoundHz').textContent = `${d.freqHz.toFixed(2)} Hz (${d.intervalLabel})`;
+    document.getElementById('inspOvertoneHz').textContent = `${d.overtoneHz.toFixed(2)} Hz`;
+    document.getElementById('inspLightTHz').textContent = `${d.lightTHz.toFixed(1)} THz`;
+
+    document.getElementById('metric2DRatio').textContent = `Aktív r_${d.k} = ${d.scaleEdge.toFixed(3)} · f = ${d.freqHz.toFixed(1)} Hz`;
+
+    // Populate bottom Ring Spectrum Cards
+    const grid = document.getElementById('ringSpectrumGrid');
+    let cardsHtml = '';
+    for (let k = 0; k < numRings; k++) {
+      const rk = getRingData(k);
+      const isAct = (k === selectedRing);
+      const txtCol = relLum(rk.rgb) > 0.55 ? '#0b0f17' : '#f8fafc';
+      cardsHtml += `
+        <button data-select-ring="${k}" class="rounded-xl p-2.5 border transition text-left flex flex-col justify-between min-h-[92px] cursor-pointer ${
+          isAct ? 'ring-2 ring-white scale-[1.03] z-10 border-white' : 'border-[#263248] opacity-90 hover:opacity-100'
+        }" style="background:${rk.hex}; color:${txtCol}">
+          <div class="flex items-center justify-between text-[10px] mono font-semibold opacity-90">
+            <span>k = ${k} (${k + 1}. öv)</span>
+            <span>r=${rk.scaleEdge.toFixed(2)}</span>
+          </div>
+          <div class="my-1">
+            <div class="mono text-sm font-bold">${rk.freqHz.toFixed(1)} Hz</div>
+            <div class="text-[10px] opacity-85 truncate">${rk.intervalLabel}</div>
+          </div>
+          <div class="flex items-center justify-between text-[10px] mono pt-1 border-t border-black/15">
+            <b>${Math.round(rk.wavelengthNm)} nm</b>
+            <span>${rk.lightTHz.toFixed(0)} THz</span>
+          </div>
+        </button>
+      `;
+    }
+    grid.innerHTML = cardsHtml;
+  }
+
+  function selectRing(k, playSound = true) {
+    selectedRing = Math.max(0, Math.min(numRings - 1, k));
+    updateAllViews();
+    if (playSound) {
+      playSpidronTone(selectedRing);
+    }
+  }
+
+  // ============================================================================
+  // 7. INTERAKTÍV ESEMÉNYKEZELŐK
+  // ============================================================================
+  // Click on 2D SVG triangles or Bottom Ring Cards
+  document.addEventListener('click', (e) => {
+    const triEl = e.target.closest('[data-ring]');
+    if (triEl) {
+      selectRing(Number(triEl.dataset.ring), true);
+      return;
+    }
+
+    const cardEl = e.target.closest('[data-select-ring]');
+    if (cardEl) {
+      selectRing(Number(cardEl.dataset.selectRing), true);
+      return;
+    }
+
+    const stepBtn = e.target.closest('[data-step]');
+    if (stepBtn) {
+      constructionStep = Number(stepBtn.dataset.step);
+      document.querySelectorAll('#constructionSteps .step-card').forEach(b => {
+        b.classList.toggle('active', b === stepBtn);
+      });
+      // Synchronize 3D view logically if user clicks step 3 vs step 4
+      if (constructionStep <= 3 && model3DType === 'hex_nest') {
+        model3DType = 'single_arm';
+        document.getElementById('sel3DType').value = 'single_arm';
+      } else if (constructionStep === 4 && model3DType === 'single_arm') {
+        model3DType = 'hex_nest';
+        document.getElementById('sel3DType').value = 'hex_nest';
+      }
+      updateAllViews();
+      playSpidronTone(selectedRing, 0.9);
+      return;
+    }
+
+    const stageBtn = e.target.closest('.stage-mode-btn');
+    if (stageBtn) {
+      stageView = stageBtn.dataset.stage;
+      document.querySelectorAll('.stage-mode-btn').forEach(b => b.classList.toggle('active', b === stageBtn));
+      const p2D = document.getElementById('pane2D');
+      const p3D = document.getElementById('pane3D');
+      const grid = document.getElementById('visualStageGrid');
+
+      if (stageView === 'split') {
+        p2D.classList.remove('hidden');
+        p3D.classList.remove('hidden');
+        grid.className = 'flex-1 grid grid-cols-1 xl:grid-cols-2 min-h-[480px] sm:min-h-[540px] stage-bg relative overflow-hidden';
+      } else if (stageView === '2d') {
+        p2D.classList.remove('hidden');
+        p3D.classList.add('hidden');
+        grid.className = 'flex-1 grid grid-cols-1 min-h-[480px] sm:min-h-[540px] stage-bg relative overflow-hidden';
+      } else {
+        p2D.classList.add('hidden');
+        p3D.classList.remove('hidden');
+        grid.className = 'flex-1 grid grid-cols-1 min-h-[480px] sm:min-h-[540px] stage-bg relative overflow-hidden';
+      }
+      resizeThree();
+      return;
+    }
+  });
+
+  // Sliders
+  document.getElementById('slFold').addEventListener('input', (e) => {
+    foldPct = Number(e.target.value) / 100;
+    document.getElementById('valFold').textContent = `${e.target.value}%`;
+    updateAllViews();
+  });
+
+  document.getElementById('slTwist').addEventListener('input', (e) => {
+    twistPct = Number(e.target.value) / 100;
+    document.getElementById('valTwist').textContent = `${e.target.value}%`;
+    updateAllViews();
+  });
+
+  document.getElementById('slRings').addEventListener('input', (e) => {
+    numRings = Number(e.target.value);
+    document.getElementById('valRings').textContent = `${numRings} szint`;
+    updateAllViews();
+  });
+
+  document.getElementById('selMappingLaw').addEventListener('change', (e) => {
+    mappingLaw = e.target.value;
+    updateAllViews();
+    playSpidronTone(selectedRing);
+  });
+
+  document.getElementById('selBaseFreq').addEventListener('change', (e) => {
+    baseFreq = Number(e.target.value);
+    updateAllViews();
+    playSpidronTone(selectedRing);
+  });
+
+  document.getElementById('sel3DType').addEventListener('change', (e) => {
+    model3DType = e.target.value;
+    updateAllViews();
+  });
+
+  document.getElementById('btnWireframe').addEventListener('click', function() {
+    showWireframe = !showWireframe;
+    this.setAttribute('aria-pressed', showWireframe);
+    wireSegments.visible = showWireframe;
+  });
+
+  document.getElementById('btnAutoRotate').addEventListener('click', function() {
+    autoRotate = !autoRotate;
+    this.setAttribute('aria-pressed', autoRotate);
+  });
+
+  document.getElementById('btnAudioMute').addEventListener('click', function() {
+    audioEnabled = !audioEnabled;
+    this.setAttribute('aria-pressed', audioEnabled);
+    const dot = document.getElementById('muteDot');
+    dot.className = `w-2 h-2 rounded-full ${audioEnabled ? 'bg-emerald-400 animate-pulse' : 'bg-rose-500'}`;
+    this.querySelector('span:last-child').textContent = `WebAudio Szintetizátor: ${audioEnabled ? 'AKTÍV' : 'NÉMÍTVA'}`;
+  });
+
+  document.getElementById('btnPlaySelectedRing').addEventListener('click', () => {
+    playSpidronTone(selectedRing, 2.2);
+  });
+
+  // Spiral Sequence Player (Plays outer ring k=0 inward to k=numRings-1)
+  let spiralTimer = null;
+  document.getElementById('btnPlaySpiral').addEventListener('click', () => {
+    if (spiralPlaying) {
+      clearInterval(spiralTimer);
+      spiralPlaying = false;
+      document.getElementById('spiralIcon').textContent = '▶';
+      return;
+    }
+    spiralPlaying = true;
+    document.getElementById('spiralIcon').textContent = '⏹';
+    let stepK = 0;
+    selectRing(stepK, true);
+
+    spiralTimer = setInterval(() => {
+      stepK++;
+      if (stepK >= numRings) {
+        clearInterval(spiralTimer);
+        spiralPlaying = false;
+        document.getElementById('spiralIcon').textContent = '▶';
+        return;
+      }
+      selectRing(stepK, true);
+    }, 420);
+  });
+
+  // Initialize
+  resizeThree();
+  updateAllViews();
+  requestAnimationFrame(animateLoop);
+})();
+</script>
+</body>
+</html>
