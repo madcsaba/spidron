@@ -95,6 +95,7 @@ document.documentElement.setAttribute("data-lang",l);document.documentElement.la
           <button class="t" id="cut"><span class="hu">✂ Metszet (¼ kivágás)</span><span class="en">✂ Section (¼ cut)</span></button>
           <button class="t" id="wire"><span class="hu">△ Háromszögháló</span><span class="en">△ Triangle mesh</span></button>
           <button class="t" id="obj"><span class="hu">⬇ OBJ</span><span class="en">⬇ OBJ</span></button>
+          <button class="t" id="hedron">⬢ Spidronhedron</button>
           <button class="t" id="truth"><span class="hu">✓ Igaz összeállítás</span><span class="en">✓ True composition</span></button>
           <button class="t on" id="spin"><span class="hu">⟳ Forgás</span><span class="en">⟳ Spin</span></button>
         </div>
@@ -146,6 +147,7 @@ document.documentElement.setAttribute("data-lang",l);document.documentElement.la
         <li><span class="tag fix"><span class="hu">PONTOSÍTVA</span><span class="en">REFINED</span></span><span class="hu"><b>Spidron: aₙ = a₀·kⁿ.</b> A hatszögű spidronnál k pontosan 1/√3 ≈ 0,5774, szintenként 30° elfordulással, és a háromszögek 60–60–60° és 30–120–30°-osak. A „k ≈ 0,5–0,7, α ≈ 45–60°” tartomány általános spirál, nem spidron.</span><span class="en"><b>Spidron: aₙ = a₀·kⁿ.</b> For the hexagonal spidron k is exactly 1/√3 ≈ 0.5774, with a 30° turn per level, and the triangles are 60–60–60° and 30–120–30°. The range “k ≈ 0.5–0.7, α ≈ 45–60°” describes a generic spiral, not a spidron.</span></li>
         <li><span class="tag new"><span class="hu">ÚJ IGAZSÁG</span><span class="en">NEW TRUTH</span></span><span class="hu"><b>A hatszögű spidron az Élet virága rácsán ül.</b> Ha egy szint csúcsai rácspontok, akkor minden kifelé eső szinté is: a √3-szoros nagyítás 30°-os forgatással a háromszögrácsot a saját 3-as indexű részrácsába viszi: rácskoordinátákban a mátrixa [[1, −1], [1, 2]], determinánsa 3 (Eisenstein-egészekkel: szorzás egy 3 normájú számmal). Kifelé ezért minden szint rácsponton marad, de nem minden rácspont lesz csúcs. Befelé, r/√3-nál már nem rácspont. Nézd a 2D lapon: a zöld csúcsok.</span><span class="en"><b>The hexagonal spidron sits on the Flower of Life lattice.</b> If one level's vertices are lattice points, so are those of every level further out: a √3 zoom with a 30° turn maps the triangular lattice into its own index-3 sublattice: in lattice coordinates its matrix is [[1, −1], [1, 2]], with determinant 3 (in Eisenstein integers: multiplication by a number of norm 3). So every level outward stays on lattice points, but not every lattice point becomes a vertex. Inward, at r/√3, they are no longer lattice points. See the green vertices on the 2D tab.</span></li>
         <li><span class="tag new"><span class="hu">ÚJ IGAZSÁG</span><span class="en">NEW TRUTH</span></span><span class="hu"><b>A spidron szárú háromszöge egy egyenlő oldalú háromszög harmada.</b> Ha egy egyenlő oldalú háromszög súlypontját összekötjük a csúcsokkal, három 30–120–30°-os háromszöget kapunk, és ezek pontosan a hatszögű spidron szárú háromszögei: a csúcsuk a súlypont. A hatszögű spidron tehát teljes egészében egyenlő oldalú háromszögekből és azok harmadaiból áll. Nézd a 2D lapon: „Súlyponti felosztás”.</span><span class="en"><b>The spidron's isosceles triangle is one third of an equilateral triangle.</b> Joining the centroid of an equilateral triangle to its vertices gives three 30–120–30° triangles, and these are exactly the isosceles triangles of the hexagonal spidron: their apex is the centroid. So the hexagonal spidron is made entirely of equilateral triangles and their thirds. See the 2D tab: “Centroid split”.</span></li>
+        <li><span class="tag new">SPIDRONHEDRON</span><span class="hu"><b>Nyolc merev fészek zárt testté áll össze a kocka csúcsainál.</b> A kocka egy csúcsa körüli tartomány pereme (élfelező, lapközép, élfelező, …) szabályos ferde hatszög: oldala a fél él, sugara √(2/3)·(fél él), csúcsai felváltva ±(fél él)/(2√3) magasságban. Pontosan ilyen a merev spidron-fészek pereme, ha a hajtásmélység a/oldal = 1/(2√3). Ezért a nyolc fészek torzítás és hézag nélkül illeszkedik; a fészkek közepe a csúcsátlón a kocka középpontjától 0,866·(fél él)-re süllyed. A gömb ikozaéderes rácsával közös szimmetriájuk a tetraéder 12 forgatása.</span><span class="en"><b>Eight rigid nests close up into a solid at the vertices of a cube.</b> The rim of the region around a cube vertex (edge midpoint, face centre, edge midpoint, …) is a regular skew hexagon: its side is half the edge, its radius √(2/3)·(half edge), its vertices alternately at heights ±(half edge)/(2√3). That is exactly the rim of a rigid spidron nest with fold depth a/side = 1/(2√3). So the eight nests fit without distortion or gaps; the nests' centres sink along the diagonals to 0.866·(half edge) from the cube centre. Their shared symmetry with the sphere's icosahedral grid is the 12 rotations of the tetrahedron.</span></li>
         <li><span class="tag new"><span class="hu">MOZGÁS</span><span class="en">MOTION</span></span><span class="hu"><b>A spidron kétféleképpen mozoghat igazán.</b> (1) Áramlás: a végtelen fészek √3-szoros nagyítás és 30°-os forgatás után önmagába tér, ezért folyamatosan befelé áramolhat, és közben ugyanaz marad. (2) Merev hajtogatás: a hatszögű fészek egyetlen paraméterrel térbe hajlik úgy, hogy egyik háromszöge sem torzul; közben elcsavarodik és összehúzódik. A 3D nézet élőben kiírja az oldalhosszak legnagyobb eltérését (10⁻¹² nagyságrend). A hajtás-számítás a Kodonfészekből való.</span><span class="en"><b>The spidron can truly move in two ways.</b> (1) Flow: the infinite nest maps onto itself after a √3 zoom with a 30° turn, so it can flow inward continuously while staying the same. (2) Rigid folding: the hexagonal nest bends into space with one parameter so that none of its triangles distorts; meanwhile it twists and contracts. The 3D view shows the largest edge-length change live (on the order of 10⁻¹²). The fold solver comes from the Codon Nest.</span></li>
         <li><span class="tag fix"><span class="hu">PONTOSÍTVA</span><span class="en">REFINED</span></span><span class="hu"><b>4 karú spidron.</b> Van négyszögű változat: 15–150–15°-os egyenlő szárú és egyenlő oldalú háromszögekből, k = 1/(2·cos 15°) ≈ 0,5176, szintenként 45° elfordulással (itt levezetve: az összekötő háromszögek pontosan egyenlő oldalúak). A hatszöges rácsra viszont nem illik.</span><span class="en"><b>4-arm spidron.</b> A square variant exists: built from 15–150–15° isosceles and equilateral triangles, k = 1/(2·cos 15°) ≈ 0.5176, with a 45° turn per level (derived here: the connecting triangles are exactly equilateral). It does not fit the hexagonal lattice, though.</span></li>
         <li><span class="tag new"><span class="hu">ÚJ IGAZSÁG</span><span class="en">NEW TRUTH</span></span><span class="hu"><b>Általános spidron-szabály.</b> Ha az n-szögű spidron összekötő háromszögei egyenlő oldalúak, az egyenlő szárú háromszög alapszöge <b>β = 60° − 180°/n</b>, a léptékarány <b>k = 1/(2·cos β)</b>, a fordulat szintenként 180°/n. n = 6: 30° és 1/√3; n = 4: 15°; n = 5: 24° és k ≈ 0,5473. (Levezetés: a csúcs távolsága a középponttól cos(π/n) − sin(π/n)·tg β, ami pontosan akkor egyenlő 1/(2·cos β)-val, ha cos(π/n + β) = ½.)</span><span class="en"><b>General spidron law.</b> If the connecting triangles of an n-gon spidron are equilateral, the isosceles base angle is <b>β = 60° − 180°/n</b>, the scale ratio <b>k = 1/(2·cos β)</b>, and the turn per level 180°/n. n = 6: 30° and 1/√3; n = 4: 15°; n = 5: 24° and k ≈ 0.5473. (Derivation: the apex distance from the centre is cos(π/n) − sin(π/n)·tan β, which equals 1/(2·cos β) exactly when cos(π/n + β) = ½.)</span></li>
@@ -330,6 +332,36 @@ function coreFrame(f,relief){
     core.scale.setScalar(Math.pow(k,f));core.rotation.z=f*Math.PI/n;}
   setTris(coreGeo,inner);setTris(ringGeo,ring);ringMat.opacity=.92*f*f*(3-2*f);M.err=err;}
 function buildCore(){coreFrame(M.phi%1,S.arms===6?M.relief:0);}
+/* spidronhedron: eight RIGID hexagonal nests close up into a solid at the vertices of a cube.
+   The boundary of the region around a cube vertex (edge midpoints and face centres) is a regular skew hexagon:
+   side = half edge c, radius sqrt(2/3)*c, heights +-c/(2*sqrt3). A rigid nest with fold depth a/side = 1/(2*sqrt3) has exactly this rim. */
+const HED={c:R/Math.SQRT2*.97,group:new THREE.Group(),nests:[],fit:0,err:0};
+(function buildHedron(){
+  const c=HED.c,relief=1/(2*s3),LVH=[];let Rr=c,a=relief*c,th=0;
+  for(let j=0;j<=14;j++){LVH.push({a,th,rho:Math.sqrt(Math.max(Rr*Rr-4*a*a,0))});const st=chainStep(Rr,a);a=st[0];th+=st[1]-Math.PI/6;Rr/=s3;}
+  const vp=(n,k)=>{const Lv=LVH[n],ang=(60-30*n-60*k)*DEG-Lv.th;return [Lv.rho*Math.cos(ang),Lv.rho*Math.sin(ang),(k%2?-1:1)*Lv.a];};
+  const mat=new THREE.MeshStandardMaterial({vertexColors:true,side:THREE.DoubleSide,flatShading:true,roughness:.5,metalness:.05});
+  let fit=0,err=0;const dist=(p,q)=>Math.hypot(p[0]-q[0],p[1]-q[1],p[2]-q[2]);
+  for(let v=0;v<8;v++){const sg=[v>>2&1?1:-1,v>>1&1?1:-1,v&1?1:-1],nrm=new THREE.Vector3(...sg).normalize();
+    const fc=new THREE.Vector3(sg[0]*c,0,0),e1=fc.clone().sub(nrm.clone().multiplyScalar(fc.dot(nrm))).normalize();
+    const hc=nrm.clone().multiplyScalar(c*s3/2);
+    const rimCube=[[sg[0]*c,0,0],[0,sg[1]*c,0],[0,0,sg[2]*c],[0,sg[1]*c,sg[2]*c],[sg[0]*c,0,sg[2]*c],[sg[0]*c,sg[1]*c,0]].map(q=>new THREE.Vector3(...q));
+    let best=null;
+    for(const sgn of [1,-1]){const e2=new THREE.Vector3().crossVectors(nrm,e1).multiplyScalar(sgn);
+      const W=p=>hc.clone().add(e1.clone().multiplyScalar(p[0])).add(e2.clone().multiplyScalar(p[1])).add(nrm.clone().multiplyScalar(p[2]));
+      let f=0;for(let k=0;k<6;k++){const w=W(vp(0,k));f=Math.max(f,Math.min(...rimCube.map(q=>q.distanceTo(w))));}
+      if(!best||f<best.f)best={f,W};}
+    const W=best.W;fit=Math.max(fit,best.f);
+    const pos=[],col=[],base=new THREE.Color(sg[0]>0?1:.12,sg[1]>0?1:.12,sg[2]>0?1:.12).lerp(new THREE.Color(0xffffff),.35);
+    const dark=base.clone().lerp(new THREE.Color(0x000000),.2);
+    for(let n=0;n<13;n++)for(let k=0;k<6;k++){const iso=[vp(n,k),vp(n,k+1),vp(n+1,k)],eq=[vp(n,k+1),vp(n+1,k),vp(n+1,k+1)];
+      if(n<8){const side=c*Math.pow(s3,-n),leg=side/s3;[[iso[0],iso[1],side],[iso[1],iso[2],leg],[iso[2],iso[0],leg],[eq[0],eq[1],leg],[eq[1],eq[2],leg],[eq[2],eq[0],leg]].forEach(([p1,p2,w])=>{err=Math.max(err,Math.abs(dist(p1,p2)/w-1));});}
+      [[iso,base],[eq,dark]].forEach(([tr,cl])=>tr.forEach(p=>{const w=W(p);pos.push(w.x,w.y,w.z);col.push(cl.r,cl.g,cl.b);}));}
+    for(let k=0;k<6;k++){[[0,0,0],vp(13,k),vp(13,k+1)].forEach(p=>{const w=W(p);pos.push(w.x,w.y,w.z);col.push(dark.r,dark.g,dark.b);});}
+    const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));g.setAttribute("color",new THREE.Float32BufferAttribute(col,3));g.computeVertexNormals();
+    const m=new THREE.Mesh(g,mat);m.userData.dir=nrm;HED.group.add(m);HED.nests.push(m);}
+  HED.fit=fit/c;HED.err=err;HED.group.visible=false;scene.add(HED.group);
+})();
 let th=.6,ph=1.15,rad=8.2,drag=null,camT=null;
 const VIEWS={front:[0,Math.PI/2],top:[0,.001],side:[Math.PI/2,Math.PI/2]};
 function resize(){const r=cv.getBoundingClientRect();if(!r.width)return;renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.updateProjectionMatrix();}
@@ -349,6 +381,7 @@ function loop(){requestAnimationFrame(loop);if(S.tab!=="3d")return;
   if(flow)M.phi=(M.phi+dt*.22)%1;
   if(breathe){M.t+=dt;M.relief=.2*S.fold*(.5-.5*Math.cos(M.t*1.1));}else M.relief=.2*S.fold;
   if(core.visible)buildCore();
+  if(HED.group.visible)HED.nests.forEach(m=>m.position.copy(m.userData.dir).multiplyScalar(S.explode*1.2));
   if((M.tick=(M.tick||0)+1)%15===0)readMotion();
   renderer.render(scene,camera);}
 function readMotion(){const el=$("#readMotion");if(!el)return;
@@ -356,6 +389,8 @@ function readMotion(){const el=$("#readMotion");if(!el)return;
     `Rigid fold: the largest change in any triangle's edge length is <b>${M.err<1e-9?"< 10⁻⁹":M.err.toExponential(1)}</b> – no triangle distorts while folding. Fold depth: ${Math.round(M.relief/.2*100)}%.`)
    :T("A négyszögű változat itt síkban áramlik: merev hajtást rá nem számoltunk.","The square variant flows flat here: no rigid fold has been computed for it.");}
 function read3d(){const n=S.arms;
+  if(S.hedron){const ex=x=>x<1e-9?"< 10⁻⁹":x.toExponential(1);$("#read3d").innerHTML=T(`<b>Spidronhedron:</b> nyolc merev hatszögű spidron-fészek a kocka csúcsainál, hajtásmélység a/oldal = 1/(2√3). A fészkek pereme a kocka élfelezőin és lapközepein fut: legnagyobb eltérés <b>${ex(HED.fit)}</b> (fél élhez mérve); a háromszögek élhossz-eltérése <b>${ex(HED.err)}</b>. A test szimmetriája a kocka 24 forgatása; a gömbbel közös rész a tetraéder 12 forgatása.`,
+    `<b>Spidronhedron:</b> eight rigid hexagonal spidron nests at the vertices of a cube, fold depth a/side = 1/(2√3). The nests' rims run through the cube's edge midpoints and face centres: largest deviation <b>${ex(HED.fit)}</b> (relative to half an edge); triangle edge-length change <b>${ex(HED.err)}</b>. The solid's symmetry is the 24 rotations of the cube; what it shares with the sphere is the 12 rotations of the tetrahedron.`);return;}
   if(S.truth){$("#read3d").innerHTML=T("<b>Igaz összeállítás:</b> 150 hatszögű spidron (k = 0,5774, 30°/szint) a hatszomszédos és 12 ötszögű spidron (k = 0,5473, 36°/szint) az ötszomszédos pontokon, a karok a szomszédok felé. Minden elem a rács pontján ül, és az együttes az ikozaéder 60 forgatására változatlan. A 4 karú mag itt nem szerepel, mert ellentmond a rácsnak.",
     "<b>True composition:</b> 150 hexagonal spidrons (k = 0.5774, 30°/level) on the six-fold and 12 pentagonal spidrons (k = 0.5473, 36°/level) on the five-fold points, arms toward the neighbours. Every element sits on a lattice point, and the whole is unchanged under the 60 rotations of the icosahedron. The 4-arm core is left out because it contradicts the lattice.");return;}
   $("#read3d").innerHTML=T(`Gömbháló: 162 kör, ebből <b>150</b> hatszomszédos és <b>12</b> ötszomszédos (piros). Euler: V − E + F = 162 − 480 + 320 = 2. A mag ${n} karú spidron (k = ${kOf(n).toFixed(4).replace('.',',')}); ${n===6?"a hatszöges rács szimmetriáival összhangban.":"a 90°-os forgatása a rácsot nem viszi önmagába, ezért az együttes szimmetriája C₂."}`,
@@ -375,8 +410,12 @@ document.querySelectorAll("[data-motion]").forEach(b=>b.addEventListener("click"
 $("#cut").addEventListener("click",()=>{S.cut=!S.cut;$("#cut").classList.toggle("on",S.cut);const p=S.cut?cutPlanes:[];[goldMat,shellMat,nestMat].forEach(m=>{m.clippingPlanes=p;m.needsUpdate=true;});});
 $("#wire").addEventListener("click",()=>{S.wire=!S.wire;$("#wire").classList.toggle("on",S.wire);circleLines.forEach(l=>l.visible=!S.wire);wireLines.forEach(l=>l.visible=S.wire);});
 $("#obj").addEventListener("click",exportOBJ);
-$("#truth").addEventListener("click",()=>{S.truth=!S.truth;$("#truth").classList.toggle("on",S.truth);core.visible=!S.truth;nestHalves.forEach(m=>m.visible=S.truth);
-  shellMat.opacity=S.truth?.5:.18;read3d();});
+function setMode(mode){S.truth=mode==="truth"&&!S.truth;S.hedron=mode==="hedron"&&!S.hedron;
+  $("#truth").classList.toggle("on",S.truth);$("#hedron").classList.toggle("on",S.hedron);
+  core.visible=!S.truth&&!S.hedron;nestHalves.forEach(m=>m.visible=S.truth);HED.group.visible=S.hedron;
+  shellMat.opacity=S.truth?.5:.18;read3d();}
+$("#truth").addEventListener("click",()=>setMode("truth"));
+$("#hedron").addEventListener("click",()=>setMode("hedron"));
 $("#spin").addEventListener("click",()=>{S.spin=!S.spin;$("#spin").classList.toggle("on",S.spin);if(S.spin){camT=null;setView("free",true);}});
 function applyLang(){const l=L();readMotion();document.querySelectorAll(".langsw button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.l===l)));read3d();draw2D();}
 document.querySelectorAll(".langsw button").forEach(b=>b.addEventListener("click",()=>{const l=b.dataset.l;try{localStorage.setItem("sjk-lang",l)}catch(e){}
