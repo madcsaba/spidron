@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hatvannégy pont – I Ching tér</title>
+<meta name="description" content="A 64 hexagram hat elrendezésben (hiperkocka, 4×4×4 kocka, Taiji-fa, Fu Xi kör, King Wen rács, kodon-kerék), DNS-réteg, spidron-fészek, nyolc fészkes spidronhedron-kocka, színek és hangok.">
+<style>
+/*
+VOICE: csendes, pontos, mértani – krétarajz fekete papíron (1. kép)
+IDEA: egy szerkesztett geometriai tábla, ahol ugyanaz a 64 pont hat ősi és modern elrendezés között vándorol
+PICTURE: élő 3D tér: 64 hexagram-jel, 192 él (hiperkocka), morfolás a rendszerek között
+COLOUR and TYPE: szénfekete + krétafehér + egy éles vörös (2. kép kiemelése); Instrument Serif címek, IBM Plex Sans szöveg
+LAYOUT: bal oldalt a tér a vezérlőkkel, jobbra a kiválasztott hexagram lapja; 900px alatt egymás alatt
+*/
+:root{color-scheme:light dark;--bg:light-dark(#f3eee3,#14120f);--panel:light-dark(#fbf8f1,#1c1a16);--ink:light-dark(#1d1b17,#ece6d6);--mute:light-dark(#6e675a,#a39b8a);--line:light-dark(#e0d5bd,#363026);--acc:light-dark(#b8322a,#d9503f);--gold:light-dark(#a8862f,#c9a54e)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "IBM Plex Sans",system-ui,sans-serif;overflow-x:clip}
+h1,h2{font-family:"Shippori Mincho","Noto Serif TC",Georgia,serif;font-weight:500;line-height:1.05;margin:0;text-wrap:balance}
+h1{font-size:clamp(34px,4.4vw,52px)}h2{font-size:32px}
+.zh{font-family:"Shippori Mincho","Noto Serif TC","Songti SC","PMingLiU",serif}
+header{position:relative;overflow:hidden;padding:28px max(4vw,16px) 14px;display:flex;flex-wrap:wrap;gap:8px 32px;align-items:end;justify-content:space-between}
+header p{margin:0;max-width:62ch;color:var(--mute)}
+main{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:0;border-top:1px solid var(--line)}
+.stage{position:sticky;top:0;align-self:start;display:flex;flex-direction:column;border-right:1px solid var(--line);background:var(--bg);z-index:1}
+.bar{display:flex;flex-wrap:wrap;gap:6px;padding:12px max(2vw,12px);border-bottom:1px solid var(--line)}
+button{font:inherit;color:inherit;background:transparent;border:1px solid var(--line);border-radius:999px;padding:9px 15px;min-height:44px;cursor:pointer}
+button:hover{border-color:var(--ink)}button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.fig{position:relative;flex:none;height:clamp(380px,62vh,700px);touch-action:none;cursor:grab}
+.cubewrap .fig{height:auto}
+@media(max-width:900px){.stage{position:relative}}
+.fig canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.cap{padding:14px max(2vw,12px) 18px;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 24px;align-items:start}
+.cap p{margin:0;max-width:72ch}
+.legend{display:flex;flex-wrap:wrap;gap:6px}
+.legend button{padding:6px 12px;min-height:36px;font-size:14px;display:flex;align-items:center;gap:7px}
+.legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.tog{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.tog button{font-size:14px;padding:6px 12px;min-height:36px}
+select{font:inherit;font-size:16px;color:inherit;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 12px;min-height:40px}
+select:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.dna{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:12px max(2vw,12px);border-top:1px solid var(--line);font-size:14px}
+.dna label{color:var(--mute)}
+.stat{margin-left:auto;font-size:14px;color:var(--mute)}.stat b{color:var(--ink);font-size:17px}
+.aal{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:13px;color:var(--mute)}
+.aal i{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:-1px}
+.grid button{border-bottom-width:3px}
+.spfig{position:relative;height:300px;border:1px solid var(--line);border-radius:10px;touch-action:none;cursor:grab;overflow:hidden}
+.spfig canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.spctl{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-top:8px}
+.spctl button{font-size:14px;padding:6px 12px;min-height:36px}
+.spctl input{accent-color:var(--acc);width:130px;min-height:36px}
+.cubeband{border-top:1px solid var(--line)}
+.cubehead{padding:28px max(4vw,16px) 16px;display:flex;flex-wrap:wrap;gap:8px 32px;align-items:end;justify-content:space-between}
+.cubehead p{margin:0;max-width:66ch;color:var(--mute)}
+.cubewrap{display:grid;grid-template-columns:minmax(0,1fr) 360px;border-top:1px solid var(--line)}
+.cubewrap .fig{border-right:1px solid var(--line);min-height:clamp(440px,72vh,780px)}
+.cside{background:var(--panel);padding:20px;display:flex;flex-direction:column;gap:16px}
+.nest{display:grid;grid-template-columns:12px 28px minmax(0,1fr) auto;gap:10px;align-items:center;font-size:14px}
+.nest i{width:12px;height:12px;border-radius:50%}.nest svg{width:28px;height:28px;fill:var(--ink)}
+.nest .k{color:var(--mute);font-size:12px;display:block}
+.nest button{font-size:13px;padding:5px 10px;min-height:34px}
+.nest button[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:#fff}
+.sl{display:grid;grid-template-columns:110px minmax(0,1fr);gap:4px 10px;align-items:center;font-size:14px;color:var(--mute)}
+.sl input{accent-color:var(--acc);min-height:32px}
+#zinfo{position:absolute;left:12px;bottom:10px;font-size:13px;color:var(--mute);pointer-events:none;font-variant-numeric:tabular-nums}
+@media(max-width:900px){.cubewrap{grid-template-columns:minmax(0,1fr)}.cubewrap .fig{border-right:0;border-bottom:1px solid var(--line)}}
+.seal{display:inline-grid;place-items:center;width:48px;height:48px;background:var(--acc);color:#fbf8f1;border-radius:5px;font-size:30px;margin-right:16px;vertical-align:-6px;box-shadow:inset 0 0 0 2px rgba(251,248,241,.35)}
+.enso{position:absolute;right:max(3vw,10px);top:-30px;width:180px;height:180px;opacity:.09;pointer-events:none}
+.enso path{fill:none;stroke:var(--ink);stroke-width:13;stroke-linecap:round}
+h3{letter-spacing:.02em}
+aside,.cside{background-image:linear-gradient(var(--gold),var(--gold));background-size:100% 1px;background-repeat:no-repeat}
+.sw{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chip{border-radius:8px;padding:10px 12px;min-height:64px;display:flex;flex-direction:column;justify-content:flex-end;font-size:13px;font-variant-numeric:tabular-nums;border:1px solid var(--line)}
+.tri3{display:flex;gap:6px;margin-top:8px;font-size:12px;color:var(--mute);align-items:center;flex-wrap:wrap}
+.tri3 i{width:14px;height:14px;border-radius:3px;display:inline-block;border:1px solid var(--line);vertical-align:-3px;margin-right:4px}
+.fr{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+.fr b{font-weight:600;display:block}.fr span{color:var(--mute);font-variant-numeric:tabular-nums}
+.fr button{padding:0;width:44px;height:44px;border-radius:50%;font-size:15px}
+.belts{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;margin-top:8px;font-size:12px;text-align:center;color:var(--mute)}
+.belts span{border:1px solid var(--line);border-radius:6px;padding:3px 0}.belts span.y{border-color:var(--acc);color:var(--ink)}
+#tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-size:14px;display:none;white-space:nowrap;z-index:2}
+#fail{position:absolute;inset:0;display:none;place-items:center;padding:24px;text-align:center;color:var(--mute)}
+aside{background:var(--panel);padding:22px 22px 28px;display:flex;flex-direction:column;gap:20px}
+.head{display:grid;grid-template-columns:86px minmax(0,1fr);gap:16px;align-items:center}
+.head svg{width:86px;height:86px;fill:var(--ink)}
+.num{font-size:14px;color:var(--mute)}
+.name{font-size:15px;color:var(--mute)}
+.big{font-size:40px;line-height:1}
+dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;margin:0;font-size:15px}
+dt{color:var(--mute)}dd{margin:0;font-variant-numeric:tabular-nums}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:center}
+.duo svg{width:100%;height:auto;display:block}
+.small{font-size:13px;color:var(--mute);margin:4px 0 0}
+.rel{display:flex;flex-wrap:wrap;gap:6px}
+.rel button{display:flex;align-items:center;gap:8px;padding:6px 10px;min-height:40px;border-radius:8px;font-size:14px}
+.rel svg{width:20px;height:20px;fill:currentColor}
+.rel .k{color:var(--mute);font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px}
+.grid button{padding:4px;border-radius:6px;min-height:40px;display:grid;place-items:center}
+.grid svg{width:100%;max-width:26px;height:auto;fill:currentColor}
+.grid button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.grid button.nb{border-color:var(--acc)}
+h3{font-size:13px;font-weight:600;margin:0 0 8px;color:var(--mute)}
+.doc{border-top:1px solid var(--line);display:grid;grid-template-columns:220px minmax(0,1fr);gap:0 56px;padding:40px max(4vw,16px) 64px}
+.toc{position:sticky;top:16px;align-self:start;display:flex;flex-direction:column;gap:2px;font-size:14px}
+.toc a{color:var(--mute);text-decoration:none;padding:6px 0 6px 12px;border-left:1px solid var(--line)}
+.toc a:hover,.toc a:focus-visible{color:var(--ink);border-left-color:var(--acc)}
+.tocmark{display:inline-grid;place-items:center;width:40px;height:40px;background:var(--acc);color:#fbf8f1;border-radius:4px;font-size:24px;margin-bottom:14px}
+.doc article{max-width:70ch}
+.doc h2{font-size:clamp(30px,3.4vw,44px);margin-bottom:18px}
+.doc h3{font-family:"Shippori Mincho",Georgia,serif;font-size:24px;font-weight:500;color:var(--ink);letter-spacing:0;margin:44px 0 10px;padding-top:14px;border-top:1px solid var(--line);scroll-margin-top:16px}
+.doc p,.doc li,.doc dd{font-size:16.5px;line-height:1.7}
+.doc p{margin:0 0 14px}
+.lede{font-size:19px!important;line-height:1.6!important}
+.doc ul{padding-left:20px;margin:0 0 14px}.doc li{margin-bottom:6px}
+.defs{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px 22px;margin:0 0 14px}
+.defs dt{font-family:"Shippori Mincho",Georgia,serif;font-size:17px;color:var(--acc)}.defs dd{margin:0;color:var(--ink)}
+.doc table{width:100%;border-collapse:collapse;margin:6px 0 16px;font-size:15px}
+.doc th{text-align:left;font-weight:600;color:var(--mute);border-bottom:1px solid var(--ink);padding:8px 10px 8px 0}
+.doc td{border-bottom:1px solid var(--line);padding:9px 10px 9px 0;vertical-align:top}
+.doc td:last-child{white-space:nowrap;color:var(--acc)}
+.note{color:var(--mute);font-size:15px!important}
+.src{list-style:none;padding:0!important}.src li{font-size:15px!important;padding:6px 0;border-bottom:1px solid var(--line);color:var(--mute)}
+.src a{color:var(--ink);text-decoration-color:var(--gold);text-underline-offset:3px}
+.hdlink{color:var(--acc);text-underline-offset:3px}
+@media(max-width:900px){.doc{grid-template-columns:minmax(0,1fr)}.toc{position:static;flex-direction:row;flex-wrap:wrap;gap:4px 12px;margin-bottom:24px}.toc a{border-left:0;padding:4px 0}.tocmark{display:none}}
+@media(max-width:600px){.defs{grid-template-columns:minmax(0,1fr);gap:2px 0}.defs dd{margin-bottom:10px}.doc td:last-child{white-space:normal}}
+@media(max-width:900px){main{grid-template-columns:minmax(0,1fr)}.stage{border-right:0;border-bottom:1px solid var(--line)}.cap{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){.bar button{padding:8px 11px;font-size:14px}aside{padding:18px 14px}}
+</style>
+</head>
+<body>
+<header>
+  <svg class="enso" viewBox="0 0 100 100" aria-hidden="true"><path d="M78 24 A38 38 0 1 0 84 40"/></svg>
+  <h1><span class="seal zh" aria-hidden="true">易</span>Hatvannégy pont, hat elrendezés</h1>
+  <p>Ugyanaz a 64 hexagram vándorol a 6 dimenziós hiperkocka, a 4×4×4 kocka, a Taiji-fa, a Fu Xi kör, a King Wen rács és a DNS kodon-kereke között. Kattints egy jelre, forgasd a teret húzással. <a class="hdlink" href="#ismerteto">Ismertető ↓</a> · <a class="hdlink" href="index.html">← nyitóoldal</a></p>
+</header>
+<main>
+  <section class="stage">
+    <div class="bar" id="layouts" role="group" aria-label="Elrendezés"></div>
+    <div class="fig" id="fig"><div id="tip"></div><div id="fail">A 3D nézethez WebGL és a three.js betöltése szükséges.</div></div>
+    <div class="cap">
+      <p id="caption"></p>
+      <div style="display:grid;gap:8px">
+        <div class="legend" id="legend" aria-label="Élek iránya: melyik vonal fordul át"></div>
+        <div class="tog">
+          <button id="tEdges" aria-pressed="true">Élek</button>
+          <button id="tSpin" aria-pressed="true">Forgás</button>
+        </div>
+      </div>
+    </div>
+    <div class="dna">
+      <label for="scheme">DNA-leképezés</label>
+      <select id="scheme"></select>
+      <div class="tog">
+        <button id="tDir" aria-pressed="false">1. bázis: alsó vonalpár</button>
+        <label for="cmode">Színezés</label><select id="cmode"><option value="nb">Szomszédság</option><option value="wx">五行 öt elem</option><option value="rgb">RGB-színkocka</option><option value="aa">Aminosav</option></select>
+      </div>
+      <div class="aal" id="aal"></div>
+      <div class="stat" id="stat"></div>
+    </div>
+  </section>
+  <aside id="side">
+    <div class="head"><svg id="hGlyph" viewBox="0 0 44 44"></svg><div><div class="num" id="hNum"></div><div class="big zh" id="hZh"></div><div class="name" id="hName"></div></div></div>
+    <dl id="facts"></dl>
+    <div><h3>Szín és hang</h3>
+      <div class="sw" id="swatch"></div>
+      <div class="tri3" id="tri3"></div>
+      <div id="freqs" style="margin-top:10px"></div>
+      <div class="spctl"><label for="base" class="small" style="margin:0">宮 alaphang</label><select id="base"><option value="261.63">261,63 Hz (C4, A=440)</option><option value="256.87">256,87 Hz (C4, A=432)</option><option value="174.61">174,61 Hz (F3)</option></select><button id="tSound" aria-pressed="false">Hang kattintásra</button></div>
+      <p class="small">Szín: a 8 trigram az RGB-kocka 8 csúcsa (alsó vonal = vörös, középső = zöld, felső = kék); a hexagram színe az alsó trigram (⅔) és a felső (⅓) keveréke. A 錯 ellentett mindig a komplementer szín. Hang: a trigram eleme adja az ötfokú hangot (宮商角徵羽), a yin trigramok egy oktávval mélyebben; bal fül = alsó, jobb fül = felső trigram. Fülhallgatóval a legjobb.</p>
+    </div>
+    <div class="duo">
+      <div><svg id="emblem" viewBox="-130 -130 260 260" aria-label="Fu Xi trigram-kör"></svg><p class="small">Korábbi Ég sorrend (5. kép), 8:5:3 körökkel (1. kép). Vörös: alsó, kiemelt: felső trigram.</p></div>
+      <div><svg id="petal" viewBox="-50 -46 100 82" aria-label="Virág-kód"></svg><p class="small">Életvirág-kód (3. kép): a hat szirom a hat vonal, telt = yang. Alul az 1. vonal, óramutató szerint.</p></div>
+    </div>
+    <div><h3>Spidron-fészek (Erdély Dániel)</h3>
+      <div class="spfig" id="spfig"></div>
+      <div class="spctl">
+        <button id="spMode" aria-pressed="false">SpHidron (ívelt)</button>
+        <label for="spFold" class="small" style="margin:0">Hajtogatás</label><input id="spFold" type="range" min="0" max="100" value="70">
+        <button id="spBreath" aria-pressed="false">Lélegzés</button>
+      </div>
+      <div class="belts" id="belts"></div>
+      <p class="small">Hat egymásba ágyazott öv: kívülről az 1. vonal, befelé a 6. Minden öv a vonala színét kapja (mint a hiperkocka élei): telt szín = yang (balra csavarodik, felfelé dől), halvány = yin (jobbra, lefelé). Sötétebb a szabályos, világosabb az egyenlő szárú háromszög. Ha egy vonal megváltozik, egyetlen öv fordul át – ez egy él a hiperkockán. (Szemléltető modell: a valódi fészek merev háromszögekkel hajlik, itt a csavarodás közelítő.)</p>
+    </div>
+    <div><h3>Kapcsolatok</h3><div class="rel" id="rel"></div></div>
+    <div><h3>King Wen sorrend (4. kép)</h3><div class="grid" id="kwgrid"></div></div>
+  </aside>
+</main>
+<section class="cubeband">
+  <div class="cubehead">
+    <h2>Spidronhedron: nyolc fészek, egy kocka</h2>
+    <p>A kocka minden csúcsában egy befelé süllyedő spidron-fészek ül, amely a csúcs körüli három negyed-lapot foglalja el: minden lapon négy fészek negyede találkozik, összesen nyolc. A fészkek csúcsa a középpont felé tart, de sosem éri el. Az övek √3-onként kisebbednek, és a legmélyükön elmosódnak. A „Merülés” gomb a kiválasztott fészek mélyére repít.</p>
+  </div>
+  <div class="cubewrap">
+    <div class="fig" id="cfig"><div id="zinfo"></div></div>
+    <div class="cside">
+      <div><h3>A nyolc fészek = nyolc trigram</h3><div id="nests" style="display:grid;gap:8px"></div></div>
+      <div><h3>Színek</h3><div class="aal" id="cleg"></div>
+        <p class="small">Öv = vonal: az 1–6. öv az 1–6. vonal színét kapja, befelé ismétlődve. Telt szín = yang, halvány = yin; sötétebb árnyalat a szabályos, világosabb az egyenlő szárú háromszög. A fészek közepe és elmosódó magja a fészek saját színét kapja. A fenti vonal-gombokkal egy vonal öveit kiemelheted mind a nyolc fészekben.</p></div>
+      <div class="sl">
+        <label for="cDepth">Süllyedés</label><input id="cDepth" type="range" min="0" max="92" value="70">
+        <label for="cRel">Dombormű</label><input id="cRel" type="range" min="0" max="100" value="55">
+        <label for="cTw">Csavarás</label><input id="cTw" type="range" min="0" max="100" value="45">
+        <label for="cBlur">Élesség mélysége</label><input id="cBlur" type="range" min="4" max="16" value="9">
+      </div>
+      <div class="tog"><button id="cDive" aria-pressed="false">Merülés ▸</button><button id="cHome">Egész kocka</button></div>
+      <p class="small">A nyolc csúcs a nyolc trigram: az x, y, z tengely pozitív oldala az 1., 2., 3. yang vonal – és egyben a vörös, zöld, kék csatorna, így a kocka az RGB-színkocka is; a fészek közepe a csúcs színét kapja. Minden fészek alsó trigramja a csúcsa, felső trigramja a kiválasztott hexagramé, így a nyolc fészek a Fu Xi-négyzet egy sora. Ha a „Süllyedés” 0, a fészkek a kocka lapjain fekszenek; feljebb húzva befelé, a középpont felé mélyülnek.</p>
+    </div>
+  </div>
+</section>
+<section class="doc" id="ismerteto">
+  <nav class="toc" aria-label="Ismertető tartalma">
+    <span class="tocmark zh" aria-hidden="true">說</span>
+    <a href="#mi-ez">Mi ez?</a><a href="#hasznalat">Használat</a><a href="#pont">A hexagram mint pont</a><a href="#elrendezesek">Hat elrendezés</a><a href="#lap">A hexagram lapja</a><a href="#dns">I Ching és DNS</a><a href="#spidron">Spidron</a><a href="#kocka">Spidronhedron</a><a href="#szin">Színek</a><a href="#hang">Hangok</a><a href="#hagyomany">Hagyomány és párosítás</a><a href="#forrasok">Források</a>
+  </nav>
+  <article>
+    <h2 id="mi-ez">Egy ősi bináris rendszer, sokféle nézőpontból</h2>
+    <p class="lede">Az I Ching 64 hexagramja hat vonalból áll, és minden vonal kétféle lehet: töretlen yang vagy tört yin. Ez 2⁶ = 64 lehetőség – ugyanannyi, ahány pontja a hatdimenziós kettes térnek, ahány csúcsa a hatdimenziós kockának, ahány kodonja a genetikai kódnak, és ahány cellája egy 4×4×4-es kockának.</p>
+    <p>Ez az oldal ezt a közös számot teszi láthatóvá. Ugyanaz a 64 jel vándorol a matematikai, a hagyományos kínai és a modern elrendezések között, majd Erdély Dániel spidron-geometriájában térbeli formát kap, végül színnel és hanggal is megszólal. A cél nem az, hogy egyik rendszert a másikkal bizonyítsuk, hanem hogy egymás mellé téve megmutassuk, mennyi szerkezet rejlik hat egyszerű vonalban.</p>
+
+    <h3 id="hasznalat">Hogyan használd?</h3>
+    <ul>
+      <li><b>Válassz hexagramot</b> a térben kattintással, a jobb oldali King Wen rácsból, vagy a „Kapcsolatok” gombjaival. Minden más nézet – a lap, a spidron-fészek, a kocka, a színek és a hangok – ehhez igazodik.</li>
+      <li><b>Forgasd és nagyítsd</b> a teret húzással, görgővel vagy két ujjal. Az elrendezés-gombok animálva rendezik át a 64 pontot.</li>
+      <li><b>Vonal-gombok:</b> egy vonalat kiemelve a hiperkocka élei, a spidron-övek és a kocka fészkei közül csak az adott vonalhoz tartozók maradnak élénkek.</li>
+      <li><b>Színezés:</b> szomszédság, öt elem (五行), RGB-színkocka vagy aminosav szerint.</li>
+      <li><b>Hang:</b> a ▶ gombok éneklőtál-szerű hangpárt szólaltatnak meg – bal fülben az egyik, jobb fülben a másik hang, ezért fülhallgatóval a legjobb.</li>
+      <li><b>Merülés:</b> a kockánál egy gombnyomásra a kiválasztott fészek mélyére repülsz, több ezerszeres nagyításig.</li>
+    </ul>
+
+    <h3 id="pont">A hexagram mint pont</h3>
+    <p>Ha a yang vonalat 1-nek, a yint 0-nak vesszük, minden hexagram egy hatjegyű bináris szám, vagyis egy pont a kételemű test, a GF(2) feletti hatdimenziós térben. Steven H. Cullinane véges geometriai munkái ezt a teret egy 4×4×4-es kockával szemléltetik: a hexagram három vonalpárja (alsó, középső, felső) három koordinátát ad, mindegyik négyféle értékkel.</p>
+    <p>A tér affin szimmetriáinak csoportja, az AGL(6,2) rendje <b>1 290 157 424 640</b> – ennyiféleképpen lehet a 64 hexagramot úgy átrendezni, hogy a köztük lévő „egyenesek” és „síkok” megmaradjanak. A szám 64 és a GL(6,2) rendjének szorzata; utánaszámoltunk.</p>
+
+    <h3 id="elrendezesek">A hat elrendezés</h3>
+    <dl class="defs">
+      <dt>Hiperkocka</dt><dd>Két hexagram akkor szomszédos, ha egyetlen vonaluk különbözik – ez a jóslásban a „mozgó vonal”. Így a hatdimenziós kocka gráfja jön létre: 64 csúcs, 192 él, minden csúcsnak hat szomszédja. Az él színe megmutatja, melyik vonal fordul át. A hat tengelyt az ikozaéder hat átlója adja, ezért a térbeli árnyék burka rombikus triakontaéder.</dd>
+      <dt>Tizenkétszög</dt><dd>Ugyanaz a hiperkocka síkba vetítve, a hat tengely 30°-onként. A mélység a yang vonalak száma, így hét réteg látszik: 1, 6, 15, 20, 15, 6, 1 hexagram – a binomiális együtthatók.</dd>
+      <dt>4×4×4 kocka</dt><dd>Cullinane kockája. A vonalpárok Gray-kód szerint állnak sorba, így a szomszédos cellák pontosan egy vonalban különböznek.</dd>
+      <dt>Taiji-fa</dt><dd>A Nagy Végső (太極) kettéválik jinre és jangra, abból négy bigram, nyolc trigram, végül hatvannégy hexagram. Itt kúpként: a csúcs a 太極, az alap a 64 levél.</dd>
+      <dt>Fu Xi kör</dt><dd>Shao Yong bináris sorrendje, 乾 fent, 坤 lent; a szemközti jelek egymás ellentettjei. Leibniz ebben az elrendezésben ismert rá a saját kettes számrendszerére.</dd>
+      <dt>King Wen rács</dt><dd>A hagyományos szöveg sorrendje. A párok (1–2, 3–4, …) egymás megfordítottjai, vagy – ha a jel fejjel lefelé is önmaga – ellentettjei.</dd>
+      <dt>Kodon-kerék</dt><dd>A genetikai kód kereke: belül az első, középen a második, kívül a harmadik bázis. Hogy melyik hexagram hová kerül, azt a választott DNS-leképezés dönti el.</dd>
+    </dl>
+
+    <h3 id="lap">A hexagram lapja</h3>
+    <p>A jobb oldali lap a kiválasztott jel teljes adatlapja: King Wen és Fu Xi sorszám, kínai és magyar név, felső és alsó trigram, kodon és aminosav, szín és hang. A trigram-kör a „Korábbi Ég” elrendezést mutatja yin-yang jellel és 8:5:3 arányú körökkel; az életvirág-kód hat szirma a hat vonal. A kapcsolatok között ott a hat szomszéd, az <span class="zh">錯</span> ellentett (minden vonal megfordul), a <span class="zh">綜</span> fordított (a jel fejjel lefelé) és a <span class="zh">互</span> mag (a belső 2–3–4. és 3–4–5. vonalból képzett jel).</p>
+
+    <h3 id="dns">I Ching és DNS</h3>
+    <p>A 64 hexagram és a 64 kodon párhuzamát Martin Schönberger és Johnson F. Yan tette ismertté; James Godwin 2025-ös írása is erre épít, de konkrét táblát nem közöl. A megfeleltetéshez el kell dönteni, melyik vonalpár melyik bázis – és a szerzők itt eltérnek. Az oldalon négy leképezés közül lehet választani (Krakowski, Zhang, Castro-Chavez, valamint egy saját, a kodon-kerék ábrájáról becsült változat), és az is állítható, hogy a hexagram alja vagy teteje legyen az első bázis.</p>
+    <p>Az aminosav-színezés egy valódi összefüggést mutat meg: a genetikai kód redundáns (61 kodon 20 aminosavat kódol, 3 a stop jel), és az azonos aminosavat kódoló kodonok a hiperkockán csoportokba állnak. A mérőszám szerint a szinonim párok 40–58%-a szomszédos, szemben a véletlen párosításnál várható kb. 9,5%-kal. Ez azonban a genetikai kód és a bináris kódolás szerkezetéből adódik – bármilyen bázis–vonalpár hozzárendelésnél hasonló jön ki –, nem bizonyítéka annak, hogy az I Ching „előre tudott” volna a DNS-ről.</p>
+
+    <h3 id="spidron">Spidron, fészek, SpHidron</h3>
+    <p>A spidron Erdély Dániel síkidoma: szabályos és 30°–120°–30°-os egyenlő szárú háromszögek váltakozó, befelé kisebbedő sorozata. Egy szabályos hatszög hat ilyen spirálkarra bomlik. A <b>spidron-fészek</b> egymásba ágyazott övekből áll; minden öv hat szabályos és hat egyenlő szárú háromszög, és minden öv √3-szor kisebb az előzőnél. A fészek térbe hajtható – hogy ez a háromszögek torzítása nélkül is lehetséges, Szilassi Lajos bizonyította.</p>
+    <p>A kapcsolat az I Chinggel Erdély saját megfigyelése: a fészek öveihez 0 vagy 1 rendelhető aszerint, hogy merre fordulnak, így a fészek bináris számot hordoz. Hat öv tehát pontosan egy hexagram. Az oldalon a legkülső öv az 1. vonal, a legbelső a 6.; a yang öv balra csavarodik és felfelé dől, a yin jobbra és lefelé. Ha egy vonal megváltozik, egyetlen öv fordul át – ez éppen egy él a hiperkockán. A SpHidron az ívelt, csavart változat. A hajtogatás itt szemléltető modell, nem a pontos merev mozgás.</p>
+
+    <h3 id="kocka">A spidronhedron-kocka</h3>
+    <p>Ha a fészkek egymáshoz kapcsolódnak, testet alkotnak. Itt a kocka minden csúcsában egy befelé süllyedő fészek ül, amely a csúcs körüli három negyed-lapot foglalja el: minden lapon négy fészek negyede találkozik, összesen nyolc. A fészkek pereme élfelezőkön és lapközepeken fut, és hézag nélkül illeszkedik; a középük a kocka közepe felé mélyül, de sosem éri el. A lapközepek és élfelezők így csúcsokként maradnak kint – ahogy Erdély fészekszobrán is.</p>
+    <p>A nyolc csúcs a nyolc trigram: az x, y, z tengely pozitív oldala az 1., 2., 3. yang vonal. Minden fészek alsó trigramja a saját csúcsa, felső trigramja a kiválasztott hexagramé, így a nyolc fészek a Fu Xi-négyzet egy sora. Befelé a hat vonal ciklikusan ismétlődik, tizenhat övig; a legbelső, már apró övek elmosódnak a fészek saját színébe. A „Merülés” ennek a végtelennek tűnő örvénynek a mélyére visz.</p>
+
+    <h3 id="szin">Színek</h3>
+    <p>Az oldal palettája a tibeti-kínai buddhista hagyományból merít, ásványi pigmentek tónusában, rizspapír és tus alapon. A hat vonal a hatszótagú mantra színeit viseli: OM fehér, MA zöld, NI sárga, PAD kék, ME vörös, HUM fekete – a tibeti hagyomány e hat színt a lét hat birodalmához köti. A trigramok a kínai öt elem (五行) színeit hordják: fa, tűz, föld, fém, víz.</p>
+    <p>A színtani párosítás már matematika. A nyolc trigram az RGB-színkocka nyolc csúcsa (alsó vonal = vörös, középső = zöld, felső = kék): az Ég fehér, a Föld fekete, a Tűz bíbor, a Víz zöld, a Mennydörgés vörös, a Szél cián, a Tó sárga, a Hegy kék. A Fu Xi körben így minden szemközti trigrampár komplementer színpár. A hexagram színe az alsó (⅔) és a felső trigram (⅓) keveréke, így a 64 hexagram kiadja a csatornánként négyfokú RGB-kocka 64 színét, és a <span class="zh">錯</span> ellentett mindig a pontos komplementer szín. Ugyanez a kocka a spidronhedron is: fészkeinek közepe a csúcs színét kapja.</p>
+
+    <h3 id="hang">Hangok</h3>
+    <p>Minden hexagramhoz három hangpár tartozik.</p>
+    <dl class="defs">
+      <dt>五音</dt><dd>A kínai ötfokú hangsor hangjai az öt elemhez tartoznak: 宮 föld, 商 fém, 角 fa, 徵 tűz, 羽 víz, a kvintsoros „hármas osztás” arányaival (1, 9/8, 81/64, 3/2, 27/16). A trigram eleme adja a hangot, a yin trigramok egy oktávval mélyebben szólnak. Bal fülben az alsó, jobbban a felső trigram.</dd>
+      <dt>Bináris tükör</dt><dd>A Fu Xi-szám (0–63) egy 64 egyenlő lépésre osztott oktáv egy foka. A pár az ellentett hexagram hangja: a kettő mindig ugyanolyan távol áll az oktáv közepétől, ahogy a komplementer színek a szürkétől.</dd>
+      <dt>Fény-oktáv</dt><dd>A hexagram színéből becsült hullámhossz a fény frekvenciáját adja; ezt 2⁴⁰-nel, azaz negyven oktávval levíve hallható hangot kapunk. Ez közelítés: a szürkéknek és a bíbor árnyalatoknak nincs egyetlen hullámhossza, ezért ott nem szól hang.</dd>
+    </dl>
+    <p>Az alaphang (宮) választható: 261,63 Hz, 256,87 Hz (A = 432 Hz hangolás) vagy 174,61 Hz.</p>
+
+    <h3 id="hagyomany">Mi hagyomány, mi matematika, mi párosítás?</h3>
+    <table class="stack">
+      <thead><tr><th>Elem</th><th>Jellege</th></tr></thead>
+      <tbody>
+        <tr><td data-l="Elem">Hexagramok, trigramok, King Wen és Fu Xi sorrend, 錯 綜 互</td><td data-l="Jellege">Hagyomány</td></tr>
+        <tr><td data-l="Elem">Trigram → öt elem, öt elem → öt hang és öt szín</td><td data-l="Jellege">Hagyomány</td></tr>
+        <tr><td data-l="Elem">Hiperkocka, 4×4×4 kocka, AGL(6,2), Gray-kód, RGB-kocka és komplementerek</td><td data-l="Jellege">Matematika</td></tr>
+        <tr><td data-l="Elem">Genetikai kód, aminosavak, szinonim kodonok</td><td data-l="Jellege">Biológia</td></tr>
+        <tr><td data-l="Elem">Hexagram ↔ kodon megfeleltetés</td><td data-l="Jellege">Szerzőnként eltérő párosítás</td></tr>
+        <tr><td data-l="Elem">Spidron-övek mint bináris számjegyek</td><td data-l="Jellege">Erdély Dániel ötlete</td></tr>
+        <tr><td data-l="Elem">Mantra-színek a vonalakon, yin trigram egy oktávval mélyebben, fény-oktáv, nyolc fészek ↔ Fu Xi-sor</td><td data-l="Jellege">Az oldal saját párosítása</td></tr>
+      </tbody>
+    </table>
+    <p class="note">A szín- és hangmegfeleltetések jelképes párosítások, nem fizikai vagy biológiai törvények; az oldal szemléltetésre és elmélyülésre készült.</p>
+
+    <h3 id="forrasok">Források</h3>
+    <ul class="src">
+      <li><a href="http://finitegeometry.org/sc/64/iching.html">Steven H. Cullinane: az I Ching véges geometriája</a> – finitegeometry.org</li>
+      <li><a href="https://world.hey.com/jrsg/i-ching-and-dna-a313f0b9">James Godwin: I Ching and DNA</a> (2025)</li>
+      <li><a href="https://arxiv.org/pdf/0908.3067">A Unified Theory on Construction and Evolution of the Genetic Code</a> – arXiv 0908.3067 (Zhang)</li>
+      <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3575644/">Castro-Chavez: a genetikai kód bináris ábrázolásai az I Ching rendje szerint</a> – PMC</li>
+      <li><a href="https://cache.erowid.org/culture/other/1997_krakowski_resproject_1.shtml">Krakowski: Occult Genetic Code</a> (1997)</li>
+      <li><a href="https://archive.bridgesmathart.org/2005/bridges2005-179.pdf">Erdély Dániel: Spidron System</a> – Bridges 2005</li>
+      <li><a href="https://pte.academia.edu/danielerdely">Erdély Dániel írásai, köztük a SpHidronról</a> – academia.edu</li>
+      <li><a href="https://mersz.hu/object/matud202108_f64040_i1">Erdély M. Dániel: Hármasút</a> – Magyar Tudomány, 2021</li>
+      <li><a href="https://sciencenews.org/?p=29836">Swirling Seas, Crystal Balls</a> – Science News</li>
+      <li><a href="https://en.wikipedia.org/wiki/Prayer_flag">Prayer flag</a> – Wikipedia</li>
+      <li><a href="https://www.visiblemantra.org/avalokitesvara.html">Az Avalokiteśvara-mantra szótagjai és színei</a> – visiblemantra.org</li>
+    </ul>
+  </article>
+</section>
+
+<script src="vendor/three.min.js"></script>
+<script>
+{
+const KW=['111111','000000','100010','010001','111010','010111','010000','000010','111011','110111','111000','000111','101111','111101','001000','000100','100110','011001','110000','000011','100101','101001','000001','100000','100111','111001','100001','011110','010010','101101','001110','011100','001111','111100','000101','101000','101011','110101','001010','010100','110001','100011','111110','011111','000110','011000','010110','011010','101110','011101','100100','001001','001011','110100','101100','001101','011011','110110','010011','110010','110011','001100','101010','010101'];
+const NM=[['乾','Qián','Teremtő'],['坤','Kūn','Befogadó'],['屯','Zhūn','Kezdeti nehézség'],['蒙','Méng','Ifjúi balgaság'],['需','Xū','Várakozás'],['訟','Sòng','Viszály'],['師','Shī','Sereg'],['比','Bǐ','Összetartás'],['小畜','Xiǎo Chù','A kicsi szelídítő ereje'],['履','Lǚ','Fellépés'],['泰','Tài','Béke'],['否','Pǐ','Pangás'],['同人','Tóng Rén','Közösség'],['大有','Dà Yǒu','Nagy birtoklás'],['謙','Qiān','Szerénység'],['豫','Yù','Lelkesedés'],['隨','Suí','Követés'],['蠱','Gǔ','A romlás helyrehozása'],['臨','Lín','Közeledés'],['觀','Guān','Szemlélődés'],['噬嗑','Shì Kè','Átharapás'],['賁','Bì','Kecsesség'],['剝','Bō','Széthullás'],['復','Fù','Visszatérés'],['無妄','Wú Wàng','Ártatlanság'],['大畜','Dà Chù','A nagy szelídítő ereje'],['頤','Yí','Táplálás'],['大過','Dà Guò','A nagy túlsúlya'],['坎','Kǎn','A mélység'],['離','Lí','A tapadó'],['咸','Xián','Hatás'],['恆','Héng','Tartósság'],['遯','Dùn','Visszavonulás'],['大壯','Dà Zhuàng','A nagy ereje'],['晉','Jìn','Haladás'],['明夷','Míng Yí','A fény elsötétülése'],['家人','Jiā Rén','A család'],['睽','Kuí','Ellentét'],['蹇','Jiǎn','Akadály'],['解','Xiè','Feloldás'],['損','Sǔn','Csökkentés'],['益','Yì','Gyarapítás'],['夬','Guài','Áttörés'],['姤','Gòu','Találkozás'],['萃','Cuì','Gyülekezés'],['升','Shēng','Felemelkedés'],['困','Kùn','Szorultság'],['井','Jǐng','A kút'],['革','Gé','Átalakulás'],['鼎','Dǐng','Az üst'],['震','Zhèn','A felrázó'],['艮','Gèn','A nyugalom'],['漸','Jiàn','Fokozatos fejlődés'],['歸妹','Guī Mèi','A férjhez menő leány'],['豐','Fēng','Bőség'],['旅','Lǚ','A vándor'],['巽','Xùn','A szelíd'],['兌','Duì','A derűs'],['渙','Huàn','Szétoszlás'],['節','Jié','Korlátozás'],['中孚','Zhōng Fú','Belső igazság'],['小過','Xiǎo Guò','A kicsi túlsúlya'],['既濟','Jì Jì','Beteljesülés után'],['未濟','Wèi Jì','Beteljesülés előtt']];
+const TG={7:['乾','Ég','☰'],6:['兌','Tó','☱'],5:['離','Tűz','☲'],4:['震','Mennydörgés','☳'],3:['巽','Szél','☴'],2:['坎','Víz','☵'],1:['艮','Hegy','☶'],0:['坤','Föld','☷']};
+const LCL=['#a8987a','#3e8a63','#c98a12','#2f5aa8','#b8322a','#2b2d42'],LCD=['#ece4d0','#5fb085','#e8b04a','#6b93dc','#e0604c','#8a8fc4'];
+const SYL=['OM','MA','NI','PAD','ME','HUM'];
+const lc=()=>isDark()?LCD:LCL;
+const ELM={7:'m',6:'m',5:'f',4:'w',3:'w',2:'a',1:'e',0:'e'},YANGT={7:1,4:1,2:1,1:1};
+const WX={w:['木','Fa','角 jué',81/64,'#2f7f78','#4fa89f'],f:['火','Tűz','徵 zhǐ',3/2,'#b8322a','#e0604c'],e:['土','Föld','宮 gōng',1,'#c98a12','#e8b04a'],m:['金','Fém','商 shāng',9/8,'#a8987a','#ece4d0'],a:['水','Víz','羽 yǔ',27/16,'#2b2d42','#8a8fc4']};
+const wxc=t=>WX[ELM[t]][isDark()?5:4];
+const hx=v=>v.toString(16).padStart(2,'0');
+const trgRGB=v=>[v>>2&1,v>>1&1,v&1].map(x=>x*255);
+const rgbOf=h=>[0,1,2].map(j=>(2*h.b[j]+h.b[j+3])*85);
+const css=c=>'#'+c.map(hx).join('');
+const lum=c=>(.2126*c[0]+.7152*c[1]+.0722*c[2])/255;
+const hueOf=c=>{const [r,g,b]=c.map(x=>x/255),mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;if(d<1e-6)return null;let h=mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4;h*=60;return h<0?h+360:h;};
+const LAM=[[0,650],[30,600],[60,578],[120,530],[180,490],[240,460],[270,420]];
+const lamOf=c=>{const h=hueOf(c);if(h===null||h>270)return null;for(let i=1;i<LAM.length;i++)if(h<=LAM[i][0]){const [h0,l0]=LAM[i-1],[h1,l1]=LAM[i];return l0+(l1-l0)*(h-h0)/(h1-h0);}return null;};
+const toneT=(t,base)=>base*WX[ELM[t]][3]*(YANGT[t]?1:.5);
+let cmode='nb',baseF=261.63,soundOn=false;
+let AC=null;const actx=()=>{try{if(!AC){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;AC=new C();}if(AC.state==='suspended')AC.resume();return AC;}catch(e){return null;}};
+const bowl=(a,f,pan,t,dur)=>{const g=a.createGain();g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.16,t+.04);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  let out=g;if(a.createStereoPanner){const p=a.createStereoPanner();p.pan.value=pan;g.connect(p);out=p;}out.connect(a.destination);
+  [[1,1],[2.71,.28],[5.15,.1]].forEach(([m,v])=>{const o=a.createOscillator(),og=a.createGain();o.type='sine';o.frequency.value=f*m;og.gain.value=v;o.connect(og);og.connect(g);o.start(t);o.stop(t+dur+.1);});};
+const playPair=(f1,f2)=>{const a=actx();if(!a)return;const t=a.currentTime+.02;if(f1)bowl(a,f1,-.75,t,4.5);if(f2)bowl(a,f2,.75,t,4.5);};
+const fmt=x=>x.toLocaleString('hu-HU',{maximumFractionDigits:1});
+const freqSets=h=>{const L=toneT(h.lo,baseF),U=toneT(h.up,baseF);const A=baseF*2**(h.fx/64),B=baseF*2**((63-h.fx)/64);
+  const c1=rgbOf(h),c2=c1.map(x=>255-x),l1=lamOf(c1),l2=lamOf(c2),fa=l=>l?299792458/(l*1e-9)/2**40:null;
+  return[['五音 trigram-pár',L,U,`${WX[ELM[h.lo]][0]} ${WX[ELM[h.lo]][2]} + ${WX[ELM[h.up]][0]} ${WX[ELM[h.up]][2]} · különbség ${fmt(Math.abs(L-U))} Hz`],
+    ['Bináris tükör (錯)',A,B,`64 fokú oktáv, ${h.fx}. és ${63-h.fx}. fok`],
+    ['Fény-oktáv (szín ↔ komplementer)',fa(l1),fa(l2),`${l1?Math.round(l1)+' nm':'akromatikus/bíbor'} · ${l2?Math.round(l2)+' nm':'akromatikus/bíbor'}`]];};
+const GRAY=[0,1,3,2]; // bigram code (alsó + 2*felső) -> Gray pozíció: 00,10,11,01
+// vonalpár kód: alsó vonal + 2*felső. 3=öreg yang ⚌, 0=öreg yin ⚏, 1=ifjú yin (alul yang), 2=ifjú yang (alul yin) – a 6. kép szerint
+const SCH=[
+ {id:'krak',n:'Krakowski (1997): ⚌A ⚏U ifjú yang G, ifjú yin C',m:{3:'A',0:'U',2:'G',1:'C'}},
+ {id:'zhang',n:'Zhang (2009): öreg yang U, ifjú yang C, ifjú yin G, öreg yin A',m:{3:'U',2:'C',1:'G',0:'A'}},
+ {id:'castro',n:'Castro-Chavez (2012): H-kötés × gyűrű (A00 G10 U01 C11)',m:{0:'A',1:'G',2:'U',3:'C'}},
+ {id:'img8',n:'A 8. kép színei alapján (becslés): ⚌A ⚏G',m:{3:'A',0:'G',1:'C',2:'U'}}
+];
+const ORD='UCAG',AAS='FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG';
+const AAN={F:'Fenilalanin',L:'Leucin',S:'Szerin',Y:'Tirozin','*':'Stop',C:'Cisztein',W:'Triptofán',P:'Prolin',H:'Hisztidin',Q:'Glutamin',R:'Arginin',I:'Izoleucin',M:'Metionin (start)',T:'Treonin',N:'Aszparagin',K:'Lizin',V:'Valin',A:'Alanin',D:'Aszparaginsav',E:'Glutaminsav',G:'Glicin'};
+const CLS=[['Hidrofób','AVLIMFW','#e8902a'],['Poláris','STNQYC','#3c7fc4'],['Pozitív','KRH','#9067c2'],['Negatív','DE','#c2185b'],['Gly / Pro','GP','#3f9b4a'],['Stop','*','#8a8a8a']];
+const clsOf=a=>CLS.findIndex(c=>c[1].includes(a));
+let scheme=0,topFirst=false,aaMode=false;
+const recode=()=>{const m=SCH[scheme].m;H.forEach(h=>{const pr=[0,1,2].map(k=>m[h.b[2*k]+2*h.b[2*k+1]]);if(topFirst)pr.reverse();h.codon=pr.join('');
+  h.ci=ORD.indexOf(h.codon[0])*16+ORD.indexOf(h.codon[1])*4+ORD.indexOf(h.codon[2]);h.aa=AAS[h.ci];h.cl=clsOf(h.aa);});};
+const synStat=()=>{let s=0,a=0;for(let i=0;i<64;i++)for(let j=i+1;j<64;j++)if(H[i].aa===H[j].aa){s++;const d=i^j;if(!(d&(d-1)))a++;}return[a,s];};
+
+// --- adatok kód szerint (bit i = (i+1). vonal, alulról)
+const H=[];const kwOf=[];
+KW.forEach((s,k)=>{const b=[...s].map(Number);const c=b.reduce((a,v,i)=>a|(v<<i),0);kwOf[c]=k;H[c]={c,b,k,nm:NM[k]};});
+const tv=(x,y,z)=>x*4+y*2+z;
+H.forEach(h=>{const b=h.b;h.lo=tv(b[0],b[1],b[2]);h.up=tv(b[3],b[4],b[5]);h.fx=h.lo*8+h.up;
+  h.cube=[0,1,2].map(k=>GRAY[b[2*k]+2*b[2*k+1]]);
+  h.yang=b.reduce((a,v)=>a+v,0);});
+const comp=c=>c^63;
+const inv=c=>{let r=0;for(let i=0;i<6;i++)if(c>>i&1)r|=1<<(5-i);return r;};
+const nuc=c=>{const b=H[c].b;const n=[b[1],b[2],b[3],b[2],b[3],b[4]];return n.reduce((a,v,i)=>a|(v<<i),0);};
+const EDGES=[];for(let c=0;c<64;c++)for(let i=0;i<6;i++){const d=c^(1<<i);if(d>c)EDGES.push([c,d,i]);}
+recode();
+
+// --- SVG segédek
+const glyph=(b,w=44)=>{const lh=w/11;let r='';for(let i=0;i<6;i++){const y=(5-i)*lh*2;r+=b[i]?`<rect x="0" y="${y}" width="${w}" height="${lh}"/>`:`<rect x="0" y="${y}" width="${w*.42}" height="${lh}"/><rect x="${w*.58}" y="${y}" width="${w*.42}" height="${lh}"/>`;}return r;};
+const gsvg=(b,cls='')=>`<svg viewBox="0 0 44 44" class="${cls}" aria-hidden="true">${glyph(b)}</svg>`;
+
+// --- elrendezések
+const LAY=[
+ {id:'hyper',t:'Hiperkocka',cap:'A 64 hexagram a 6-kocka (Q6) 64 csúcsa; két jel szomszédos, ha egy vonaluk tér el. A hat tengely az ikozaéder hat átlója, így a vetület burka rombikus triakontaéder – a hatdimenziós kocka legszimmetrikusabb 3D árnyéka.'},
+ {id:'petrie',t:'Tizenkétszög',cap:'A 2. kép Petrie-vetülete: a hat tengely 30°-onként áll a síkban. A mélység a yang vonalak száma, így rétegek jönnek létre: 1, 6, 15, 20, 15, 6, 1 hexagram – a binomiális együtthatók.'},
+ {id:'cube',t:'4×4×4 kocka',cap:'Cullinane kockája: az alsó, középső és felső vonalpár egy-egy koordináta 0–3 között, Gray-sorrendben, így a szomszédos cellák egy vonalban térnek el. Ez a GF(2) feletti 6 dimenziós affin tér egy szemléletes képe.'},
+ {id:'tree',t:'Taiji-fa',cap:'A Taiji-fa (6. kép) kúpként: a csúcs a 太極, minden szinten kettéágazik (jin/jang), az első elágazás az alsó vonal. A szintek: 2 vonal, 4 bigram, 8 trigram, … 64 hexagram.'},
+ {id:'fuxi',t:'Fu Xi kör',cap:'Fu Xi (Shao Yong) kör, 7. és 8. kép: bináris rend, 乾 fent (dél), 坤 lent (észak). A bal fél 乾-tól, a jobb fél 坤-tól halad; a szemközti jelek egymás komplementerei.'},
+ {id:'kw',t:'King Wen rács',cap:'King Wen sorrend 8×8-as rácsban (4. kép), a hagyományos szöveg rendje. A párok (1–2, 3–4, …) egymás megfordítottjai, vagy – ha a jel szimmetrikus – komplementerei.'},
+ {id:'codon',t:'Kodon-kerék',cap:'Kodon-kerék (8. kép): belül az első bázis, középen a második, kívül a 64 hexagram a harmadik bázis szerint (U, C, A, G sorrendben). A választott leképezés dönti el, melyik hexagram hová kerül – váltsd lent, és nézd, hogyan rendeződik át.'}
+];
+const angC=i=>(i+.5)/64*Math.PI*2;
+const codonPos=()=>H.map(h=>{const a=angC(h.ci);return[Math.sin(a)*R*1.05,Math.cos(a)*R*1.05,0];});
+const R=5;
+const P={};
+const norm=a=>{let m=0;a.forEach(p=>m=Math.max(m,Math.hypot(...p)));return a.map(p=>p.map(v=>v*R/m));};
+{const f=(1+Math.sqrt(5))/2;const ax=[[0,1,f],[0,-1,f],[1,f,0],[-1,f,0],[f,0,1],[-f,0,1]];
+ P.hyper=norm(H.map(h=>[0,1,2].map(j=>h.b.reduce((a,v,i)=>a+(v-.5)*ax[i][j],0))));
+ P.petrie=norm(H.map(h=>{let x=0,y=0;h.b.forEach((v,i)=>{const a=i*Math.PI/6;x+=(v-.5)*Math.cos(a);y+=(v-.5)*Math.sin(a);});return[x,y,(h.yang-3)*.55];}));
+ P.cube=H.map(h=>[(h.cube[0]-1.5)*2.4,(h.cube[2]-1.5)*2.4,(h.cube[1]-1.5)*2.4]);
+ P.fuxi=H.map(h=>{const v=h.fx;const th=v>=32?(63-v+.5)/32*Math.PI:Math.PI+(v+.5)/32*Math.PI;return[-Math.sin(th)*R*1.05,Math.cos(th)*R*1.05,0];});
+ P.codon=codonPos();
+ P.kw=H.map(h=>[((h.k%8)-3.5)*1.35,(3.5-Math.floor(h.k/8))*1.35,0]);
+ // fa
+ const node=(d,o)=>{const span=2**(6-d);const a=((o*span)+span/2)/64*Math.PI*2-Math.PI/2;const r=R*d/6;return[Math.cos(a)*r,(3-d)*1.15,Math.sin(a)*r];};
+ P.tree=H.map(h=>{const o=h.b.reduce((a,v,i)=>a|((1-v)<<(5-i)),0);return node(6,o);});
+ P.treeLines=[];for(let d=0;d<6;d++)for(let o=0;o<2**d;o++){const p=node(d,o);P.treeLines.push(p,node(d+1,o*2),p,node(d+1,o*2+1));}
+}
+
+// --- állapot
+let lay='hyper',sel=0,dirOn=-1,edgesOn=true,spin=true;
+const fig=document.getElementById('fig'),tip=document.getElementById('tip');
+const isDark=()=>{const t=document.documentElement.dataset.theme;return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches;};
+
+// --- oldalpanel
+const side=()=>{
+  const h=H[sel];const [zh,py,hu]=h.nm;
+  document.getElementById('hGlyph').innerHTML=glyph(h.b);
+  document.getElementById('hNum').textContent=`King Wen ${h.k+1}. · Fu Xi ${h.fx}`;
+  document.getElementById('hZh').textContent=zh;
+  document.getElementById('hName').textContent=`${py} – ${hu}`;
+  const L=TG[h.lo],U=TG[h.up];
+  document.getElementById('facts').innerHTML=[
+   ['Felső trigram',`${U[2]} <span class="zh">${U[0]}</span> ${U[1]}`],['Alsó trigram',`${L[2]} <span class="zh">${L[0]}</span> ${L[1]}`],
+   ['Vonalak (alulról)',h.b.join('')],['Yang vonalak',h.yang+' / 6'],
+   ['4×4×4 cella',`(${h.cube.join(', ')})`],['Kodon (mRNS)',`<b>${h.codon}</b>`],
+   ['Aminosav',`<i style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${CLS[h.cl][2]};margin-right:6px"></i>${AAN[h.aa]}${h.aa!=='*'?' ('+h.aa+')':''} · ${CLS[h.cl][0].toLowerCase()}`]
+  ].map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join('');
+  // szín és hang
+  {const c=rgbOf(h),k=c.map(x=>255-x),tx=x=>lum(x)>.55?'#1d1b17':'#fbf8f1';
+   document.getElementById('swatch').innerHTML=`<div class="chip" style="background:${css(c)};color:${tx(c)}"><b>${css(c)}</b>hexagram</div><div class="chip" style="background:${css(k)};color:${tx(k)}"><b>${css(k)}</b>錯 komplementer</div>`;
+   document.getElementById('tri3').innerHTML=`<span><i style="background:${css(trgRGB(h.lo))}"></i>alsó ${TG[h.lo][0]} ⅔</span><span>+</span><span><i style="background:${css(trgRGB(h.up))}"></i>felső ${TG[h.up][0]} ⅓</span><span>· elemek: <i style="background:${wxc(h.lo)}"></i>${WX[ELM[h.lo]][1]} / <i style="background:${wxc(h.up)}"></i>${WX[ELM[h.up]][1]}</span>`;
+   document.getElementById('freqs').innerHTML=freqSets(h).map((f,i)=>`<div class="fr"><div><b>${f[0]}</b><span>${f[1]?fmt(f[1])+' Hz':'–'} · ${f[2]?fmt(f[2])+' Hz':'–'}<br>${f[3]}</span></div><button data-play="${i}" aria-label="Lejátszás: ${f[0]}">▶</button></div>`).join('');}
+  // embléma
+  const pos={7:0,3:45,2:90,1:135,0:180,4:225,5:270,6:315};
+  let e=`<g fill="none" stroke="var(--line)" stroke-width="1"><circle r="48"/><circle r="30"/><circle r="18"/><circle r="122"/></g>`;
+  e+=`<circle r="40" fill="var(--panel)" stroke="var(--ink)" stroke-width="1.5"/><path d="M0,-40A40,40 0 0,1 0,40A20,20 0 0,1 0,0A20,20 0 0,0 0,-40Z" fill="var(--ink)"/><circle cy="-20" r="6" fill="var(--ink)"/><circle cy="20" r="6" fill="var(--panel)"/>`;
+  for(const t in pos){const v=+t;const bits=[v>>2&1,v>>1&1,v&1];const col=cmode==='rgb'?css(trgRGB(v)):wxc(v);const op=(v===h.lo||v===h.up)?1:.4;
+   let g=`<g transform="rotate(${pos[t]})" fill="${col}" stroke="var(--mute)" stroke-width=".6" opacity="${op}">`;if(v===h.lo)g+=`<circle cy="-58" r="3.5" fill="var(--acc)" stroke="none"/>`;if(v===h.up)g+=`<circle cy="-58" r="3.5" fill="none" stroke="var(--acc)" stroke-width="1.4"/>`;
+   bits.forEach((bb,i)=>{const y=-70-i*10;g+=bb?`<rect x="-18" y="${y}" width="36" height="6"/>`:`<rect x="-18" y="${y}" width="15" height="6"/><rect x="3" y="${y}" width="15" height="6"/>`;});
+   g+=`<text y="-102" text-anchor="middle" font-size="14" class="zh" fill="var(--ink)" stroke="none">${TG[v][0]}</text></g>`;e+=g;}
+  document.getElementById('emblem').innerHTML=e;
+  // virág
+  const r=17;let p=`<polygon points="0,-42 36.4,21 -36.4,21" fill="none" stroke="var(--ink)" stroke-width="1.6"/><circle r="21" fill="none" stroke="var(--ink)" stroke-width="1.2"/>`;
+  for(let i=0;i<6;i++){const a=(90+60*i)*Math.PI/180;const x=(r*Math.cos(a)).toFixed(2),y=(r*Math.sin(a)).toFixed(2);
+   p+=`<path d="M0,0A${r},${r} 0 0,1 ${x},${y}A${r},${r} 0 0,1 0,0Z" fill="${h.b[i]?'var(--ink)':'none'}" stroke="var(--ink)" stroke-width="1"/>`;}
+  document.getElementById('petal').innerHTML=p;
+  // kapcsolatok
+  const rel=[];for(let i=0;i<6;i++)rel.push([h.c^(1<<i),`${i+1}. vonal`,lc()[i]]);
+  rel.push([comp(h.c),'錯 ellentett'],[inv(h.c),'綜 fordított'],[nuc(h.c),'互 mag']);
+  H.filter(x=>x.aa===h.aa&&x.c!==h.c).forEach(x=>rel.push([x.c,'szinonim '+x.codon,CLS[h.cl][2]]));
+  document.getElementById('rel').innerHTML=rel.map(([c,k,col])=>`<button data-c="${c}" title="${H[c].nm[2]}"${col?` style="border-color:${col}"`:''}>${gsvg(H[c].b)}<span>${H[c].k+1}<br><span class="k">${k}</span></span></button>`).join('');
+  document.querySelectorAll('#kwgrid button').forEach(btn=>{const c=+btn.dataset.c;btn.className=c===sel?'on':((c^sel)&((c^sel)-1))===0?'nb':'';btn.setAttribute('aria-pressed',c===sel);btn.style.borderBottomColor=cmode==='aa'?CLS[H[c].cl][2]:cmode==='rgb'?css(rgbOf(H[c])):cmode==='wx'?wxc(H[c].lo):'';btn.title=`${H[c].k+1}. ${H[c].nm[2]} · ${H[c].codon} ${AAN[H[c].aa]}`;});
+  const [a,s]=synStat();document.getElementById('stat').innerHTML=`Szinonim párok szomszédos a Q6-on: <b>${(100*a/s).toFixed(1)}%</b> (${a}/${s})`;
+};
+document.getElementById('kwgrid').innerHTML=KW.map((s,k)=>{const c=H.findIndex(h=>h.k===k);return`<button data-c="${c}" title="${k+1}. ${NM[k][2]}">${gsvg(H[c].b)}</button>`;}).join('');
+document.getElementById('layouts').innerHTML=LAY.map(l=>`<button data-l="${l.id}" aria-pressed="${l.id===lay}">${l.t}</button>`).join('');
+const renderLeg=()=>{document.getElementById('legend').innerHTML=lc().map((c,i)=>`<button data-d="${i}" aria-pressed="${i===dirOn}" title="${SYL[i]}"><i style="background:${c}"></i>${i+1}. vonal</button>`).join('');document.getElementById('cleg').innerHTML=lc().map((c,i)=>`<span><i style="background:${c}"></i>${i+1}. öv · ${SYL[i]}</span>`).join('');};
+renderLeg();
+document.getElementById('scheme').innerHTML=SCH.map((s,i)=>`<option value="${i}">${s.n}</option>`).join('');
+document.getElementById('aal').innerHTML=CLS.map(c=>`<span><i style="background:${c[2]}"></i>${c[0]}</span>`).join('');
+const capEl=document.getElementById('caption');capEl.textContent=LAY[0].cap;
+
+// --- 3D
+let api=null;
+if(window.THREE){try{api=build();}catch(err){console.log(err);}}
+if(!api)document.getElementById('fail').style.display='grid';
+
+function build(){
+  const T=THREE;
+  const ren=new T.WebGLRenderer({antialias:true,alpha:true});ren.setPixelRatio(Math.min(devicePixelRatio,2));fig.appendChild(ren.domElement);
+  const scene=new T.Scene();const cam=new T.PerspectiveCamera(42,1,.1,200);
+  // textúrák
+  const tex=H.map(h=>{const cv=document.createElement('canvas');cv.width=cv.height=128;const g=cv.getContext('2d');
+    g.fillStyle='rgba(128,128,128,.0)';g.fillRect(0,0,128,128);g.fillStyle='#fff';
+    for(let i=0;i<6;i++){const y=16+(5-i)*17;if(h.b[i])g.fillRect(14,y,100,11);else{g.fillRect(14,y,44,11);g.fillRect(70,y,44,11);}}
+    const t=new T.CanvasTexture(cv);t.anisotropy=4;return t;});
+  const halo=(()=>{const cv=document.createElement('canvas');cv.width=cv.height=128;const g=cv.getContext('2d');const gr=g.createRadialGradient(64,64,4,64,64,62);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.55,'rgba(255,255,255,.85)');gr.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=gr;g.fillRect(0,0,128,128);return new T.CanvasTexture(cv);})();
+  const nodes=H.map((h,c)=>{const back=new T.Sprite(new T.SpriteMaterial({map:halo,transparent:true,depthWrite:false,opacity:.9}));const s=new T.Sprite(new T.SpriteMaterial({map:tex[c],transparent:true,depthWrite:false}));s.userData.c=c;back.renderOrder=1;s.renderOrder=2;scene.add(back);scene.add(s);return{s,back};});
+  const cur=H.map((h,c)=>new T.Vector3(...P[lay][c])),from=cur.map(v=>v.clone()),to=cur.map(v=>v.clone());
+  // élek
+  const eg=new T.BufferGeometry();const ep=new Float32Array(EDGES.length*6),ec=new Float32Array(EDGES.length*6);
+  eg.setAttribute('position',new T.BufferAttribute(ep,3));eg.setAttribute('color',new T.BufferAttribute(ec,3));
+  const em=new T.LineBasicMaterial({vertexColors:true,transparent:true,opacity:.5,depthWrite:false});const eL=new T.LineSegments(eg,em);scene.add(eL);
+  const sg=new T.BufferGeometry();const sp=new Float32Array(36);sg.setAttribute('position',new T.BufferAttribute(sp,3));
+  const sm=new T.LineBasicMaterial({color:0xb8322a,transparent:true,opacity:1,depthWrite:false});const sL=new T.LineSegments(sg,sm);scene.add(sL);
+  const tg=new T.BufferGeometry().setFromPoints(P.treeLines.map(p=>new T.Vector3(...p)));const tm=new T.LineBasicMaterial({transparent:true,opacity:0,depthWrite:false});const tL=new T.LineSegments(tg,tm);scene.add(tL);
+  const root=new T.Mesh(new T.SphereGeometry(.22,24,16),new T.MeshBasicMaterial({color:0xb8322a,transparent:true,opacity:0}));root.position.set(0,3*1.15,0);scene.add(root);
+  const colEdges=()=>{const dark=isDark();EDGES.forEach(([a,b,i],n)=>{const c=new T.Color(lc()[i]);const dim=dirOn>=0&&dirOn!==i;if(dim)c.lerp(new T.Color(dark?0x14120f:0xf3eee3),.85);for(let k=0;k<2;k++)c.toArray(ec,n*6+k*3);});eg.attributes.color.needsUpdate=true;};
+  const theme=()=>{const dark=isDark();tm.color.set(dark?0xecebe6:0x151515);paint();colEdges();};
+  let paint=()=>{const dark=isDark();const ink=new T.Color(dark?0xece6d6:0x1d1b17),bg=new T.Color(dark?0x1c1a16:0xfbf8f1);
+    if(cmode==='rgb'||cmode==='wx'){nodes.forEach(({s,back},c)=>{const d=c^sel,isSel=c===sel,nb=d&&!(d&(d-1));const col=cmode==='rgb'?css(rgbOf(H[c])):wxc(H[c].lo);
+      back.material.color.set(col);s.material.color.set(cmode==='rgb'?(lum(rgbOf(H[c]))>.55?0x1d1b17:0xfbf8f1):(dark?0x14120f:0xfbf8f1));back.material.opacity=1;s.material.opacity=1;s.userData.k=isSel?1.8:nb?1.25:1;});
+      yc.set(CLS[H[sel].cl][2]);syn=[];labels.forEach(l=>l.material.color.set(dark?0xece6d6:0x1d1b17));return;}
+    nodes.forEach(({s,back},c)=>{const d=c^sel;const isSel=c===sel,nb=d&&!(d&(d-1));const dirHit=dirOn>=0&&(c===(sel^(1<<dirOn)));
+      if(aaMode){const syn=H[c].aa===H[sel].aa;s.material.color.set(isSel?0xffffff:dark?0x14120f:0xfbf8f1);back.material.color.set(isSel?0xb8322a:CLS[H[c].cl][2]);
+        back.material.opacity=isSel||syn?1:.55;s.material.opacity=isSel||syn?1:.7;s.userData.k=isSel?1.7:syn?1.35:1;return;}
+      s.material.opacity=1;
+      s.material.color.copy(isSel?new T.Color(0xffffff):ink);back.material.color.copy(isSel?new T.Color(0xb8322a):nb?new T.Color(lc()[Math.log2(d)]):bg);
+      back.material.opacity=isSel||nb?.95:dark?.75:.9;s.userData.k=isSel?1.7:nb||dirHit?1.25:1;});
+    yc.set(CLS[H[sel].cl][2]);syn=H.filter(x=>x.aa===H[sel].aa&&x.c!==sel).map(x=>x.c);labels.forEach(l=>l.material.color.set(dark?0xece6d6:0x1d1b17));};
+  // szinonim-vonalak és kodon-címkék
+  let syn=[];const yg=new T.BufferGeometry();const yp=new Float32Array(36);yg.setAttribute('position',new T.BufferAttribute(yp,3));
+  const ym=new T.LineBasicMaterial({transparent:true,opacity:0,depthWrite:false});const yc=ym.color;const yL=new T.LineSegments(yg,ym);scene.add(yL);
+  const txt=(s,px)=>{const cv=document.createElement('canvas');cv.width=cv.height=128;const g=cv.getContext('2d');g.fillStyle='#fff';g.font=`600 ${px}px "IBM Plex Sans",sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillText(s,64,68);
+    const sp=new T.Sprite(new T.SpriteMaterial({map:new T.CanvasTexture(cv),transparent:true,depthWrite:false,opacity:0}));scene.add(sp);return sp;};
+  const labels=[];
+  for(let i=0;i<4;i++){const a=angC(i*16+7.5);const l=txt(ORD[i],96);l.position.set(Math.sin(a)*1.6,Math.cos(a)*1.6,0);l.scale.set(1.3,1.3,1);labels.push(l);
+    for(let j=0;j<4;j++){const b=angC(i*16+j*4+1.5);const m2=txt(ORD[j],72);m2.position.set(Math.sin(b)*3.3,Math.cos(b)*3.3,0);m2.scale.set(.7,.7,1);labels.push(m2);}}
+  let t0=0,dur=1300,anim=1;
+  const go=id=>{lay=id;cur.forEach((v,c)=>{from[c].copy(v);to[c].set(...P[id][c]);});t0=performance.now();anim=0;};
+  // kamera
+  let th=.6,ph=1.15,rad=15.5,drag=null,moved=0;const pts=new Map();let pinch=0;
+  const place=()=>{cam.position.set(rad*Math.sin(ph)*Math.sin(th),rad*Math.cos(ph),rad*Math.sin(ph)*Math.cos(th));cam.lookAt(0,0,0);};
+  const el=ren.domElement;
+  el.addEventListener('pointerdown',e=>{el.setPointerCapture(e.pointerId);pts.set(e.pointerId,[e.clientX,e.clientY]);drag=[e.clientX,e.clientY];moved=0;fig.style.cursor='grabbing';});
+  el.addEventListener('pointermove',e=>{
+    if(pts.has(e.pointerId)){const prev=pts.get(e.pointerId);pts.set(e.pointerId,[e.clientX,e.clientY]);
+      if(pts.size===2){const [a,b]=[...pts.values()];const dd=Math.hypot(a[0]-b[0],a[1]-b[1]);if(pinch)rad=Math.min(40,Math.max(6,rad*pinch/dd));pinch=dd;moved=99;return;}
+      const dx=e.clientX-prev[0],dy=e.clientY-prev[1];moved+=Math.abs(dx)+Math.abs(dy);th-=dx*.008;ph=Math.min(3.05,Math.max(.1,ph-dy*.008));tip.style.display='none';return;}
+    const c=pick(e);if(c<0){tip.style.display='none';return;}const r=fig.getBoundingClientRect();tip.style.display='block';tip.innerHTML=`${H[c].k+1}. <span class="zh">${H[c].nm[0]}</span> ${H[c].nm[2]}`;
+    tip.style.left=Math.min(r.width-tip.offsetWidth-8,e.clientX-r.left+14)+'px';tip.style.top=(e.clientY-r.top+14)+'px';});
+  const up=e=>{pts.delete(e.pointerId);if(pts.size<2)pinch=0;if(pts.size===0){fig.style.cursor='grab';if(moved<6){const c=pick(e);if(c>=0)select(c);}}};
+  el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up);
+  el.addEventListener('pointerleave',()=>tip.style.display='none');
+  el.addEventListener('wheel',e=>{e.preventDefault();rad=Math.min(40,Math.max(6,rad*(1+Math.sign(e.deltaY)*.08)));},{passive:false});
+  const ray=new T.Raycaster();const m=new T.Vector2();
+  function pick(e){const r=el.getBoundingClientRect();m.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(m,cam);const hit=ray.intersectObjects(nodes.map(n=>n.s));return hit.length?hit[0].object.userData.c:-1;}
+  const size=()=>{const w=fig.clientWidth,h=fig.clientHeight;ren.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();};
+  new ResizeObserver(size).observe(fig);size();
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;if(reduce){spin=false;document.getElementById('tSpin').setAttribute('aria-pressed','false');}
+  let last=performance.now();
+  let loop=now=>{const dt=Math.min(.05,(now-last)/1000);last=now;
+    if(anim<1){anim=reduce?1:Math.min(1,(now-t0)/dur);const k=anim<.5?4*anim**3:1-((-2*anim+2)**3)/2;cur.forEach((v,c)=>v.lerpVectors(from[c],to[c],k));}
+    if(spin&&!pts.size)th+=dt*.12;place();
+    const pulse=1+.06*Math.sin(now/300);
+    nodes.forEach(({s,back},c)=>{const p=cur[c];s.position.copy(p);back.position.copy(p);const k=s.userData.k||1;const sc=.62*k*(c===sel?pulse:1);s.scale.set(sc,sc,1);back.scale.set(sc*1.35,sc*1.35,1);});
+    EDGES.forEach(([a,b],n)=>{cur[a].toArray(ep,n*6);cur[b].toArray(ep,n*6+3);});eg.attributes.position.needsUpdate=true;
+    for(let i=0;i<6;i++){cur[sel].toArray(sp,i*6);cur[sel^(1<<i)].toArray(sp,i*6+3);}sg.attributes.position.needsUpdate=true;
+    yp.fill(0);syn.forEach((c,i)=>{if(i<6){cur[sel].toArray(yp,i*6);cur[c].toArray(yp,i*6+3);}});yg.attributes.position.needsUpdate=true;
+    ym.opacity+=((aaMode?1:0)-ym.opacity)*.1;yL.visible=ym.opacity>.01;
+    const lT=lay==='codon'?1:0;labels.forEach(l=>{l.material.opacity+=(lT-l.material.opacity)*.08;l.visible=l.material.opacity>.01;});
+    const tTarget=lay==='tree'?.55:0;tm.opacity+=(tTarget-tm.opacity)*.08;root.material.opacity=tm.opacity*1.8;tL.visible=tm.opacity>.01;
+    const eTarget=!edgesOn?0:(lay==='tree'||lay==='kw'||lay==='fuxi'||lay==='codon')?.1:aaMode?.25:.5;em.opacity+=(eTarget-em.opacity)*.08;eL.visible=em.opacity>.01;sm.opacity=edgesOn?1:0;
+    ren.render(scene,cam);requestAnimationFrame(loop);};
+  theme();requestAnimationFrame(loop);
+  new MutationObserver(theme).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change',theme);
+  // ---- közös övszín: az öv a vonal színét kapja (mint a hiperkocka élei)
+  const beltCol=(line,yang,dark)=>{const base=new T.Color(lc()[line]);const neu=new T.Color(dark?0x2a2620:0xebe4d4);
+    let e,s;if(yang){e=base.clone().lerp(new T.Color(0x000000),.12);s=base.clone().lerp(new T.Color(0xffffff),.38);}
+    else{e=neu.clone().lerp(base,.30);s=neu.clone().lerp(base,.12);}
+    if(dirOn>=0&&dirOn!==line){const bg=new T.Color(dark?0x1c1a16:0xfbf8f1);e.lerp(bg,.7);s.lerp(bg,.7);}
+    return[e,s];};
+  // ---- spidron-fészek
+  const sfig=document.getElementById('spfig');
+  const sren=new T.WebGLRenderer({antialias:true,alpha:true});sren.setPixelRatio(Math.min(devicePixelRatio,2));sfig.appendChild(sren.domElement);
+  const ss=new T.Scene(),sc=new T.PerspectiveCamera(36,1,.01,50);
+  ss.add(new T.HemisphereLight(0xffffff,0x444444,.75));const dl=new T.DirectionalLight(0xffffff,.8);dl.position.set(2,3,4);ss.add(dl);
+  const smat=new T.MeshStandardMaterial({vertexColors:true,side:T.DoubleSide,flatShading:true,roughness:.55,metalness:.05});
+  const sgeo=new T.BufferGeometry();const smesh=new T.Mesh(sgeo,smat);ss.add(smesh);
+  const lgeo=new T.BufferGeometry();const lmat=new T.LineBasicMaterial({transparent:true,opacity:.55});const lmesh=new T.LineSegments(lgeo,lmat);ss.add(lmesh);
+  let curved=false,fold=.7,breath=false,sth=.4,sph=.95,srad=3.1,sdrag=null,spDirty=true;
+  const S3=Math.sqrt(3),LS3=Math.log(S3),r0=1;
+  const ease=x=>x*x*(3-2*x);
+  const deform=(x,y,b)=>{const r=Math.hypot(x,y);let t=r>1e-9?Math.log(r0/r)/LS3:6;t=Math.max(0,Math.min(6,t));
+    let th=0,z=0;const phi=fold*.42,h=fold*.5;
+    for(let k=0;k<6;k++){const s=b[k]?1:-1,rk=r0/S3**k;let f=Math.max(0,Math.min(1,t-k));if(curved)f=ease(f);
+      th+=s*phi*f;z+=s*h*rk*(curved?Math.sin(f*Math.PI)*.6+f*.4:f);if(t<k+1)break;}
+    const c=Math.cos(th),sn=Math.sin(th);return[x*c-y*sn,z,x*sn+y*c];};
+  const V=(k,i)=>{const a=k*Math.PI/6+i*Math.PI/3,r=r0/S3**k;return[r*Math.cos(a),r*Math.sin(a)];};
+  const buildSp=()=>{const b=H[sel].b,dark=isDark();const pos=[],col=[],lin=[];
+    const pal=k=>beltCol(k,b[k],dark);
+    const n=curved?7:1;
+    const tri=(A,B,C,cl)=>{for(let i=0;i<n;i++)for(let j=0;j<n-i;j++){const P=(u,v)=>{const w=1-u-v;return[A[0]*w+B[0]*u+C[0]*v,A[1]*w+B[1]*u+C[1]*v];};
+        const q=[[i/n,j/n],[(i+1)/n,j/n],[i/n,(j+1)/n]];const q2=[[(i+1)/n,j/n],[(i+1)/n,(j+1)/n],[i/n,(j+1)/n]];
+        [q].concat(i+j<n-1?[q2]:[]).forEach(Q=>Q.forEach(([u,v])=>{const p=P(u,v);pos.push(...deform(p[0],p[1],b));col.push(cl.r,cl.g,cl.b);}));}
+      if(!curved){const d=[A,B,C].map(p=>deform(p[0],p[1],b));lin.push(...d[0],...d[1],...d[1],...d[2],...d[2],...d[0]);}};
+    for(let k=0;k<6;k++){const [ce,ci]=pal(k);for(let i=0;i<6;i++){tri(V(k,i),V(k,i+1),V(k+1,i),ci);tri(V(k,i),V(k+1,i-1),V(k+1,i),ce);}}
+    const cc=new T.Color(0xb8322a);for(let i=0;i<6;i++)tri([0,0],V(6,i),V(6,i+1),cc);
+    sgeo.setAttribute('position',new T.Float32BufferAttribute(pos,3));sgeo.setAttribute('color',new T.Float32BufferAttribute(col,3));sgeo.computeVertexNormals();
+    smat.flatShading=!curved;smat.needsUpdate=true;lgeo.setAttribute('position',new T.Float32BufferAttribute(lin,3));lmat.color.set(dark?0x121212:0xffffff);lmesh.visible=!curved;
+    document.getElementById('belts').innerHTML=b.map((v,k)=>`<span class="${v?'y':''}">${k+1}. öv<br>${v?'yang ↺':'yin ↻'}</span>`).join('');spDirty=false;};
+  const ssize=()=>{const w=sfig.clientWidth,h=sfig.clientHeight;sren.setSize(w,h,false);sc.aspect=w/h;sc.updateProjectionMatrix();};
+  new ResizeObserver(ssize).observe(sfig);ssize();
+  const se=sren.domElement;
+  se.addEventListener('pointerdown',e=>{se.setPointerCapture(e.pointerId);sdrag=[e.clientX,e.clientY];});
+  se.addEventListener('pointermove',e=>{if(!sdrag)return;sth-=(e.clientX-sdrag[0])*.01;sph=Math.min(3,Math.max(.15,sph-(e.clientY-sdrag[1])*.01));sdrag=[e.clientX,e.clientY];});
+  se.addEventListener('pointerup',()=>sdrag=null);se.addEventListener('pointercancel',()=>sdrag=null);
+  se.addEventListener('wheel',e=>{e.preventDefault();srad=Math.min(8,Math.max(.25,srad*(1+Math.sign(e.deltaY)*.1)));},{passive:false});
+  const spTick=now=>{if(breath){fold=.5+.5*Math.sin(now/1400);document.getElementById('spFold').value=Math.round(fold*100);spDirty=true;}
+    if(spDirty)buildSp();if(!sdrag&&spin)sth+=.004;
+    sc.position.set(srad*Math.sin(sph)*Math.sin(sth),srad*Math.cos(sph),srad*Math.sin(sph)*Math.cos(sth));sc.lookAt(0,0,0);sren.render(ss,sc);};
+  const spSet=o=>{if('curved'in o)curved=o.curved;if('fold'in o)fold=o.fold;if('breath'in o)breath=o.breath;spDirty=true;};
+  const _paint=paint;paint=()=>{_paint();spDirty=true;};
+  const _loop=loop;loop=now=>{spTick(now);_loop(now);};
+
+  // ---- spidronhedron kocka
+  const cfig=document.getElementById('cfig'),zinfo=document.getElementById('zinfo');
+  const cren=new T.WebGLRenderer({antialias:true,alpha:true,logarithmicDepthBuffer:true});cren.setPixelRatio(Math.min(devicePixelRatio,2));cfig.appendChild(cren.domElement);
+  const cs=new T.Scene(),cc=new T.PerspectiveCamera(40,1,.001,100);
+  cs.add(new T.HemisphereLight(0xffffff,0x3a3a3a,.7));const cd1=new T.DirectionalLight(0xffffff,.75);cd1.position.set(3,5,4);cs.add(cd1);const cd2=new T.DirectionalLight(0xffffff,.3);cd2.position.set(-4,-2,-3);cs.add(cd2);
+  const cmat=new T.MeshStandardMaterial({vertexColors:true,side:T.DoubleSide,flatShading:true,roughness:.6,metalness:.05});
+  const cgeo=new T.BufferGeometry();cs.add(new T.Mesh(cgeo,cmat));
+  // 8 csúcs = 8 trigram (x,y,z előjele = 1., 2., 3. vonal = R, G, B)
+  const TV=[];for(let c=0;c<8;c++)TV.push([c>>2&1?1:-1,c>>1&1?1:-1,c&1?1:-1]);
+  const NB=16;let rel=.55,tw=.45,sharp=9,depth=.7,cDirty=true,dive=0,diveT=0,diving=false,diveNest=7;
+  const sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]],crs=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+  // perem: élfelező, lapközép, élfelező, … (ferde hatszög, 3 negyed-lap)
+  const ring=v=>{const M=a=>{const m=v.slice();m[a]=0;return m;},C=(a,b)=>{const c=v.slice();c[a]=0;c[b]=0;return c;};
+    let R=[M(0),C(0,1),M(1),C(1,2),M(2),C(2,0)];if(dot(crs(sub(R[0],v),sub(R[1],v)),v)<0)R=[M(0),C(2,0),M(2),C(1,2),M(1),C(0,1)];return R;};
+  const RING=TV.map(ring),NRM=TV.map(v=>v.map(z=>z/Math.sqrt(3)));
+  const trigOf=n=>{const v=TV[n];return(v[0]>0?4:0)+(v[1]>0?2:0)+(v[2]>0?1:0);};
+  const nestCodes=()=>TV.map((v,n)=>(v[0]>0?1:0)|(v[1]>0?2:0)|(v[2]>0?4:0)|(sel&56));
+  const C30=Math.cos(Math.PI/6);
+  const cpt=(n,x,y,bits)=>{let r=0;for(let j=0;j<6;j++){const a=Math.PI/6+j*Math.PI/3;r=Math.max(r,(x*Math.cos(a)+y*Math.sin(a))/C30);}let t=r>1e-12?Math.log(1/r)/LS3:NB;t=Math.max(0,Math.min(NB,t));
+    let th=0,D=0;for(let k=0;k<NB;k++){const s=bits[k%6]?1:-1,w=k<sharp?1:Math.max(0,1-(k-sharp+1)/4);let f=Math.max(0,Math.min(1,t-k));
+      th+=s*tw*.5*ease(f)*w;if(t<k+1){D=s*rel*.32*(3**(-k/2))*Math.sin(Math.PI*f)*w;break;}}
+    const c=Math.cos(th),sn=Math.sin(th);const qx=x*c-y*sn,qy=x*sn+y*c;
+    let ang=Math.atan2(qy,qx);if(ang<0)ang+=Math.PI*2;const s=Math.floor(ang/(Math.PI/3))%6;
+    const h0=[Math.cos(s*Math.PI/3),Math.sin(s*Math.PI/3)],h1=[Math.cos((s+1)*Math.PI/3),Math.sin((s+1)*Math.PI/3)];
+    const det=h0[0]*h1[1]-h1[0]*h0[1],a=(qx*h1[1]-h1[0]*qy)/det,b=(h0[0]*qy-qx*h0[1])/det;
+    const ap=TV[n].map(z=>z*(1-depth)),T0=RING[n][s],T1=RING[n][(s+1)%6],N=NRM[n];
+    return[0,1,2].map(j=>ap[j]+a*(T0[j]-ap[j])+b*(T1[j]-ap[j])+N[j]*D);};
+  const edgeG=new T.BufferGeometry();{const e=[];TV.forEach((a,i)=>TV.forEach((b,j)=>{if(j>i&&Math.abs(a[0]-b[0])+Math.abs(a[1]-b[1])+Math.abs(a[2]-b[2])===2)e.push(...a,...b);}));edgeG.setAttribute('position',new T.Float32BufferAttribute(e,3));}
+  const edgeM=new T.LineBasicMaterial({transparent:true,opacity:.35});cs.add(new T.LineSegments(edgeG,edgeM));
+  const buildCube=()=>{const dark=isDark(),codes=nestCodes(),pos=[],col=[];const n=3;edgeM.color.set(dark?0xc9a54e:0xa8862f);
+    const VV=(k,i)=>{const a=k*Math.PI/6+i*Math.PI/3,r=3**(-k/2);return[r*Math.cos(a),r*Math.sin(a)];};
+    codes.forEach((code,ni)=>{const bits=H[code].b,hue=new T.Color(css(trgRGB(trigOf(ni)))),mid=hue.clone().lerp(new T.Color(dark?0x555555:0xaaaaaa),.4);
+      const tri=(A,B,C,cl)=>{for(let i=0;i<n;i++)for(let j=0;j<n-i;j++){const P2=(u,w)=>{const z=1-u-w;return[A[0]*z+B[0]*u+C[0]*w,A[1]*z+B[1]*u+C[1]*w];};
+          const qs=[[[i/n,j/n],[(i+1)/n,j/n],[i/n,(j+1)/n]]];if(i+j<n-1)qs.push([[(i+1)/n,j/n],[(i+1)/n,(j+1)/n],[i/n,(j+1)/n]]);
+          qs.forEach(Q=>Q.forEach(([u,w])=>{const q=P2(u,w);pos.push(...cpt(ni,q[0],q[1],bits));col.push(cl.r,cl.g,cl.b);}));}};
+      for(let k=0;k<NB;k++){const [e,s2]=beltCol(k%6,bits[k%6],dark);
+        const w=k<sharp?0:Math.min(1,(k-sharp+1)/4);e.lerp(mid,w);s2.lerp(mid,w);
+        for(let i=0;i<6;i++){tri(VV(k,i),VV(k,i+1),VV(k+1,i),s2);tri(VV(k,i),VV(k+1,i-1),VV(k+1,i),e);}}
+      for(let i=0;i<6;i++)tri([0,0],VV(NB,i),VV(NB,i+1),hue);});
+    cgeo.setAttribute('position',new T.Float32BufferAttribute(pos,3));cgeo.setAttribute('color',new T.Float32BufferAttribute(col,3));cgeo.computeVertexNormals();
+    document.getElementById('nests').innerHTML=codes.map((c,i)=>{const t=trigOf(i);return`<div class="nest"><i style="background:${css(trgRGB(t))};border:1px solid var(--line)"></i>${gsvg(H[c].b)}<span>${H[c].k+1}. <span class="zh">${H[c].nm[0]}</span> ${H[c].nm[2]}<span class="k">csúcs ${TG[t][2]} ${TG[t][1]}${c===sel?' · kiválasztott':''}</span></span><button data-nest="${i}" aria-pressed="${i===diveNest}">Ide</button></div>`;}).join('');
+    cDirty=false;};
+  const csize=()=>{const w=cfig.clientWidth,h=cfig.clientHeight;cren.setSize(w,h,false);cc.aspect=w/h;cc.updateProjectionMatrix();};
+  new ResizeObserver(csize).observe(cfig);csize();
+  let cth=.75,cph=1.0,crad=6.2,cdr=null;const cpts=new Map();let cpin=0;const ce=cren.domElement;
+  ce.style.touchAction='none';
+  ce.addEventListener('pointerdown',e=>{ce.setPointerCapture(e.pointerId);cpts.set(e.pointerId,[e.clientX,e.clientY]);});
+  ce.addEventListener('pointermove',e=>{if(!cpts.has(e.pointerId))return;const pr=cpts.get(e.pointerId);cpts.set(e.pointerId,[e.clientX,e.clientY]);
+    if(cpts.size===2){const [a,b]=[...cpts.values()];const dd=Math.hypot(a[0]-b[0],a[1]-b[1]);if(cpin){if(dive>0)dive=Math.min(1,Math.max(0,dive+Math.log(dd/cpin)*.12));else crad=Math.min(14,Math.max(2.2,crad*cpin/dd));}cpin=dd;return;}
+    cth-=(e.clientX-pr[0])*.007;cph=Math.min(3.05,Math.max(.1,cph-(e.clientY-pr[1])*.007));});
+  const cup=e=>{cpts.delete(e.pointerId);if(cpts.size<2)cpin=0;};ce.addEventListener('pointerup',cup);ce.addEventListener('pointercancel',cup);
+  ce.addEventListener('wheel',e=>{e.preventDefault();diving=false;document.getElementById('cDive').setAttribute('aria-pressed','false');
+    if(dive>0||e.deltaY<0&&crad<=2.3)dive=Math.min(1,Math.max(0,dive-Math.sign(e.deltaY)*.035));else crad=Math.min(14,Math.max(2.2,crad*(1+Math.sign(e.deltaY)*.08)));},{passive:false});
+  let cLast=0;
+  const cTick=now=>{if(cDirty)buildCube();const cdt=cLast?Math.min(.1,(now-cLast)/1000):0;cLast=now;
+    if(diving){dive=Math.min(1,dive+cdt/7.5);if(dive>=1)diving=false;}
+    if(!cpts.size&&spin&&dive===0)cth+=.0018;
+    const vn=NRM[diveNest],apx=cpt(diveNest,0,0,H[nestCodes()[diveNest]].b);
+    const k=ease(Math.min(1,dive*4));
+    const dist=crad*(1-k)+k*2.4*Math.pow(2.5e-4/2.4,Math.max(0,(dive-.25)/.75));
+    const orb=[Math.sin(cph)*Math.sin(cth),Math.cos(cph),Math.sin(cph)*Math.cos(cth)];
+    const tilt=[vn[0]+.25*Math.sin(now/3000),vn[1]+.25*Math.cos(now/3700),vn[2]];const tl=Math.hypot(...tilt);
+    const dir=orb.map((o,i)=>o*(1-k)+tilt[i]/tl*k);const dl2=Math.hypot(...dir);
+    const tgt=apx.map(z=>z*k);
+    cc.position.set(tgt[0]+dir[0]/dl2*dist,tgt[1]+dir[1]/dl2*dist,tgt[2]+dir[2]/dl2*dist);cc.near=Math.max(1e-6,dist*.02);cc.far=dist+20;cc.updateProjectionMatrix();cc.lookAt(tgt[0],tgt[1],tgt[2]);
+    zinfo.textContent=dive>0?`nagyítás ≈ ${Math.max(1,Math.round(crad/dist)).toLocaleString('hu-HU')}× · látható öv ≈ ${Math.min(NB,Math.max(0,Math.log(2.4/dist)/LS3)).toFixed(1)}`:'';
+    cren.render(cs,cc);};
+  const cSet=o=>{if('rel'in o)rel=o.rel;if('tw'in o)tw=o.tw;if('sharp'in o)sharp=o.sharp;if('depth'in o)depth=o.depth;if('nest'in o){diveNest=o.nest;}if('dive'in o){diving=o.dive;if(o.dive&&dive>=1)dive=0;}if('home'in o){diving=false;dive=0;}cDirty=true;};
+  const _p2=paint;paint=()=>{_p2();cDirty=true;};
+  const _l2=loop;loop=now=>{cTick(now);_l2(now);};
+
+  const regen=()=>{P.codon=codonPos();if(lay==='codon')go('codon');paint();};
+  return{go,paint:()=>paint(),colEdges,regen,spSet,cSet};
+}
+
+function select(c){sel=c;side();if(api)api.paint();if(soundOn){const f=freqSets(H[c])[0];playPair(f[1],f[2]);}}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.c!==undefined){select(+b.dataset.c);return;}
+  if(b.dataset.l){document.querySelectorAll('#layouts button').forEach(x=>x.setAttribute('aria-pressed',x===b));capEl.textContent=LAY.find(l=>l.id===b.dataset.l).cap;if(api)api.go(b.dataset.l);return;}
+  if(b.dataset.d!==undefined){const d=+b.dataset.d;dirOn=dirOn===d?-1:d;document.querySelectorAll('#legend button').forEach(x=>x.setAttribute('aria-pressed',+x.dataset.d===dirOn));if(api){api.colEdges();api.paint();}return;}
+  if(b.id==='tEdges'){edgesOn=!edgesOn;b.setAttribute('aria-pressed',edgesOn);}
+  if(b.id==='tSpin'){spin=!spin;b.setAttribute('aria-pressed',spin);}
+  if(b.id==='tDir'){topFirst=!topFirst;b.setAttribute('aria-pressed',topFirst);b.textContent=topFirst?'1. bázis: felső vonalpár':'1. bázis: alsó vonalpár';recode();side();if(api)api.regen();}
+  if(b.dataset.play!==undefined){const f=freqSets(H[sel])[+b.dataset.play];playPair(f[1],f[2]);return;}
+  if(b.id==='tSound'){soundOn=!soundOn;b.setAttribute('aria-pressed',soundOn);if(soundOn)actx();}
+});
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||!api)return;
+  if(b.id==='spMode'){const v=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',v);api.spSet({curved:v});}
+  if(b.id==='spBreath'){const v=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',v);api.spSet({breath:v});}});
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||!api)return;
+  if(b.dataset.nest!==undefined){api.cSet({nest:+b.dataset.nest,dive:true});document.getElementById('cDive').setAttribute('aria-pressed','true');}
+  if(b.id==='cDive'){const v=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',v);api.cSet({dive:v});}
+  if(b.id==='cHome'){document.getElementById('cDive').setAttribute('aria-pressed','false');api.cSet({home:true});}});
+[['cDepth','depth',100],['cRel','rel',100],['cTw','tw',100],['cBlur','sharp',1]].forEach(([id,k,d])=>document.getElementById(id).addEventListener('input',e=>{if(api)api.cSet({[k]:e.target.value/d});}));
+document.getElementById('spFold').addEventListener('input',e=>{if(api)api.spSet({fold:e.target.value/100,breath:false});document.getElementById('spBreath').setAttribute('aria-pressed','false');});
+document.getElementById('cmode').addEventListener('change',e=>{cmode=e.target.value;aaMode=cmode==='aa';side();if(api)api.paint();});
+document.getElementById('base').addEventListener('change',e=>{baseF=+e.target.value;side();});
+const reTheme=()=>{renderLeg();side();};new MutationObserver(reTheme).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});matchMedia('(prefers-color-scheme: dark)').addEventListener('change',reTheme);
+document.getElementById('scheme').addEventListener('change',e=>{scheme=+e.target.value;recode();side();if(api)api.regen();});
+side();
+}
+</script>
+</body>
+</html>
