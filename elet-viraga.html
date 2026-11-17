@@ -93,6 +93,8 @@ document.documentElement.setAttribute("data-lang",l);document.documentElement.la
           <label><span class="hu">Robbantás</span><span class="en">Explode</span> <input type="range" id="explode" min="0" max="100" value="0"></label>
           <label><span class="hu">Hajtás</span><span class="en">Fold</span> <input type="range" id="fold" min="0" max="100" value="55"></label>
           <button class="t" id="cut"><span class="hu">✂ Metszet (¼ kivágás)</span><span class="en">✂ Section (¼ cut)</span></button>
+          <button class="t" id="wire"><span class="hu">△ Háromszögháló</span><span class="en">△ Triangle mesh</span></button>
+          <button class="t" id="obj"><span class="hu">⬇ OBJ</span><span class="en">⬇ OBJ</span></button>
           <button class="t" id="truth"><span class="hu">✓ Igaz összeállítás</span><span class="en">✓ True composition</span></button>
           <button class="t on" id="spin"><span class="hu">⟳ Forgás</span><span class="en">⟳ Spin</span></button>
         </div>
@@ -113,6 +115,8 @@ document.documentElement.setAttribute("data-lang",l);document.documentElement.la
           <button class="t on" data-show="circles"><span class="hu">Körök</span><span class="en">Circles</span></button>
           <button class="t on" data-show="lattice"><span class="hu">Rácspontok</span><span class="en">Lattice points</span></button>
           <button class="t on" data-show="spidron">Spidron</button>
+          <button class="t" data-show="spiral"><span class="hu">Rácsspirál √3·R(30°)</span><span class="en">Lattice spiral √3·R(30°)</span></button>
+          <button class="t" data-show="centroid"><span class="hu">Súlyponti felosztás</span><span class="en">Centroid split</span></button>
         </div>
         <div class="bar"><span class="lbl"><span class="hu">Forgatási próba:</span><span class="en">Rotation test:</span></span>
           <button class="t" data-rot="0">0°</button><button class="t" data-rot="60">60°</button><button class="t" data-rot="90">90°</button><button class="t" data-rot="120">120°</button><button class="t" data-rot="180">180°</button>
@@ -133,7 +137,8 @@ document.documentElement.setAttribute("data-lang",l);document.documentElement.la
       <ul class="truths">
         <li><span class="tag ok"><span class="hu">IGAZ</span><span class="en">TRUE</span></span><span class="hu"><b>Élet virága (2D):</b> egyenlő r sugarú körök, a középpontok távolsága r. Minden kör átmegy a hat szomszéd középpontján, ezért a középpontok és a metszéspontok ugyanazt a háromszögrácsot adják.</span><span class="en"><b>Flower of Life (2D):</b> circles of equal radius r, centres r apart. Every circle passes through the centres of its six neighbours, so centres and intersections form the same triangular lattice.</span></li>
         <li><span class="tag fix"><span class="hu">PONTOSÍTVA</span><span class="en">REFINED</span></span><span class="hu"><b>Spidron: aₙ = a₀·kⁿ.</b> A hatszögű spidronnál k pontosan 1/√3 ≈ 0,5774, szintenként 30° elfordulással, és a háromszögek 60–60–60° és 30–120–30°-osak. A „k ≈ 0,5–0,7, α ≈ 45–60°” tartomány általános spirál, nem spidron.</span><span class="en"><b>Spidron: aₙ = a₀·kⁿ.</b> For the hexagonal spidron k is exactly 1/√3 ≈ 0.5774, with a 30° turn per level, and the triangles are 60–60–60° and 30–120–30°. The range “k ≈ 0.5–0.7, α ≈ 45–60°” describes a generic spiral, not a spidron.</span></li>
-        <li><span class="tag new"><span class="hu">ÚJ IGAZSÁG</span><span class="en">NEW TRUTH</span></span><span class="hu"><b>A hatszögű spidron az Élet virága rácsán ül.</b> Ha egy szint csúcsai rácspontok, akkor minden kifelé eső szinté is: a √3-szoros nagyítás 30°-os forgatással a háromszögrácsot önmagába viszi (az Eisenstein-egészek között egy 3 normájú szorzás). Befelé, r/√3-nál már nem rácspont. Nézd a 2D lapon: a zöld csúcsok.</span><span class="en"><b>The hexagonal spidron sits on the Flower of Life lattice.</b> If one level's vertices are lattice points, so are those of every level further out: a √3 zoom with a 30° turn maps the triangular lattice into itself (multiplication by an Eisenstein integer of norm 3). Inward, at r/√3, they are no longer lattice points. See the green vertices on the 2D tab.</span></li>
+        <li><span class="tag new"><span class="hu">ÚJ IGAZSÁG</span><span class="en">NEW TRUTH</span></span><span class="hu"><b>A hatszögű spidron az Élet virága rácsán ül.</b> Ha egy szint csúcsai rácspontok, akkor minden kifelé eső szinté is: a √3-szoros nagyítás 30°-os forgatással a háromszögrácsot a saját 3-as indexű részrácsába viszi: rácskoordinátákban a mátrixa [[1, −1], [1, 2]], determinánsa 3 (Eisenstein-egészekkel: szorzás egy 3 normájú számmal). Kifelé ezért minden szint rácsponton marad, de nem minden rácspont lesz csúcs. Befelé, r/√3-nál már nem rácspont. Nézd a 2D lapon: a zöld csúcsok.</span><span class="en"><b>The hexagonal spidron sits on the Flower of Life lattice.</b> If one level's vertices are lattice points, so are those of every level further out: a √3 zoom with a 30° turn maps the triangular lattice into its own index-3 sublattice: in lattice coordinates its matrix is [[1, −1], [1, 2]], with determinant 3 (in Eisenstein integers: multiplication by a number of norm 3). So every level outward stays on lattice points, but not every lattice point becomes a vertex. Inward, at r/√3, they are no longer lattice points. See the green vertices on the 2D tab.</span></li>
+        <li><span class="tag new"><span class="hu">ÚJ IGAZSÁG</span><span class="en">NEW TRUTH</span></span><span class="hu"><b>A spidron szárú háromszöge egy egyenlő oldalú háromszög harmada.</b> Ha egy egyenlő oldalú háromszög súlypontját összekötjük a csúcsokkal, három 30–120–30°-os háromszöget kapunk, és ezek pontosan a hatszögű spidron szárú háromszögei: a csúcsuk a súlypont. A hatszögű spidron tehát teljes egészében egyenlő oldalú háromszögekből és azok harmadaiból áll. Nézd a 2D lapon: „Súlyponti felosztás”.</span><span class="en"><b>The spidron's isosceles triangle is one third of an equilateral triangle.</b> Joining the centroid of an equilateral triangle to its vertices gives three 30–120–30° triangles, and these are exactly the isosceles triangles of the hexagonal spidron: their apex is the centroid. So the hexagonal spidron is made entirely of equilateral triangles and their thirds. See the 2D tab: “Centroid split”.</span></li>
         <li><span class="tag fix"><span class="hu">PONTOSÍTVA</span><span class="en">REFINED</span></span><span class="hu"><b>4 karú spidron.</b> Van négyszögű változat: 15–150–15°-os egyenlő szárú és egyenlő oldalú háromszögekből, k = 1/(2·cos 15°) ≈ 0,5176, szintenként 45° elfordulással (itt levezetve: az összekötő háromszögek pontosan egyenlő oldalúak). A hatszöges rácsra viszont nem illik.</span><span class="en"><b>4-arm spidron.</b> A square variant exists: built from 15–150–15° isosceles and equilateral triangles, k = 1/(2·cos 15°) ≈ 0.5176, with a 45° turn per level (derived here: the connecting triangles are exactly equilateral). It does not fit the hexagonal lattice, though.</span></li>
         <li><span class="tag new"><span class="hu">ÚJ IGAZSÁG</span><span class="en">NEW TRUTH</span></span><span class="hu"><b>Általános spidron-szabály.</b> Ha az n-szögű spidron összekötő háromszögei egyenlő oldalúak, az egyenlő szárú háromszög alapszöge <b>β = 60° − 180°/n</b>, a léptékarány <b>k = 1/(2·cos β)</b>, a fordulat szintenként 180°/n. n = 6: 30° és 1/√3; n = 4: 15°; n = 5: 24° és k ≈ 0,5473. (Levezetés: a csúcs távolsága a középponttól cos(π/n) − sin(π/n)·tg β, ami pontosan akkor egyenlő 1/(2·cos β)-val, ha cos(π/n + β) = ½.)</span><span class="en"><b>General spidron law.</b> If the connecting triangles of an n-gon spidron are equilateral, the isosceles base angle is <b>β = 60° − 180°/n</b>, the scale ratio <b>k = 1/(2·cos β)</b>, and the turn per level 180°/n. n = 6: 30° and 1/√3; n = 4: 15°; n = 5: 24° and k ≈ 0.5473. (Derivation: the apex distance from the centre is cos(π/n) − sin(π/n)·tan β, which equals 1/(2·cos β) exactly when cos(π/n + β) = ½.)</span></li>
         <li><span class="tag no"><span class="hu">NEM TARTHATÓ</span><span class="en">DOES NOT HOLD</span></span><span class="hu"><b>C₄ (D₄h) szimmetria az együttesre.</b> A hatszöges rács 90°-os forgatásra nem kerül önmagába, ezért a 4 karú mag és az Élet virága közös szimmetriája legfeljebb 180° (C₂). A forgatási próba ezt számszerűen mutatja.</span><span class="en"><b>C₄ (D₄h) symmetry for the whole.</b> The hexagonal lattice does not map onto itself under a 90° turn, so the 4-arm core and the Flower of Life share at most a 180° symmetry (C₂). The rotation test shows this numerically.</span></li>
@@ -149,10 +154,11 @@ document.documentElement.setAttribute("data-lang",l);document.documentElement.la
         <tr><td><span class="hu">Fordulat szintenként</span><span class="en">Turn per level</span></td><td class="m">30°</td><td class="m">36°</td><td class="m">45°</td></tr>
         <tr><td><span class="hu">Háromszögek</span><span class="en">Triangles</span></td><td class="m">60–60–60°, 30–120–30°</td><td class="m">60–60–60°, 24–132–24°</td><td class="m">60–60–60°, 15–150–15°</td></tr>
         <tr><td><span class="hu">Spirál</span><span class="en">Spiral</span></td><td class="m">r = r₀·e^(−bθ), b = ln√3/(π/6) ≈ 1.049</td><td class="m">b = ln(1/k)/(π/5) ≈ 0.958</td><td class="m">b = ln(1/k)/(π/4) ≈ 0.838</td></tr>
+        <tr><td><span class="hu">√3·R(30°) rácskoordinátákban</span><span class="en">√3·R(30°) in lattice coordinates</span></td><td class="m">[[1, −1], [1, 2]], det 3</td><td class="m">–</td><td class="m">–</td></tr>
         <tr><td><span class="hu">Rácsra illik?</span><span class="en">Fits the lattice?</span></td><td><span class="hu">igen, kifelé minden szint</span><span class="en">yes, every level outward</span></td><td><span class="hu">a gömb 12 ötszögpontján</span><span class="en">at the sphere's 12 five-fold points</span></td><td><span class="hu">nem (csak a tengelyen fekvő 2 csúcs)</span><span class="en">no (only the 2 vertices on the axis)</span></td></tr>
         <tr><td><span class="hu">Közös szimmetria az Élet virágával</span><span class="en">Shared symmetry with the Flower of Life</span></td><td class="m">C₆ (60°)</td><td class="m"><span class="hu">ikozaéderes (gömbön)</span><span class="en">icosahedral (on the sphere)</span></td><td class="m">C₂ (180°)</td></tr>
       </table></div>
-      <p class="small" style="margin-top:12px"><span class="hu">A 3D mag hajtása szemléltető dombormű, nem méretpontos hajtogatás. A spidron Erdély Dániel geometriája. Kapcsolódó oldalak:</span><span class="en">The 3D core's fold is an illustrative relief, not a dimensionally exact fold. The spidron is the geometry of Dániel Erdély. Related pages:</span> <a href="spidron-lab.html"><span class="hu">Spidron-labor</span><span class="en">Spidron Lab</span></a> · <a href="harmonia.html"><span class="hu">Harmónia Labor</span><span class="en">Harmony Lab</span></a> · <a href="spidron-cube.html"><span class="hu">Spidron-kocka</span><span class="en">Spidron Cube</span></a></p>
+      <p class="small" style="margin-top:12px"><span class="hu">A 3D mag hajtása szemléltető dombormű, nem méretpontos hajtogatás. A spidron Erdély Dániel geometriája (<a href="https://archive.bridgesmathart.org/2005/bridges2005-179.pdf" target="_blank" rel="noopener">Some Surprising New Properties of the Spidrons</a>, Bridges 2005). Kapcsolódó oldalak:</span><span class="en">The 3D core's fold is an illustrative relief, not a dimensionally exact fold. The spidron is the geometry of Dániel Erdély (<a href="https://archive.bridgesmathart.org/2005/bridges2005-179.pdf" target="_blank" rel="noopener">Some Surprising New Properties of the Spidrons</a>, Bridges 2005). Related pages:</span> <a href="spidron-lab.html"><span class="hu">Spidron-labor</span><span class="en">Spidron Lab</span></a> · <a href="harmonia.html"><span class="hu">Harmónia Labor</span><span class="en">Harmony Lab</span></a> · <a href="spidron-cube.html"><span class="hu">Spidron-kocka</span><span class="en">Spidron Cube</span></a></p>
     </section>
   </div>
 </div>
@@ -165,7 +171,7 @@ document.documentElement.setAttribute("data-lang",l);document.documentElement.la
 const $=s=>document.querySelector(s);
 const L=()=>document.documentElement.getAttribute("data-lang")==="en"?"en":"hu";
 const T=(hu,en)=>L()==="en"?en:hu;
-const S={arms:6,tab:"3d",levels:5,show:{circles:true,lattice:true,spidron:true},rot:0,explode:0,fold:.55,cut:false,spin:true};
+const S={arms:6,tab:"3d",levels:5,show:{circles:true,lattice:true,spidron:true,spiral:false,centroid:false},wire:false,rot:0,explode:0,fold:.55,cut:false,spin:true};
 const SQ3=Math.sqrt(3);
 /* general spidron law (equilateral connecting triangles): base angle β = 60° − 180°/n, scale ratio k = 1/(2·cos β) */
 const betaOf=n=>Math.PI/3-Math.PI/n,kOf=n=>1/(2*Math.cos(betaOf(n)));
@@ -197,6 +203,16 @@ function draw2D(){
   if(S.show.spidron)verts.forEach(v=>{const ok=onLattice(v.p[0],v.p[1]);tot++;on+=ok;per[v.m]=(per[v.m]||0)+ok;
     s+=`<circle cx="${v.p[0].toFixed(4)}" cy="${(-v.p[1]).toFixed(4)}" r="${Math.max(.025,.07*Math.pow(kOf(n),v.m*.5))}" fill="${ok?"#16a34a":"#dc2626"}"/>`;});
   // rotation test: rotated ghost of everything, and the share of points that land on an original point
+  // lattice spiral: T = √3·R(30°) applied to the six unit vectors, k = 0, 1, 2 (radii 1, √3, 3)
+  if(S.show.spiral){const Tm=p=>{const c=Math.cos(Math.PI/6)*SQ3,s=Math.sin(Math.PI/6)*SQ3;return [p[0]*c-p[1]*s,p[0]*s+p[1]*c];};
+    for(let j=0;j<6;j++){let v=[Math.cos(j*Math.PI/3),Math.sin(j*Math.PI/3)];const arr=[v];for(let k=0;k<2;k++){v=Tm(v);arr.push(v);}
+      s+=`<polyline points="${arr.map(q=>`${q[0].toFixed(4)},${(-q[1]).toFixed(4)}`).join(" ")}" fill="none" stroke="#0e7490" stroke-width="0.05" stroke-linecap="round" stroke-linejoin="round"/>`;
+      arr.forEach(q=>{s+=`<circle cx="${q[0].toFixed(4)}" cy="${(-q[1]).toFixed(4)}" r="0.06" fill="#0e7490"/>`;});}}
+  // centroid split: on each outer-level isosceles triangle, the full equilateral triangle on its base, centroid = the apex
+  if(S.show.centroid&&n===6)tris.filter(tr=>tr.iso&&tr.m<2).forEach(tr=>{const [a,b2,c]=tr.p,third=[3*c[0]-a[0]-b2[0],3*c[1]-a[1]-b2[1]];
+    s+=`<polygon points="${[a,b2,third].map(q=>`${q[0].toFixed(4)},${(-q[1]).toFixed(4)}`).join(" ")}" fill="none" stroke="#b45309" stroke-width="0.022" stroke-dasharray="0.07 0.05"/>`;
+    s+=`<line x1="${c[0].toFixed(4)}" y1="${(-c[1]).toFixed(4)}" x2="${third[0].toFixed(4)}" y2="${(-third[1]).toFixed(4)}" stroke="#b45309" stroke-width="0.022"/>`;
+    s+=`<circle cx="${c[0].toFixed(4)}" cy="${(-c[1]).toFixed(4)}" r="0.045" fill="#b45309"/>`;});
   const pts=centres.concat(verts.map(v=>v.p));let match=null;
   if(S.rot){const g=pts.map(p=>rotPt(p,S.rot));
     match=g.filter(q=>pts.some(p=>Math.hypot(p[0]-q[0],p[1]-q[1])<1e-6)).length/pts.length;
@@ -207,6 +223,8 @@ function draw2D(){
   let r=T(`<b>${n} karú spidron</b>, k = ${kS}, ${180/n}° fordulat szintenként. Rácsra eső csúcsok: <b>${on} / ${tot}</b> (szintenként, kívülről: ${per.map((x,m)=>`${x}/${n}`).join(", ")}).`,
            `<b>${n}-arm spidron</b>, k = ${kS}, ${180/n}° turn per level. Vertices on the lattice: <b>${on} / ${tot}</b> (per level, from outside: ${per.map((x,m)=>`${x}/${n}`).join(", ")}).`);
   if(n===6)r+=T(" A legkülső három szint (sugár 3r, √3·r, r) teljesen a rácson van, befelé már nincs.","  The outer three levels (radius 3r, √3·r, r) lie fully on the lattice; further in they do not.");
+  if(S.show.spiral)r+=`<br>`+T("Rácsspirál: T = √3·R(30°), rácskoordinátákban [[1, −1], [1, 2]], det = 3: a 6 egységvektor képei 1, √3 és 3 távolságra mind rácspontok.","Lattice spiral: T = √3·R(30°), in lattice coordinates [[1, −1], [1, 2]], det = 3: the images of the 6 unit vectors at distances 1, √3 and 3 are all lattice points.");
+  if(S.show.centroid)r+=`<br>`+(n===6?T("Súlyponti felosztás: a szaggatott egyenlő oldalú háromszögek súlypontja (narancs pont) pontosan a spidron szárú háromszögének csúcsa.","Centroid split: the centroid (orange dot) of each dashed equilateral triangle is exactly the apex of the spidron's isosceles triangle."):T("A súlyponti felosztás csak a hatszögű spidronra érvényes.","The centroid split holds only for the hexagonal spidron."));
   if(match!==null)r+=`<br>`+T(`Forgatás ${S.rot}°: a pontok <b>${Math.round(match*100)}%-a</b> kerül vissza önmagára`,`Rotation ${S.rot}°: <b>${Math.round(match*100)}%</b> of the points land back on the figure`)+` – ${match>0.999?T("ez a forgatás szimmetria.","this rotation is a symmetry."):T("ez a forgatás nem szimmetria.","this rotation is not a symmetry.")}`;
   else r+=`<br>${T("Válassz egy forgatási szöget: a lila másolat mutatja, hová kerül az ábra.","Pick a rotation angle: the violet copy shows where the figure goes.")}`;
   $("#read2d").innerHTML=r;
@@ -232,16 +250,28 @@ const GEO=geodesic();
 const goldMat=new THREE.LineBasicMaterial({color:0xc8901a,transparent:true,opacity:.85,clippingPlanes:cutPlanes,clipIntersection:true});
 const shellMat=new THREE.MeshStandardMaterial({color:0xfff4dc,transparent:true,opacity:.18,side:THREE.DoubleSide,depthWrite:false,clippingPlanes:cutPlanes,clipIntersection:true});
 const halves=[new THREE.Group(),new THREE.Group()];halves.forEach(h=>scene.add(h));
+const circleLines=[],wireLines=[];
 function circleOn(u,rho,seg){const a=Math.abs(u.x)<.9?new THREE.Vector3(1,0,0):new THREE.Vector3(0,1,0),e1=new THREE.Vector3().crossVectors(u,a).normalize(),e2=new THREE.Vector3().crossVectors(u,e1);
   const out=[];for(let i=0;i<=seg;i++){const t=i/seg*Math.PI*2;out.push(u.clone().multiplyScalar(Math.cos(rho)).add(e1.clone().multiplyScalar(Math.sin(rho)*Math.cos(t))).add(e2.clone().multiplyScalar(Math.sin(rho)*Math.sin(t))).multiplyScalar(R));}return out;}
 (function buildShell(){
   const segs=[[],[]];
   GEO.V.forEach(u=>{const side=u.x>=0?1:0,pts=circleOn(u,GEO.edge,40);for(let i=0;i<pts.length-1;i++)segs[side].push(pts[i].x,pts[i].y,pts[i].z,pts[i+1].x,pts[i+1].y,pts[i+1].z);});
-  segs.forEach((arr,s)=>{const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(arr,3));halves[s].add(new THREE.LineSegments(g,goldMat));
+  segs.forEach((arr,s)=>{const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(arr,3));const ls=new THREE.LineSegments(g,goldMat);halves[s].add(ls);circleLines.push(ls);
     const shell=new THREE.Mesh(new THREE.SphereGeometry(R*.995,48,24,s?-Math.PI/2:Math.PI/2,Math.PI),shellMat);halves[s].add(shell);});
   const dotG=new THREE.SphereGeometry(.055,12,8),dotM=new THREE.MeshBasicMaterial({color:0xdc2626});
   GEO.V.forEach((u,i)=>{if(GEO.nb[i].size!==5)return;const m=new THREE.Mesh(dotG,dotM);m.position.copy(u).multiplyScalar(R*1.01);halves[u.x>=0?1:0].add(m);});
 })();
+/* geodesic triangle mesh (edges), the alternative to the circles */
+(function buildWire(){const segs=[[],[]];GEO.nb.forEach((s,i)=>s.forEach(j=>{if(j<i)return;const a=GEO.V[i].clone().multiplyScalar(R),b=GEO.V[j].clone().multiplyScalar(R),side=(a.x+b.x)>=0?1:0;segs[side].push(a.x,a.y,a.z,b.x,b.y,b.z);}));
+  segs.forEach((arr,s)=>{const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(arr,3));const ls=new THREE.LineSegments(g,goldMat);ls.visible=false;halves[s].add(ls);wireLines.push(ls);});})();
+/* OBJ export of what is visible (triangles as faces, lines as polylines), with the explode offsets applied */
+function exportOBJ(){let out="# Elet viraga + spidron (madcsaba/spidron, elet-viraga.html)\n",vi=1;const v=new THREE.Vector3();
+  scene.traverse(o=>{if(!o.visible||!(o.isMesh||o.isLineSegments)||!o.geometry||!o.geometry.attributes.position)return;let p=o.parent,vis=true;while(p){if(!p.visible)vis=false;p=p.parent;}if(!vis)return;
+    if(o.geometry.type==="SphereGeometry")return;o.updateMatrixWorld(true);const pos=o.geometry.attributes.position,idx=o.geometry.index;out+=`o ${o.isMesh?"mesh":"lines"}_${vi}\n`;
+    const base=vi;for(let i=0;i<pos.count;i++){v.fromBufferAttribute(pos,i).applyMatrix4(o.matrixWorld);out+=`v ${v.x.toFixed(5)} ${v.y.toFixed(5)} ${v.z.toFixed(5)}\n`;vi++;}
+    if(o.isMesh){const n=idx?idx.count:pos.count;for(let i=0;i<n;i+=3){const a=idx?idx.getX(i):i,b=idx?idx.getX(i+1):i+1,c=idx?idx.getX(i+2):i+2;out+=`f ${base+a} ${base+b} ${base+c}\n`;}}
+    else for(let i=0;i<pos.count;i+=2)out+=`l ${base+i} ${base+i+1}\n`;});
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([out],{type:"text/plain"}));a.download=S.truth?"elet-viraga-igaz-osszeallitas.obj":"elet-viraga-spidron.obj";document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);}
 /* true composition: a spidron on every geodesic point, arms = number of neighbours, arms toward the neighbours */
 const nestMat=new THREE.MeshStandardMaterial({vertexColors:true,side:THREE.DoubleSide,flatShading:true,roughness:.5,clippingPlanes:cutPlanes,clipIntersection:true});
 const nestHalves=[];
@@ -301,6 +331,8 @@ $("#levels").addEventListener("input",e=>{S.levels=+e.target.value;draw2D();});
 $("#explode").addEventListener("input",e=>{S.explode=e.target.value/100;});
 $("#fold").addEventListener("input",e=>{S.fold=e.target.value/100;buildCore();});
 $("#cut").addEventListener("click",()=>{S.cut=!S.cut;$("#cut").classList.toggle("on",S.cut);const p=S.cut?cutPlanes:[];[goldMat,shellMat,nestMat].forEach(m=>{m.clippingPlanes=p;m.needsUpdate=true;});});
+$("#wire").addEventListener("click",()=>{S.wire=!S.wire;$("#wire").classList.toggle("on",S.wire);circleLines.forEach(l=>l.visible=!S.wire);wireLines.forEach(l=>l.visible=S.wire);});
+$("#obj").addEventListener("click",exportOBJ);
 $("#truth").addEventListener("click",()=>{S.truth=!S.truth;$("#truth").classList.toggle("on",S.truth);core.visible=!S.truth;nestHalves.forEach(m=>m.visible=S.truth);
   shellMat.opacity=S.truth?.5:.18;read3d();});
 $("#spin").addEventListener("click",()=>{S.spin=!S.spin;$("#spin").classList.toggle("on",S.spin);if(S.spin){camT=null;setView("free",true);}});
