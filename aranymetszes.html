@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spidron és aranymetszés / Spidron and the Golden Ratio</title>
+<meta name="description" content="Hol van aranymetszés a spidronban? Arany spidron-kar (arany gnómon, k = 1/φ), amely síkban nem zárul, és a 20 merev fészekből álló spidron-dodekaéder, ahol φ a hajtás mélységében van. / Where is the golden ratio in the spidron? A golden spidron arm (golden gnomon, k = 1/φ) that does not close in the plane, and the spidron dodecahedron of 20 rigid nests, with φ in the depth of the fold.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Spidron és aranymetszés / Spidron and the Golden Ratio">
+<meta property="og:description" content="Mérve, nem állítva: hol van φ a spidronban, és hol nincs. / Measured, not claimed: where φ is in the spidron, and where it is not.">
+<meta property="og:url" content="https://madcsaba.github.io/spidron/aranymetszes.html">
+<script>
+(function(){var l;try{l=localStorage.getItem("sjk-lang")}catch(e){}
+if(l!=="hu"&&l!=="en")l=(navigator.language||"").toLowerCase().indexOf("hu")===0?"hu":"en";
+document.documentElement.setAttribute("data-lang",l);document.documentElement.lang=l;})();
+</script>
+<script src="vendor/three.min.js"></script>
+<style>
+  :root{--bg:#f6f7f9;--panel:#fff;--line:#e3e6ea;--ink:#1a1d21;--dim:#6b7280;--acc:#2563eb;--green:#16a34a;--gold:#c8901a;--red:#dc2626;--amber:#b45309;
+    --display:ui-sans-serif,system-ui,"Segoe UI",Helvetica,Arial;--serif:Georgia,'Times New Roman',serif}
+  html[data-lang="hu"] .en{display:none}
+  html[data-lang="en"] .hu{display:none}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--display)}
+  .wrap{max-width:1320px;margin:0 auto;padding:22px 18px 56px}
+  .kicker{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);font-weight:700}
+  h1{font:600 30px/1.2 var(--serif);margin:6px 0}
+  h2{font:600 20px/1.3 var(--serif);margin:0 0 8px}
+  h3{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin:16px 0 6px}
+  .lead{color:var(--dim);max-width:920px;margin:0 0 14px}
+  .grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:16px;align-items:start}
+  @media (max-width:1000px){.grid{grid-template-columns:minmax(0,1fr)}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
+  .bar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:0 0 10px}
+  .bar .lbl{font-size:12.5px;color:var(--dim)}
+  .bar label{font-size:13px;color:var(--dim);display:flex;align-items:center;gap:6px}
+  input[type=range]{width:110px}
+  button.t{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font:13px var(--display);cursor:pointer;color:var(--ink);min-height:34px}
+  button.t:hover{border-color:#c5cad1}
+  button.t.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+  .tabs{display:flex;gap:6px;margin-bottom:12px;border-bottom:1px solid var(--line);padding-bottom:10px}
+  .stage{position:relative;border-radius:12px;overflow:hidden;background:radial-gradient(ellipse at 50% 42%,#fffdf6 0%,#ece8de 100%);border:1px solid var(--line)}
+  #gl{display:block;width:100%;height:min(70vh,620px);touch-action:none;cursor:grab}
+  #svg2d{display:block;width:100%;height:auto;max-height:min(70vh,620px);background:#fffdf6;border-radius:12px;border:1px solid var(--line)}
+  .hint{position:absolute;left:10px;bottom:8px;font-size:12px;color:var(--dim);pointer-events:none;background:rgba(255,255,255,.85);padding:2px 6px;border-radius:6px}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--dim);margin-top:8px}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:5px;vertical-align:-2px}
+  .readout{font-size:14px;margin-top:8px;padding:8px 10px;background:#f8fafc;border:1px solid var(--line);border-radius:10px}
+  .readout b{font-family:var(--serif)}
+  .truths{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+  .truths li{border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13.5px}
+  .tag{display:inline-block;font-size:11.5px;font-weight:700;padding:1px 7px;border-radius:5px;margin-right:6px;letter-spacing:.02em}
+  .ok{background:#dcfce7;color:#166534}.fix{background:#fef3c7;color:#92400e}.no{background:#fee2e2;color:#991b1b}.new{background:#dbeafe;color:#1e40af}
+  table{border-collapse:collapse;width:100%;font-size:13px;min-width:460px}
+  th,td{border-bottom:1px solid var(--line);padding:6px 6px;text-align:left;vertical-align:top}
+  th{color:var(--dim);font-weight:600;font-size:12px}
+  td.m{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px}
+  .small{font-size:12.5px;color:var(--dim)}
+  a{color:var(--acc)}
+  .langsw{position:fixed;top:10px;right:12px;z-index:50;display:flex;background:#fff;border:1px solid #e3e6ea;border-radius:999px;padding:3px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+  .langsw button{border:0;background:none;font:600 13px var(--display);color:#6b7280;padding:5px 11px;border-radius:999px;cursor:pointer;min-height:32px}
+  .langsw button[aria-pressed="true"]{background:#1a1d21;color:#fff}
+  [hidden]{display:none!important}
+  .note{border-left:3px solid var(--amber);background:#fffbeb;padding:8px 12px;border-radius:0 10px 10px 0;font-size:13.5px;margin:12px 0 0}
+  .scroll{overflow-x:auto}
+  #lbls{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker"><span class="hu">Geometria · ellenőrzés</span><span class="en">Geometry · fact check</span></div>
+  <h1><span class="hu">Spidron és aranymetszés</span><span class="en">Spidron and the Golden Ratio</span></h1>
+  <p class="lead"><span class="hu">A klasszikus, hatszögű spidronban nincs aranymetszés: minden aránya √3-ból jön. Két helyen viszont valóban megjelenik a φ = 1,618…: egy spidron-karban, amely aranymetszés szerint zsugorodik, de síkban nem zárul fészekké, és egy zárt testben, a 20 merev fészekből álló spidron-dodekaéderben, ahol φ a hajtás mélységében van.</span><span class="en">The classic hexagonal spidron contains no golden ratio: all its proportions come from √3. In two places, though, φ = 1.618… really does appear: in a spidron arm that shrinks by the golden ratio but cannot close into a flat nest, and in a closed solid, the spidron dodecahedron of 20 rigid nests, where φ sits in the depth of the fold.</span> <a href="index.html"><span class="hu">← nyitóoldal</span><span class="en">← home</span></a></p>
+
+  <div class="grid">
+    <section class="card">
+      <div class="tabs" role="tablist">
+        <button class="t on" data-tab="2d" role="tab"><span class="hu">Arany spidron-kar (2D)</span><span class="en">Golden spidron arm (2D)</span></button>
+        <button class="t" data-tab="3d" role="tab"><span class="hu">Spidron-testek (3D)</span><span class="en">Spidron solids (3D)</span></button>
+      </div>
+
+      <div id="pane2d">
+        <div class="bar">
+          <label><span class="hu">Karok száma</span><span class="en">Number of arms</span> <input type="range" id="arms" min="1" max="15" value="8"> <b id="armsN">8</b></label>
+          <label><span class="hu">Szintek</span><span class="en">Levels</span> <input type="range" id="levels" min="2" max="9" value="7"></label>
+        </div>
+        <div class="bar">
+          <button class="t on" data-show="spiral"><span class="hu">Csúcsspirál (φ / 24°)</span><span class="en">Vertex spiral (φ / 24°)</span></button>
+          <button class="t" data-show="golden"><span class="hu">Aranyspirál (φ / 90°)</span><span class="en">Golden spiral (φ / 90°)</span></button>
+          <button class="t" data-show="hex"><span class="hu">Hatszögű spidron spirálja (√3 / 30°)</span><span class="en">Hexagonal spidron spiral (√3 / 30°)</span></button>
+        </div>
+        <svg id="svg2d" viewBox="-1.12 -1.12 2.24 2.24" role="img" aria-label="Arany spidron-kar / Golden spidron arm"></svg>
+        <div class="legend">
+          <span><i style="background:#e9c46a"></i><span class="hu">arany gnómon (36°–108°–36°)</span><span class="en">golden gnomon (36°–108°–36°)</span></span>
+          <span><i style="background:#c8901a"></i><span class="hu">egyenlő oldalú háromszög</span><span class="en">equilateral triangle</span></span>
+          <span><i style="background:#7c3aed"></i><span class="hu">második fordulat (a 8. kartól)</span><span class="en">second turn (from the 8th arm)</span></span>
+          <span><i style="background:#dc2626"></i><span class="hu">átfedés az első fordulattal</span><span class="en">overlap with the first turn</span></span>
+        </div>
+        <div class="readout" id="read2d"></div>
+      </div>
+
+      <div id="pane3d" hidden>
+        <div class="bar"><span class="lbl"><span class="hu">Test:</span><span class="en">Solid:</span></span>
+          <button class="t" data-solid="tetra"><span class="hu">Tetraéder (4 fészek)</span><span class="en">Tetrahedron (4 nests)</span></button>
+          <button class="t" data-solid="cube"><span class="hu">Kocka (8)</span><span class="en">Cube (8)</span></button>
+          <button class="t on" data-solid="dodeca"><span class="hu">Dodekaéder (20)</span><span class="en">Dodecahedron (20)</span></button>
+        </div>
+        <div class="bar">
+          <label><span class="hu">Robbantás</span><span class="en">Explode</span> <input type="range" id="explode" min="0" max="100" value="0"></label>
+          <button class="t on" id="frame"><span class="hu">Alaptest élei</span><span class="en">Edges of the base solid</span></button>
+          <button class="t" id="one"><span class="hu">Egy fészek kiemelve</span><span class="en">Highlight one nest</span></button>
+          <button class="t on" id="spin"><span class="hu">⟳ Forgás</span><span class="en">⟳ Spin</span></button>
+        </div>
+        <div class="stage"><canvas id="gl"></canvas><div class="hint"><span class="hu">Húzd: forgatás · görgő: nagyítás</span><span class="en">Drag: rotate · wheel: zoom</span></div></div>
+        <div class="readout" id="read3d"></div>
+        <div class="scroll"><table id="stab"></table></div>
+      </div>
+    </section>
+
+    <aside class="card">
+      <h2><span class="hu">Mi igaz és mi nem</span><span class="en">What holds and what does not</span></h2>
+      <ul class="truths" id="truths"></ul>
+      <p class="note"><span class="hu"><b>Az általános spidron-szabály:</b> n karú fészekben a szárú háromszög alapszöge β = 60° − 180°/n, a szintenkénti arány k = 1/(2·cos β). Ebből számol az oldal; a testeknél a merev hajtást ugyanaz a megoldó adja, mint a <a href="kodonfeszek/">Kodonfészek</a> és az <a href="elet-viraga.html">Élet virága</a> spidronhedronja.</span><span class="en"><b>The general spidron law:</b> in an n-arm nest the isosceles triangle's base angle is β = 60° − 180°/n and the scale ratio per level is k = 1/(2·cos β). This page computes from it; for the solids the rigid fold comes from the same solver as in the <a href="kodonfeszek/">Codon Nest</a> and the <a href="elet-viraga.html">Flower of Life</a> spidronhedron.</span></p>
+    </aside>
+  </div>
+</div>
+<div class="langsw" role="group" aria-label="Nyelv / Language"><button type="button" data-l="hu">HU</button><button type="button" data-l="en">EN</button></div>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const L=()=>document.documentElement.getAttribute("data-lang")==="en"?"en":"hu";
+const T=(hu,en)=>L()==="en"?en:hu;
+const num=(x,d)=>{const s=x.toFixed(d);return L()==="en"?s:s.replace(".",",");};
+const ex=x=>x<1e-9?"< 10⁻⁹":x.toExponential(1);
+const s3=Math.sqrt(3),PHI=(1+Math.sqrt(5))/2,DEG=Math.PI/180;
+const S={tab:"2d",arms:8,levels:7,show:{spiral:true,golden:false,hex:false},solid:"dodeca",explode:0,frame:true,one:false,spin:true};
+
+/* ---------- 2D: the golden arm = the nest formula with n = 7.5 (β = 36°, k = 1/φ) ---------- */
+const N=7.5,BETA=Math.PI/3-Math.PI/N,K=1/(2*Math.cos(BETA));
+const P=(m,j)=>{const a=m*Math.PI/N+2*Math.PI*j/N,r=Math.pow(K,m);return [r*Math.cos(a),r*Math.sin(a)];};
+const dd=(p,q)=>Math.hypot(p[0]-q[0],p[1]-q[1]);
+const F2={};
+(function(){F2.k=K;F2.kErr=Math.abs(K-1/PHI);F2.beta=BETA/DEG;
+  // triangle check on arm 0, levels 0..6: isosceles legs equal, base/leg = φ, equilateral sides equal
+  let e=0,g=0;for(let m=0;m<7;m++){const a=P(m,0),b=P(m,1),c=P(m+1,0),d=P(m+1,1);
+    e=Math.max(e,Math.abs(dd(a,c)/dd(b,c)-1),Math.abs(dd(b,c)/dd(c,d)-1),Math.abs(dd(b,d)/dd(c,d)-1));g=Math.max(g,Math.abs(dd(a,b)/dd(a,c)/PHI-1));}
+  F2.triErr=e;F2.gnErr=g;F2.turn=Math.pow(PHI,15);F2.goldTurn=Math.pow(PHI,4);F2.hexTurn=Math.pow(s3,12);})();
+const svg=$("#svg2d"),pt=p=>`${p[0].toFixed(5)},${(-p[1]).toFixed(5)}`;
+function draw2D(){let s="";const M=S.levels;
+  for(let j=0;j<S.arms;j++){const second=j>=8,over=j===7;
+    for(let m=0;m<M;m++){const iso=[P(m,j),P(m,j+1),P(m+1,j)],eq=[P(m,j+1),P(m+1,j),P(m+1,j+1)];
+      const fi=second?"#c4b5fd":over?"#fca5a5":"#f3dc9a",fe=second?"#8b5cf6":over?"#ef4444":"#d9a441",st=second?"#5b21b6":over?"#b91c1c":"#8a6a1e";
+      s+=`<polygon points="${iso.map(pt).join(" ")}" fill="${fi}" fill-opacity="${second?.45:.85}" stroke="${st}" stroke-width="0.004"/>`;
+      s+=`<polygon points="${eq.map(pt).join(" ")}" fill="${fe}" fill-opacity="${second?.4:.8}" stroke="${st}" stroke-width="0.004"/>`;}}
+  const spiral=(f,col,dash)=>{let d="";for(let i=0;i<=720;i++){const t=i*DEG,r=f(t);if(r<.004)break;d+=(i?"L":"M")+pt([r*Math.cos(t),r*Math.sin(t)]);}
+    s+=`<path d="${d}" fill="none" stroke="${col}" stroke-width="0.008" ${dash?`stroke-dasharray="${dash}"`:""}/>`;};
+  if(S.show.spiral){spiral(t=>Math.pow(PHI,-t/(24*DEG)),"#0f172a");for(let m=0;m<=M;m++)s+=`<circle cx="${P(m,0)[0].toFixed(5)}" cy="${(-P(m,0)[1]).toFixed(5)}" r="0.012" fill="#0f172a"/>`;}
+  if(S.show.golden)spiral(t=>Math.pow(PHI,-t/(90*DEG)),"#16a34a","0.03 0.015");
+  if(S.show.hex)spiral(t=>Math.pow(s3,-t/(30*DEG)),"#0e7490","0.012 0.012");
+  svg.innerHTML=s;
+  const cover=Math.min(S.arms,15)*48;
+  let r=T(`<b>Arany spidron-kar:</b> β = ${num(F2.beta,4)}°, k = 1/(2·cos β) = ${num(F2.k,6)} = 1/φ (eltérés ${ex(F2.kErr)}). A szárú háromszög arany gnómon: alapja és szára φ arányú (eltérés ${ex(F2.gnErr)}); a háromszögek mérete pontos (${ex(F2.triErr)}). Egy kar 48°-ot fed le, szintenként 24°-ot fordul.`,
+    `<b>Golden spidron arm:</b> β = ${num(F2.beta,4)}°, k = 1/(2·cos β) = ${num(F2.k,6)} = 1/φ (deviation ${ex(F2.kErr)}). The isosceles triangle is a golden gnomon: base to leg is φ (deviation ${ex(F2.gnErr)}); triangle sizes are exact (${ex(F2.triErr)}). One arm covers 48° and turns 24° per level.`);
+  r+="<br>"+T(`<b>${S.arms} kar = ${cover}°.</b> `,`<b>${S.arms} arms = ${cover}°.</b> `)+(S.arms<7?T("Még nincs körbe.","Not yet round."):S.arms===7?T("7 kar 336°: 24° rés marad, és fél kar nem tölti ki, mert a fél kar nem spidron-kar.","7 arms make 336°: a 24° gap remains, and half an arm cannot fill it, because half an arm is not a spidron arm."):S.arms<15?T("A 8. kar már átfedi az elsőt (piros): síkban nincs zárt arany fészek.","The 8th arm already overlaps the first (red): there is no closed golden nest in the plane."):T("15 kar pontosan 720° után zárul: két fordulat, mint egy kétrétegű, csavart felület. Síkban ez nem fér el.","15 arms close up exactly after 720°: two turns, like a two-sheeted, twisted surface. It does not fit in the plane."));
+  r+="<br>"+T(`Egy teljes fordulat alatt a csúcsspirál φ¹⁵ ≈ ${num(F2.turn,0)}-szorosára zsugorodik; az aranyspirál φ⁴ ≈ ${num(F2.goldTurn,2)}-szorosára, a hatszögű spidroné √3¹² = ${num(F2.hexTurn,0)}-szorosára. Mind logaritmikus spirál, de csak az aranyspirál az aranyspirál.`,
+    `In one full turn the vertex spiral shrinks by φ¹⁵ ≈ ${num(F2.turn,0)}; the golden spiral by φ⁴ ≈ ${num(F2.goldTurn,2)}, the hexagonal spidron's by √3¹² = ${num(F2.hexTurn,0)}. All are logarithmic spirals, but only the golden spiral is the golden spiral.`);
+  $("#read2d").innerHTML=r;}
+
+/* ---------- 3D: rigid hexagonal nests at the vertices of solids with three faces per vertex ---------- */
+function chainStep(Rr,a){const r=Rr/s3;if(Math.abs(a)<1e-12)return[0,Math.PI/6];const rho=Math.sqrt(Rr*Rr-4*a*a);
+  const F=x=>{const rp=Math.sqrt(r*r-4*x*x),d=Math.PI/6+Math.asin(Math.max(-1,Math.min(1,2*a*x/(rho*rp))));return[rho*rho+rp*rp-2*rho*rp*Math.cos(d)+(a-x)*(a-x)-r*r,d];};
+  let x0=-a/s3*.8,x1=-a/s3,f0=F(x0)[0],f1=F(x1)[0];for(let i=0;i<80&&Math.abs(f1)>1e-15&&f1!==f0;i++){const x2=x1-f1*(x1-x0)/(f1-f0);x0=x1;f0=f1;x1=x2;f1=F(x1)[0];}return[x1,F(x1)[1]];}
+function solidVerts(name){const C=[];for(const x of[-1,1])for(const y of[-1,1])for(const z of[-1,1])C.push([x,y,z]);
+  if(name==="tetra")return [[1,1,1],[1,-1,-1],[-1,1,-1],[-1,-1,1]];
+  if(name==="cube")return C;
+  const D=C.slice();for(const a of[-1,1])for(const b of[-1,1])D.push([0,a/PHI,b*PHI],[a/PHI,b*PHI,0],[b*PHI,0,a/PHI]);return D;}
+const V3=a=>new THREE.Vector3(...a);
+function analyse(name){const V=solidVerts(name).map(V3);let emin=1e9;V.forEach((a,i)=>V.forEach((b,j)=>{if(j>i)emin=Math.min(emin,a.distanceTo(b));}));
+  const E=[];V.forEach((a,i)=>V.forEach((b,j)=>{if(j>i&&Math.abs(a.distanceTo(b)-emin)<1e-9)E.push([i,j]);}));
+  // faces: planes through three mutually adjacent-in-face vertices with all others on one side
+  const faces=[],seen=new Set();
+  V.forEach((v,i)=>{const nb=E.filter(e=>e.includes(i)).map(e=>e[0]===i?e[1]:e[0]);
+    for(let p=0;p<nb.length;p++)for(let q=p+1;q<nb.length;q++){const n=new THREE.Vector3().crossVectors(V[nb[p]].clone().sub(v),V[nb[q]].clone().sub(v));
+      const sd=V.map(w=>w.clone().sub(v).dot(n)).filter(x=>Math.abs(x)>1e-9);if(!(sd.every(x=>x>0)||sd.every(x=>x<0)))continue;
+      const on=V.map((w,k)=>Math.abs(w.clone().sub(v).dot(n))<1e-9?k:-1).filter(k=>k>=0).sort((a,b)=>a-b),key=on.join(",");if(!seen.has(key)){seen.add(key);faces.push(on);}}});
+  const fc=faces.map(f=>f.reduce((s,k)=>s.add(V[k]),new THREE.Vector3()).multiplyScalar(1/f.length));
+  // angles from a vertex axis to its edge axis and face axis
+  const v=V[0],nb=E.filter(e=>e.includes(0)).map(e=>e[0]===0?e[1]:e[0]),em=V[0].clone().add(V[nb[0]]).multiplyScalar(.5),f0=fc[faces.findIndex(f=>f.includes(0))];
+  const te=v.angleTo(em),tf=v.angleTo(f0);
+  // rim: edge point at the edge midpoint (radius r = |em|·sin te), face point on the face axis at the same radius
+  const r=em.length()*Math.sin(te),he=em.length()*Math.cos(te),tF=r/Math.sin(tf),hf=tF*Math.cos(tf),a=(he-hf)/2,side=Math.sqrt(r*r+4*a*a);
+  return {V,E,faces,fc,te,tf,r,he,hf,a,side,relief:a/side,tF,em:em.length(),circ:v.length()};}
+const SOL={};["tetra","cube","dodeca"].forEach(k=>{SOL[k]=analyse(k);});
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(34,1,.1,100),cv=$("#gl");
+const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));
+scene.add(new THREE.HemisphereLight(0xffffff,0x9a8f7a,.8));const dl=new THREE.DirectionalLight(0xffffff,.75);dl.position.set(3,5,6);scene.add(dl);
+const root=new THREE.Group();scene.add(root);let nests=[],frameLines=null;
+function build(name){const A=SOL[name];while(root.children.length)root.remove(root.children[0]);nests=[];
+  const scale=2/A.circ,Rr0=A.side*scale;let Rr=Rr0,a=A.relief*Rr0,th=0;const LV=[];
+  for(let j=0;j<=14;j++){LV.push({a,th,rho:Math.sqrt(Math.max(Rr*Rr-4*a*a,0))});const st=chainStep(Rr,a);a=st[0];th+=st[1]-Math.PI/6;Rr/=s3;}
+  const vp=(n,k)=>{const Lv=LV[n],g=(60-30*n-60*k)*DEG-Lv.th;return [Lv.rho*Math.cos(g),Lv.rho*Math.sin(g),(((k%6)+6)%2?-1:1)*Lv.a];};
+  const d3=(p,q)=>Math.hypot(p[0]-q[0],p[1]-q[1],p[2]-q[2]);
+  let err=0,fit=0,shared=0;
+  for(let n=0;n<9;n++)for(let k=0;k<6;k++){const side=Rr0*Math.pow(s3,-n),leg=side/s3,i=[vp(n,k),vp(n,k+1),vp(n+1,k)],e=[vp(n,k+1),vp(n+1,k),vp(n+1,k+1)];
+    [[i[0],i[1],side],[i[1],i[2],leg],[i[2],i[0],leg],[e[0],e[1],leg],[e[1],e[2],leg],[e[2],e[0],leg]].forEach(([p,q,w])=>{err=Math.max(err,Math.abs(d3(p,q)/w-1));});}
+  const mat=new THREE.MeshStandardMaterial({vertexColors:true,side:THREE.DoubleSide,flatShading:true,roughness:.5,metalness:.05});
+  const rims=[];
+  A.V.forEach((v0,vi)=>{const v=v0.clone().multiplyScalar(scale),nrm=v.clone().normalize();
+    const nb=A.E.filter(e=>e.includes(vi)).map(e=>e[0]===vi?e[1]:e[0]),fIdx=A.faces.map((f,i)=>f.includes(vi)?i:-1).filter(i=>i>=0);
+    const targets=nb.map(w=>v0.clone().add(A.V[w]).multiplyScalar(.5*scale)).concat(fIdx.map(i=>A.fc[i].clone().normalize().multiplyScalar(A.tF*scale)));
+    const f0=targets[nb.length],e1=f0.clone().sub(nrm.clone().multiplyScalar(f0.dot(nrm))).normalize(),hc=nrm.clone().multiplyScalar((A.he+A.hf)/2*scale);
+    let best=null;for(const sg of[1,-1]){const e2=new THREE.Vector3().crossVectors(nrm,e1).multiplyScalar(sg);
+      const W=p=>hc.clone().addScaledVector(e1,p[0]).addScaledVector(e2,p[1]).addScaledVector(nrm,p[2]);
+      let f=0;for(let k=0;k<6;k++){const w=W(vp(0,k));f=Math.max(f,Math.min(...targets.map(q=>q.distanceTo(w))));}if(!best||f<best.f)best={f,W};}
+    fit=Math.max(fit,best.f/(A.side*scale));const W=best.W;rims.push([0,1,2,3,4,5].map(k=>W(vp(0,k))));
+    const base=new THREE.Color(.5+.5*nrm.x,.5+.5*nrm.y,.5+.5*nrm.z).lerp(new THREE.Color(0xffffff),.15),dark=base.clone().lerp(new THREE.Color(0),.22);
+    const pos=[],col=[];
+    for(let n=0;n<13;n++)for(let k=0;k<6;k++){[[[vp(n,k),vp(n,k+1),vp(n+1,k)],base],[[vp(n,k+1),vp(n+1,k),vp(n+1,k+1)],dark]].forEach(([tr,c])=>tr.forEach(p=>{const w=W(p);pos.push(w.x,w.y,w.z);col.push(c.r,c.g,c.b);}));}
+    for(let k=0;k<6;k++)[[0,0,0],vp(13,k),vp(13,k+1)].forEach(p=>{const w=W(p);pos.push(w.x,w.y,w.z);col.push(dark.r,dark.g,dark.b);});
+    const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));g.setAttribute("color",new THREE.Float32BufferAttribute(col,3));g.computeVertexNormals();
+    const m=new THREE.Mesh(g,mat);m.userData.dir=nrm;root.add(m);nests.push(m);});
+  // every rim edge must be shared by exactly two nests (closed surface without gaps)
+  const keyOf=p=>p.toArray().map(x=>Math.round(x*1e6)).join(","),edges=new Map();
+  rims.forEach(rm=>rm.forEach((p,k)=>{const q=rm[(k+1)%6],kk=[keyOf(p),keyOf(q)].sort().join("|");edges.set(kk,(edges.get(kk)||0)+1);}));
+  shared=[...edges.values()].every(x=>x===2);
+  const lp=[];A.E.forEach(([i,j])=>{lp.push(...A.V[i].clone().multiplyScalar(scale).toArray(),...A.V[j].clone().multiplyScalar(scale).toArray());});
+  const lg=new THREE.BufferGeometry();lg.setAttribute("position",new THREE.Float32BufferAttribute(lp,3));
+  frameLines=new THREE.LineSegments(lg,new THREE.LineBasicMaterial({color:0x6b7280,transparent:true,opacity:.6}));frameLines.visible=S.frame;root.add(frameLines);
+  A.err=err;A.fit=fit;A.closed=shared;A.rimEdges=edges.size;highlight();}
+function highlight(){nests.forEach((m,i)=>{m.material=m.material.clone();m.material.transparent=S.one&&i>0;m.material.opacity=S.one&&i>0?.18:1;});}
+const CLOSED={tetra:"1/6",cube:"1/(2√3)",dodeca:"1/(2√(21 − 12φ))"};
+function read3d(){const A=SOL[S.solid],nm={tetra:T("tetraéder","tetrahedron"),cube:T("kocka","cube"),dodeca:T("dodekaéder","dodecahedron")}[S.solid];
+  $("#read3d").innerHTML=T(`<b>${A.V.length} merev hatszögű fészek a ${nm} csúcsainál.</b> Hajtásmélység a/oldal = <b>${CLOSED[S.solid]}</b> = ${num(A.relief,6)}. A fészkek pereme a test élfelezőin és lapjainak tengelyén fut (eltérés ${ex(A.fit)}); a háromszögek élhossz-eltérése ${ex(A.err)}; a ${A.rimEdges} peremél mindegyikén pontosan két fészek osztozik: <b>${A.closed?"zárt felület, hézag nélkül":"nem zárt"}</b>.`,
+    `<b>${A.V.length} rigid hexagonal nests at the vertices of the ${nm}.</b> Fold depth a/side = <b>${CLOSED[S.solid]}</b> = ${num(A.relief,6)}. The nests' rims run through the solid's edge midpoints and along its face axes (deviation ${ex(A.fit)}); triangle edge-length change ${ex(A.err)}; each of the ${A.rimEdges} rim edges is shared by exactly two nests: <b>${A.closed?"a closed surface without gaps":"not closed"}</b>.`);
+  let rows=`<tr><th>${T("Test","Solid")}</th><th>${T("Fészek","Nests")}</th><th>tan θ<sub>${T("él","edge")}</sub></th><th>tan θ<sub>${T("lap","face")}</sub> / tan θ<sub>${T("él","edge")}</sub></th><th>a/${T("oldal","side")}</th><th>1/(2√(1+4tan²θ))</th></tr>`;
+  ["tetra","cube","dodeca"].forEach(k=>{const B=SOL[k],t=Math.tan(B.te);rows+=`<tr${k===S.solid?' style="background:#f8fafc"':""}><td>${{tetra:T("tetraéder","tetrahedron"),cube:T("kocka","cube"),dodeca:T("dodekaéder","dodecahedron")}[k]}</td><td class="m">${B.V.length}</td><td class="m">${num(t,6)}${k==="dodeca"?" = 1/φ²":k==="cube"?" = 1/√2":" = √2"}</td><td class="m">${num(Math.tan(B.tf)/t,6)}</td><td class="m">${num(B.relief,6)}</td><td class="m">${num(1/(2*Math.sqrt(1+4*t*t)),6)}</td></tr>`;});
+  $("#stab").innerHTML=rows;}
+let th=.6,ph=1.1,rad=8,drag=null,camT=null;
+function resize(){const r=cv.getBoundingClientRect();if(!r.width)return;renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.updateProjectionMatrix();}
+new ResizeObserver(resize).observe(cv);
+cv.addEventListener("pointerdown",e=>{drag={x:e.clientX,y:e.clientY};cv.setPointerCapture(e.pointerId);cv.style.cursor="grabbing";});
+cv.addEventListener("pointermove",e=>{if(!drag)return;th-=(e.clientX-drag.x)*.008;ph=Math.max(.05,Math.min(Math.PI-.05,ph-(e.clientY-drag.y)*.008));drag.x=e.clientX;drag.y=e.clientY;});
+cv.addEventListener("pointerup",()=>{drag=null;cv.style.cursor="grab";});
+cv.addEventListener("wheel",e=>{e.preventDefault();rad=Math.max(4,Math.min(16,rad*(1+Math.sign(e.deltaY)*.08)));},{passive:false});
+function loop(){requestAnimationFrame(loop);if(S.tab!=="3d")return;if(S.spin&&!drag)th+=.003;
+  const Rr=rad*Math.max(1,1/camera.aspect);camera.position.set(Rr*Math.sin(ph)*Math.sin(th),Rr*Math.cos(ph),Rr*Math.sin(ph)*Math.cos(th));camera.lookAt(0,0,0);
+  nests.forEach(m=>m.position.copy(m.userData.dir).multiplyScalar(S.explode*1.4));renderer.render(scene,camera);}
+
+/* ---------- side panel ---------- */
+function drawSide(){const li=(tag,cls,hu,en)=>`<li><span class="tag ${cls}">${tag}</span>${T(hu,en)}</li>`,D=SOL.dodeca,k5=1/(2*Math.cos(Math.PI/3-Math.PI/5));
+  $("#truths").innerHTML=[
+    li(T("NEM TARTHATÓ","DOES NOT HOLD"),"no",`<b>„A spidron spirálja aranyspirál.”</b> Egy fordulat alatt az aranyspirál φ⁴ ≈ ${num(F2.goldTurn,2)}-szeresére nő, a hatszögű spidroné √3¹² = ${num(F2.hexTurn,0)}-szorosára. Mindkettő logaritmikus spirál, de nem ugyanaz.`,
+      `<b>“The spidron spiral is a golden spiral.”</b> In one turn the golden spiral grows by φ⁴ ≈ ${num(F2.goldTurn,2)}, the hexagonal spidron's by √3¹² = ${num(F2.hexTurn,0)}. Both are logarithmic spirals, but not the same one.`),
+    li(T("IGAZ","TRUE"),"ok",`<b>A klasszikus spidronban nincs φ.</b> A hatszögű spidron aránya 1/√3, az ötszögűé ${num(k5,4)}; egyik sem aranymetszés. (Az ötszögű fészek peremén a csúcsok távolsága φ arányú, de ez minden szabályos ötszögre igaz.)`,
+      `<b>The classic spidron contains no φ.</b> The hexagonal spidron's ratio is 1/√3, the pentagonal one's ${num(k5,4)}; neither is the golden ratio. (On the rim of a pentagonal nest the vertex distances are in the ratio φ, but that holds for every regular pentagon.)`),
+    li(T("ÚJ","NEW"),"new",`<b>Arany spidron-kar.</b> Ha a szárú háromszög alapszöge 36°, akkor arany gnómon (36°–108°–36°), és a kar szintenként pontosan 1/φ arányban zsugorodik. Ez a kar létezik, de síkban nem zárul fészekké: 7,5 kar kellene. 15 kar csak két teljes fordulat, 720° után zárul.`,
+      `<b>A golden spidron arm.</b> If the isosceles triangle's base angle is 36°, it is a golden gnomon (36°–108°–36°), and the arm shrinks by exactly 1/φ per level. This arm exists, but does not close into a flat nest: it would need 7.5 arms. 15 arms close up only after two full turns, 720°.`),
+    li(T("ÚJ","NEW"),"new",`<b>Spidron-dodekaéder: φ a hajtás mélységében.</b> A dodekaéder 20 csúcsánál 20 merev hatszögű fészek hézag nélkül zárt testté áll össze, hajtásmélységük a/oldal = 1/(2√(21 − 12φ)) ≈ ${num(D.relief,4)}. Az általános szabály a háromlapú csúcsokra: a/oldal = 1/(2√(1 + 4·tan²θ)), ahol θ a csúcs tengelye és az élfelező iránya közti szög. Tetraéder: 1/6, kocka: 1/(2√3), dodekaéder: tan θ = 1/φ², ezért itt jelenik meg φ.`,
+      `<b>Spidron dodecahedron: φ in the depth of the fold.</b> At the 20 vertices of the dodecahedron, 20 rigid hexagonal nests close up into a solid without gaps, with fold depth a/side = 1/(2√(21 − 12φ)) ≈ ${num(D.relief,4)}. The general law for vertices with three faces: a/side = 1/(2√(1 + 4·tan²θ)), where θ is the angle between the vertex axis and the edge-midpoint direction. Tetrahedron: 1/6, cube: 1/(2√3), dodecahedron: tan θ = 1/φ², which is where φ comes in.`),
+    li(T("PONTOSÍTANDÓ","REFINE"),"fix",`<b>Ikozaéder ötszögű fészkekkel.</b> Ezt korábban javasoltuk, de így nem működik: páratlan karszámnál (5) a fel-le váltakozó hajtás körbeérve nem zárul, és az ikozaéder csúcsánál 5 lap találkozik, így a csúcs körüli perem tízszög. Ehhez 10 karú merev fészek kellene, ezt nem számoltuk ki.`,
+      `<b>Icosahedron with pentagonal nests.</b> We suggested this earlier, but it does not work that way: with an odd number of arms (5) the up-and-down alternating fold does not close around, and at an icosahedron vertex 5 faces meet, so the rim around the vertex is a decagon. That would need a 10-arm rigid nest, which we have not computed.`),
+    li(T("PONTOSÍTANDÓ","REFINE"),"fix",`<b>Penrose–Robinson-háromszögek.</b> Az arany háromszög (36°–72°–72°) és az arany gnómon is önhasonló, φ arányú spirált ad, de egyenlő oldalú háromszög nélkül. Rokon szerkezet, definíció szerint nem spidron.`,
+      `<b>Penrose–Robinson triangles.</b> The golden triangle (36°–72°–72°) and the golden gnomon also give a self-similar spiral with ratio φ, but without equilateral triangles. A related structure, by definition not a spidron.`)
+  ].join("");}
+
+/* ---------- controls ---------- */
+document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{S.tab=b.dataset.tab;document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("on",x===b));
+  $("#pane3d").hidden=S.tab!=="3d";$("#pane2d").hidden=S.tab!=="2d";if(S.tab==="3d"){resize();read3d();}else draw2D();}));
+document.querySelectorAll("[data-show]").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.show;S.show[k]=!S.show[k];b.classList.toggle("on",S.show[k]);draw2D();}));
+$("#arms").addEventListener("input",e=>{S.arms=+e.target.value;$("#armsN").textContent=S.arms;draw2D();});
+$("#levels").addEventListener("input",e=>{S.levels=+e.target.value;draw2D();});
+document.querySelectorAll("[data-solid]").forEach(b=>b.addEventListener("click",()=>{S.solid=b.dataset.solid;document.querySelectorAll("[data-solid]").forEach(x=>x.classList.toggle("on",x===b));build(S.solid);read3d();}));
+$("#explode").addEventListener("input",e=>{S.explode=e.target.value/100;});
+const tog=(id,k,f)=>$(id).addEventListener("click",()=>{S[k]=!S[k];$(id).classList.toggle("on",S[k]);if(f)f();});
+tog("#frame","frame",()=>{if(frameLines)frameLines.visible=S.frame;});tog("#one","one",highlight);tog("#spin","spin");
+function applyLang(){const l=L();document.querySelectorAll(".langsw button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.l===l)));draw2D();drawSide();read3d();}
+document.querySelectorAll(".langsw button").forEach(b=>b.addEventListener("click",()=>{const l=b.dataset.l;try{localStorage.setItem("sjk-lang",l)}catch(e){}
+  document.documentElement.setAttribute("data-lang",l);document.documentElement.lang=l;applyLang();window.dispatchEvent(new CustomEvent("sjk:lang",{detail:l}));}));
+build(S.solid);applyLang();requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
