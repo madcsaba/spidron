@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Élet fája és spidron / Tree of Life and Spidron</title>
+<meta name="description" content="A kabbalisztikus Élet fája és a hatszögű spidron közös geometriája: rács, úthosszak, háromszögtípusok, spidron-fészek Tiferet körül és merev 3D hajtás. / The shared geometry of the kabbalistic Tree of Life and the hexagonal spidron: lattice, path lengths, triangle types, a spidron nest around Tiferet and a rigid 3D fold.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Élet fája és spidron / Tree of Life and Spidron">
+<meta property="og:description" content="Mérve, nem állítva: mi közös az Élet fájában és a spidronban. / Measured, not claimed: what the Tree of Life and the spidron share.">
+<meta property="og:url" content="https://madcsaba.github.io/spidron/elet-faja.html">
+<script>
+(function(){var l;try{l=localStorage.getItem("sjk-lang")}catch(e){}
+if(l!=="hu"&&l!=="en")l=(navigator.language||"").toLowerCase().indexOf("hu")===0?"hu":"en";
+document.documentElement.setAttribute("data-lang",l);document.documentElement.lang=l;})();
+</script>
+<script src="vendor/three.min.js"></script>
+<style>
+  :root{--bg:#f6f7f9;--panel:#fff;--line:#e3e6ea;--ink:#1a1d21;--dim:#6b7280;--acc:#2563eb;--green:#16a34a;--gold:#c8901a;--red:#dc2626;--amber:#b45309;
+    --display:ui-sans-serif,system-ui,"Segoe UI",Helvetica,Arial;--serif:Georgia,'Times New Roman',serif}
+  html[data-lang="hu"] .en{display:none}
+  html[data-lang="en"] .hu{display:none}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--display)}
+  .wrap{max-width:1320px;margin:0 auto;padding:22px 18px 56px}
+  .kicker{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);font-weight:700}
+  h1{font:600 30px/1.2 var(--serif);margin:6px 0}
+  h2{font:600 20px/1.3 var(--serif);margin:0 0 8px}
+  h3{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin:16px 0 6px}
+  .lead{color:var(--dim);max-width:920px;margin:0 0 14px}
+  .grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:16px;align-items:start}
+  @media (max-width:1000px){.grid{grid-template-columns:minmax(0,1fr)}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
+  .bar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:0 0 10px}
+  .bar .lbl{font-size:12.5px;color:var(--dim)}
+  .bar label{font-size:13px;color:var(--dim);display:flex;align-items:center;gap:6px}
+  input[type=range]{width:110px}
+  button.t{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font:13px var(--display);cursor:pointer;color:var(--ink);min-height:34px}
+  button.t:hover{border-color:#c5cad1}
+  button.t.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+  .tabs{display:flex;gap:6px;margin-bottom:12px;border-bottom:1px solid var(--line);padding-bottom:10px}
+  .stage{position:relative;border-radius:12px;overflow:hidden;background:radial-gradient(ellipse at 50% 42%,#fffdf6 0%,#ece8de 100%);border:1px solid var(--line)}
+  #gl{display:block;width:100%;height:min(70vh,620px);touch-action:none;cursor:grab}
+  #svg2d{display:block;width:100%;height:auto;max-height:min(70vh,620px);background:#fffdf6;border-radius:12px;border:1px solid var(--line)}
+  .hint{position:absolute;left:10px;bottom:8px;font-size:12px;color:var(--dim);pointer-events:none;background:rgba(255,255,255,.85);padding:2px 6px;border-radius:6px}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--dim);margin-top:8px}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:5px;vertical-align:-2px}
+  .readout{font-size:14px;margin-top:8px;padding:8px 10px;background:#f8fafc;border:1px solid var(--line);border-radius:10px}
+  .readout b{font-family:var(--serif)}
+  .truths{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+  .truths li{border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13.5px}
+  .tag{display:inline-block;font-size:11.5px;font-weight:700;padding:1px 7px;border-radius:5px;margin-right:6px;letter-spacing:.02em}
+  .ok{background:#dcfce7;color:#166534}.fix{background:#fef3c7;color:#92400e}.no{background:#fee2e2;color:#991b1b}.new{background:#dbeafe;color:#1e40af}
+  table{border-collapse:collapse;width:100%;font-size:13px;min-width:460px}
+  th,td{border-bottom:1px solid var(--line);padding:6px 6px;text-align:left;vertical-align:top}
+  th{color:var(--dim);font-weight:600;font-size:12px}
+  td.m{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px}
+  .small{font-size:12.5px;color:var(--dim)}
+  a{color:var(--acc)}
+  .langsw{position:fixed;top:10px;right:12px;z-index:50;display:flex;background:#fff;border:1px solid #e3e6ea;border-radius:999px;padding:3px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+  .langsw button{border:0;background:none;font:600 13px var(--display);color:#6b7280;padding:5px 11px;border-radius:999px;cursor:pointer;min-height:32px}
+  .langsw button[aria-pressed="true"]{background:#1a1d21;color:#fff}
+  [hidden]{display:none!important}
+  #lbls{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+  .names{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:4px 12px;font-size:13px;margin:0;padding:0;list-style:none}
+  .names b{font-family:var(--serif)}
+  .note{border-left:3px solid var(--amber);background:#fffbeb;padding:8px 12px;border-radius:0 10px 10px 0;font-size:13.5px;margin:12px 0 0}
+  .lbl3d{position:absolute;transform:translate(-50%,-140%);font:600 11.5px var(--display);color:#3f2d06;background:rgba(255,253,246,.85);padding:0 4px;border-radius:4px;pointer-events:none;white-space:nowrap}
+  .scroll{overflow-x:auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker"><span class="hu">Geometria · ellenőrzés</span><span class="en">Geometry · fact check</span></div>
+  <h1><span class="hu">Élet fája és spidron</span><span class="en">Tree of Life and Spidron</span></h1>
+  <p class="lead"><span class="hu">A kabbalisztikus Élet fája elterjedt háromoszlopos rajza egy szabályos háromszögrács pontjain áll. Ezen a rácson a hatszögű spidron is otthon van. Itt megmérjük, mi közös bennük: az utak hossza, a háromszögek alakja, és egy spidron-fészek Tiferet körül. A merev hajtás a fát a saját geometriájából emeli ki a síkból.</span><span class="en">The widespread three-pillar drawing of the kabbalistic Tree of Life stands on the points of a regular triangular lattice. The hexagonal spidron lives on that same lattice. Here we measure what they share: the lengths of the paths, the shapes of the triangles, and a spidron nest around Tiferet. A rigid fold lifts the tree out of the plane using only its own geometry.</span> <a href="index.html"><span class="hu">← nyitóoldal</span><span class="en">← home</span></a></p>
+
+  <div class="grid">
+    <section class="card">
+      <div class="tabs" role="tablist">
+        <button class="t on" data-tab="2d" role="tab"><span class="hu">2D rajz és mérés</span><span class="en">2D drawing and measurement</span></button>
+        <button class="t" data-tab="3d" role="tab"><span class="hu">3D merev hajtás</span><span class="en">3D rigid fold</span></button>
+      </div>
+
+      <div id="pane2d">
+        <div class="bar">
+          <button class="t on" data-show="lattice"><span class="hu">Rács</span><span class="en">Lattice</span></button>
+          <button class="t on" data-show="paths"><span class="hu">22 út (hossz szerint)</span><span class="en">22 paths (by length)</span></button>
+          <button class="t" data-show="tris"><span class="hu">Háromszögek típus szerint</span><span class="en">Triangles by type</span></button>
+          <button class="t on" data-show="nest"><span class="hu">Spidron-fészek Tiferet körül</span><span class="en">Spidron nest around Tiferet</span></button>
+          <button class="t on" data-show="daat">Da'at</button>
+          <button class="t" data-show="cross"><span class="hu">Metszések</span><span class="en">Crossings</span></button>
+        </div>
+        <svg id="svg2d" viewBox="-3.1 -2.55 6.2 5.1" role="img" aria-label="Élet fája / Tree of Life"></svg>
+        <div class="legend">
+          <span><i style="background:#c8901a"></i><span class="hu">út, hossza 1</span><span class="en">path of length 1</span></span>
+          <span><i style="background:#0e7490"></i><span class="hu">út, hossza √3</span><span class="en">path of length √3</span></span>
+          <span><i style="background:#7c3aed"></i><span class="hu">út, hossza 2</span><span class="en">path of length 2</span></span>
+          <span><i style="background:#4b6fa8"></i><span class="hu">spidron-fészek</span><span class="en">spidron nest</span></span>
+          <span><i style="background:#16a34a"></i><span class="hu">út, amely egyben spidron-él</span><span class="en">path that is also a spidron edge</span></span>
+        </div>
+        <div class="readout" id="read2d"></div>
+      </div>
+
+      <div id="pane3d" hidden>
+        <div class="bar">
+          <label><span class="hu">Hajtásmélység</span><span class="en">Fold depth</span> <input type="range" id="fold" min="0" max="100" value="60"></label>
+          <button class="t on" id="breathe"><span class="hu">⇅ Lélegzés</span><span class="en">⇅ Breathe</span></button>
+          <button class="t on" id="mesh"><span class="hu">△ Spidron-felület</span><span class="en">△ Spidron surface</span></button>
+          <button class="t on" id="labels"><span class="hu">Nevek</span><span class="en">Names</span></button>
+          <button class="t on" id="spin"><span class="hu">⟳ Forgás</span><span class="en">⟳ Spin</span></button>
+          <button class="t" data-view="front"><span class="hu">Elölnézet</span><span class="en">Front view</span></button>
+          <button class="t" data-view="side"><span class="hu">Oldalnézet</span><span class="en">Side view</span></button>
+        </div>
+        <div class="stage" id="stage"><canvas id="gl"></canvas><div id="lbls"></div><div class="hint"><span class="hu">Húzd: forgatás · görgő: nagyítás</span><span class="en">Drag: rotate · wheel: zoom</span></div></div>
+        <div class="legend">
+          <span><i style="background:#e0a82e"></i><span class="hu">szefira</span><span class="en">sefirah</span></span>
+          <span><i style="background:#16a34a"></i><span class="hu">út, amely spidron-él: hossza a hajtásban sem változik</span><span class="en">path that is a spidron edge: its length never changes in the fold</span></span>
+          <span><i style="background:#9ca3af"></i><span class="hu">többi út: a hossza változik</span><span class="en">other paths: their length changes</span></span>
+          <span><i style="background:#7aa7e0"></i><span class="hu">a Tiferet körüli merev spidron-fészek</span><span class="en">the rigid spidron nest around Tiferet</span></span>
+        </div>
+        <div class="readout" id="read3d"></div>
+        <div class="scroll"><table id="ptab"></table></div>
+      </div>
+    </section>
+
+    <aside class="card">
+      <h2><span class="hu">Mi igaz és mi nem</span><span class="en">What holds and what does not</span></h2>
+      <ul class="truths" id="truths"></ul>
+      <h3><span class="hu">A tíz szefira</span><span class="en">The ten sefirot</span></h3>
+      <ul class="names" id="names"></ul>
+      <p class="note"><span class="hu"><b>Fontos:</b> ez geometriai megfeleltetés, nem kabbalisztikus tanítás. A szefirák jelentése nem vezethető le a spidronból. A mérések a ma elterjedt, 22 utas, körökből szerkesztett arányú rajzra vonatkoznak; a luriánus (Ari) és a Gra-féle fa útjai mások, azokra külön kell számolni. Egyes hagyományok Keter helyett Da'atot számítják a tíz közé.</span><span class="en"><b>Note:</b> this is a geometric correspondence, not kabbalistic teaching. The meaning of the sefirot cannot be derived from the spidron. The measurements refer to today's widespread 22-path drawing with proportions built from circles; the Lurianic (Ari) and Gra trees have different paths and need their own calculation. Some traditions count Da'at among the ten instead of Keter.</span></p>
+      <p class="small"><span class="hu">Források: a szefirák nevei és jelentése a Chabad.org ismertetői alapján; a 22 utas elrendezés Athanasius Kircher <i>Oedipus Aegyptiacus</i> (1652) rajzára megy vissza; a spidron Erdély Dániel alkotása (Bridges-konferenciák anyagai). A merev hajtás megoldója a <a href="kodonfeszek/">Kodonfészek</a> oldalé.</span><span class="en">Sources: names and meanings of the sefirot after Chabad.org; the 22-path layout goes back to Athanasius Kircher's <i>Oedipus Aegyptiacus</i> (1652); the spidron was created by Dániel Erdély (Bridges conference papers). The rigid-fold solver is the one from the <a href="kodonfeszek/">Codon Nest</a> page.</span></p>
+    </aside>
+  </div>
+</div>
+<div class="langsw" role="group" aria-label="Nyelv / Language"><button type="button" data-l="hu">HU</button><button type="button" data-l="en">EN</button></div>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const L=()=>document.documentElement.getAttribute("data-lang")==="en"?"en":"hu";
+const T=(hu,en)=>L()==="en"?en:hu;
+const num=(x,d)=>{const s=x.toFixed(d);return L()==="en"?s:s.replace(".",",");};
+const ex=x=>x<1e-9?"< 10⁻⁹":x.toExponential(1);
+const s3=Math.sqrt(3),DEG=Math.PI/180;
+const S={tab:"2d",show:{lattice:true,paths:true,tris:false,nest:true,daat:true,cross:false},fold:.6,breathe:true,mesh:true,labels:true,spin:true};
+
+/* ---------- the tree: three-pillar layout on a triangular lattice (step 1), Tiferet at the origin, y up ---------- */
+const NODES={K:[0,2],Ch:[s3/2,1.5],B:[-s3/2,1.5],D:[0,1],Che:[s3/2,.5],G:[-s3/2,.5],T:[0,0],N:[s3/2,-.5],H:[-s3/2,-.5],Y:[0,-1],M:[0,-2]};
+const NAME={K:["Keter","Keter","Korona","Crown"],Ch:["Chokhma","Chokhmah","Bölcsesség","Wisdom"],B:["Bina","Binah","Megértés","Understanding"],
+  D:["Da'at","Da'at","Tudás","Knowledge"],Che:["Chesed","Chesed","Szeretet, kegyelem","Kindness"],G:["Gevura","Gevurah","Erő, szigor","Strength, restraint"],
+  T:["Tiferet","Tiferet","Szépség, harmónia","Beauty, harmony"],N:["Necach","Netzach","Győzelem, kitartás","Victory, endurance"],H:["Hod","Hod","Ragyogás, dicsőség","Splendour"],
+  Y:["Jeszod","Yesod","Alap","Foundation"],M:["Malkut","Malkhut","Királyság","Kingship"]};
+const nm=k=>NAME[k][L()==="en"?1:0];
+const PATHS="K-Ch K-B K-T Ch-B Ch-T Ch-Che B-T B-G Che-G Che-T Che-N G-T G-H T-N T-Y T-H N-H N-Y N-M H-Y H-M Y-M".split(" ").map(e=>e.split("-"));
+const TEN=Object.keys(NODES).filter(k=>k!=="D");
+const dist2=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+
+/* hexagonal spidron nest around Tiferet: level n has radius √3·(1/√3)^n, vertex k at angle 60° − 30°·n − 60°·k.
+   level 0 (radius √3) passes through Chokhmah (k=0) and Binah (k=5); level 1 (radius 1) through
+   Chesed (0), Netzach (1), Yesod (2), Hod (3), Gevurah (4) and the empty place of Da'at (5). */
+const ONNEST={Ch:[0,0],B:[0,5],Che:[1,0],N:[1,1],Y:[1,2],H:[1,3],G:[1,4],D:[1,5]};
+const R0=s3,NL=12;
+function chainStep(Rr,a){const r=Rr/s3;if(Math.abs(a)<1e-12)return[0,Math.PI/6];const rho=Math.sqrt(Rr*Rr-4*a*a);
+  const F=x=>{const rp=Math.sqrt(r*r-4*x*x),d=Math.PI/6+Math.asin(Math.max(-1,Math.min(1,2*a*x/(rho*rp))));return[rho*rho+rp*rp-2*rho*rp*Math.cos(d)+(a-x)*(a-x)-r*r,d];};
+  let x0=-a/s3*.8,x1=-a/s3,f0=F(x0)[0],f1=F(x1)[0];for(let i=0;i<60&&Math.abs(f1)>1e-15&&f1!==f0;i++){const x2=x1-f1*(x1-x0)/(f1-f0);x0=x1;f0=f1;x1=x2;f1=F(x1)[0];}return[x1,F(x1)[1]];}
+const LV=[];
+function shape(relief){let Rr=R0,a=relief*R0,th=0;LV.length=0;
+  for(let j=0;j<=NL;j++){LV.push({a,th,rho:Math.sqrt(Math.max(Rr*Rr-4*a*a,0))});const st=chainStep(Rr,a);a=st[0];th+=st[1]-Math.PI/6;Rr/=s3;}}
+const vp=(n,k)=>{const Lv=LV[n],ang=(60-30*n-60*k)*DEG-Lv.th;return [Lv.rho*Math.cos(ang),Lv.rho*Math.sin(ang),(((k%6)+6)%2?-1:1)*Lv.a];};
+const d3=(p,q)=>Math.hypot(p[0]-q[0],p[1]-q[1],p[2]-q[2]);
+/* spidron edges of the nest (as unordered vertex pairs) */
+function nestEdges(levels){const E=[];for(let n=0;n<levels;n++)for(let k=0;k<6;k++){const a=[n,k],b=[n,(k+1)%6],c=[n+1,k],d=[n+1,(k+1)%6];E.push([a,b],[b,c],[c,a],[c,d]);}return E;}
+const key=v=>v[0]+":"+v[1];
+const NE=new Set(nestEdges(2).map(([a,b])=>[key(a),key(b)].sort().join("|")));
+const isSpidronEdge=(a,b)=>ONNEST[a]&&ONNEST[b]&&NE.has([key(ONNEST[a]),key(ONNEST[b])].sort().join("|"));
+
+/* ---------- facts, computed ---------- */
+const F={};
+(function facts(){
+  F.onLattice=Object.keys(NODES).every(k=>{const [x,y]=NODES[k],i=x/(s3/2),j=y-i/2;return Math.abs(i-Math.round(i))<1e-9&&Math.abs(j-Math.round(j))<1e-9;});
+  F.len={};PATHS.forEach(([a,b])=>{const l=dist2(NODES[a],NODES[b]),c=Math.abs(l-1)<1e-9?"1":Math.abs(l-s3)<1e-9?"√3":Math.abs(l-2)<1e-9?"2":l.toFixed(3);F.len[c]=(F.len[c]||0)+1;});
+  const has=(a,b)=>PATHS.some(([x,y])=>(x===a&&y===b)||(x===b&&y===a));
+  F.tris=[];for(let i=0;i<TEN.length;i++)for(let j=i+1;j<TEN.length;j++)for(let k=j+1;k<TEN.length;k++){const t=[TEN[i],TEN[j],TEN[k]];
+    if(has(t[0],t[1])&&has(t[1],t[2])&&has(t[0],t[2])){const l=[dist2(NODES[t[0]],NODES[t[1]]),dist2(NODES[t[1]],NODES[t[2]]),dist2(NODES[t[0]],NODES[t[2]])].sort((x,y)=>x-y);
+      const type=Math.abs(l[2]-l[0])<1e-9?"eq":Math.abs(l[0]-l[1])<1e-9&&Math.abs(l[2]-s3*l[0])<1e-9?"iso":Math.abs(l[2]*l[2]-l[0]*l[0]-l[1]*l[1])<1e-9?"right":"other";F.tris.push({t,type});}}
+  F.count=F.tris.reduce((o,x)=>(o[x.type]=(o[x.type]||0)+1,o),{});
+  const X=(p,q,r,s)=>{const o=(a,b,c)=>Math.sign((b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]));return o(p,q,r)*o(p,q,s)<0&&o(r,s,p)*o(r,s,q)<0;};
+  F.cross=[];for(let i=0;i<PATHS.length;i++)for(let j=i+1;j<PATHS.length;j++){const [a,b]=PATHS[i],[c,d]=PATHS[j];if(new Set([a,b,c,d]).size<4)continue;
+    const P1=NODES[a],P2=NODES[b],P3=NODES[c],P4=NODES[d];if(X(P1,P2,P3,P4)){const den=(P1[0]-P2[0])*(P3[1]-P4[1])-(P1[1]-P2[1])*(P3[0]-P4[0]),t=((P1[0]-P3[0])*(P3[1]-P4[1])-(P1[1]-P3[1])*(P3[0]-P4[0]))/den;
+      F.cross.push({p:[a,b],q:[c,d],at:[P1[0]+t*(P2[0]-P1[0]),P1[1]+t*(P2[1]-P1[1])]});}}
+  // nest check in the flat state: every on-nest node coincides with its nest vertex
+  shape(0);F.nestFit=Math.max(...Object.keys(ONNEST).map(k=>{const v=vp(...ONNEST[k]);return Math.hypot(v[0]-NODES[k][0],v[1]-NODES[k][1]);}));
+  F.hexR=["Che","G","N","H","Y"].map(k=>dist2(NODES[k],NODES.T));F.spidronPaths=PATHS.filter(([a,b])=>isSpidronEdge(a,b)).length;
+  F.beta=PATHS.length-TEN.length+1;
+})();
+
+/* ---------- 2D ---------- */
+const svg=$("#svg2d"),LCOL={"1":"#c8901a","√3":"#0e7490","2":"#7c3aed"};
+const TCOL={iso:"#bfdbfe",eq:"#fde68a",right:"#fecaca",other:"#e5e7eb"};
+const pt=p=>`${p[0].toFixed(4)},${(-p[1]).toFixed(4)}`;
+function draw2D(){let s="";
+  if(S.show.tris)F.tris.forEach(({t,type})=>{s+=`<polygon points="${t.map(k=>pt(NODES[k])).join(" ")}" fill="${TCOL[type]}" fill-opacity=".75" stroke="none"/>`;});
+  if(S.show.nest){shape(0);for(let n=0;n<8;n++)for(let k=0;k<6;k++){const iso=[vp(n,k),vp(n,k+1),vp(n+1,k)],eq=[vp(n,k+1),vp(n+1,k),vp(n+1,k+1)];
+    s+=`<polygon points="${iso.map(pt).join(" ")}" fill="#dbe7f7" fill-opacity="${S.show.tris?.25:.6}" stroke="#4b6fa8" stroke-width="0.012"/>`;
+    s+=`<polygon points="${eq.map(pt).join(" ")}" fill="#a9c3ea" fill-opacity="${S.show.tris?.25:.6}" stroke="#4b6fa8" stroke-width="0.012"/>`;}}
+  if(S.show.lattice)for(let i=-3;i<=3;i++)for(let j=-6;j<=6;j++){const x=i*s3/2,y=j+i/2;if(Math.abs(x)<=2.9&&y>=-2.4&&y<=2.4)s+=`<circle cx="${x.toFixed(4)}" cy="${(-y).toFixed(4)}" r="0.03" fill="#8a6a1e" opacity=".6"/>`;}
+  if(S.show.paths)PATHS.forEach(([a,b])=>{const l=dist2(NODES[a],NODES[b]),c=Math.abs(l-1)<1e-9?"1":Math.abs(l-s3)<1e-9?"√3":"2",sp=isSpidronEdge(a,b);
+    if(sp)s+=`<line x1="${NODES[a][0]}" y1="${-NODES[a][1]}" x2="${NODES[b][0]}" y2="${-NODES[b][1]}" stroke="#16a34a" stroke-width="0.075" stroke-linecap="round" opacity=".45"/>`;
+    s+=`<line x1="${NODES[a][0]}" y1="${-NODES[a][1]}" x2="${NODES[b][0]}" y2="${-NODES[b][1]}" stroke="${LCOL[c]}" stroke-width="0.03" stroke-linecap="round"/>`;});
+  if(S.show.cross)F.cross.forEach(c=>{const [x,y]=c.at,r=.07;s+=`<path d="M${x-r},${-y-r}L${x+r},${-y+r}M${x-r},${-y+r}L${x+r},${-y-r}" stroke="#dc2626" stroke-width="0.03"/>`;});
+  Object.keys(NODES).forEach(k=>{if(k==="D"&&!S.show.daat)return;const [x,y]=NODES[k],dd=k==="D";
+    s+=`<circle cx="${x}" cy="${-y}" r="0.15" fill="${dd?"#fffdf6":"#fff7e0"}" stroke="${dd?"#9ca3af":"#b8860b"}" stroke-width="0.025" ${dd?'stroke-dasharray="0.05 0.04"':""}/>`;
+    const right=x>0.1,left=x<-0.1,tx=right?x+.22:left?x-.22:x+.2,anc=right?"start":left?"end":"start";
+    s+=`<text x="${tx.toFixed(3)}" y="${(-y+.06).toFixed(3)}" font-size="0.17" text-anchor="${anc}" fill="${dd?"#6b7280":"#3f2d06"}" font-family="Georgia,serif">${nm(k)}</text>`;});
+  svg.innerHTML=s;
+  const c=F.count;let r=T(`<b>Mérés:</b> a 11 pont (Da'attal) mind rácspont: <b>${F.onLattice?"igen":"nem"}</b>. A 22 út hossza: <b>${F.len["1"]}</b> × 1, <b>${F.len["√3"]}</b> × √3, <b>${F.len["2"]}</b> × 2. A pontok közt <b>${F.tris.length}</b> háromszög záródik: ${c.iso} db 30°–120°–30°-os és ${c.eq} egyenlő oldalú (ez a spidron két háromszöge), valamint ${c.right||0} derékszögű (30°–60°–90°).`,
+    `<b>Measured:</b> all 11 points (with Da'at) are lattice points: <b>${F.onLattice?"yes":"no"}</b>. The 22 paths: <b>${F.len["1"]}</b> × 1, <b>${F.len["√3"]}</b> × √3, <b>${F.len["2"]}</b> × 2. Among the points <b>${F.tris.length}</b> triangles close: ${c.iso} of 30°–120°–30° and ${c.eq} equilateral (the spidron's two triangles), plus ${c.right||0} right triangles (30°–60°–90°).`);
+  if(S.show.nest)r+="<br>"+T(`A Tiferet körüli spidron-fészek csúcsai és a szefirák eltérése: <b>${ex(F.nestFit)}</b>. Az utak közül <b>${F.spidronPaths}</b> egyben spidron-él (zöld kiemelés).`,`Deviation between the nest's vertices around Tiferet and the sefirot: <b>${ex(F.nestFit)}</b>. <b>${F.spidronPaths}</b> of the paths are also spidron edges (green highlight).`);
+  if(S.show.cross)r+="<br>"+T(`A rajzban <b>${F.cross.length}</b> útpár metszi egymást: `,`In the drawing <b>${F.cross.length}</b> pairs of paths cross: `)+F.cross.map(c=>`${nm(c.p[0])}–${nm(c.p[1])} × ${nm(c.q[0])}–${nm(c.q[1])}`).join("; ")+".";
+  if(S.show.tris)r+="<br>"+T("Kék: 30°–120°–30°, sárga: egyenlő oldalú, piros: derékszögű.","Blue: 30°–120°–30°, yellow: equilateral, red: right triangle.");
+  $("#read2d").innerHTML=r;}
+
+/* ---------- 3D ---------- */
+const cv=$("#gl"),stage=$("#stage"),lbls=$("#lbls");
+const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(34,1,.1,100);
+scene.add(new THREE.HemisphereLight(0xffffff,0x9a8f7a,.85));const dl=new THREE.DirectionalLight(0xffffff,.7);dl.position.set(3,5,6);scene.add(dl);
+const nestMat=new THREE.MeshStandardMaterial({vertexColors:true,side:THREE.DoubleSide,flatShading:true,roughness:.55,transparent:true,opacity:.82});
+const nestGeo=new THREE.BufferGeometry(),nestMesh=new THREE.Mesh(nestGeo,nestMat);scene.add(nestMesh);
+const NT=(NL-1)*6*2+6,posArr=new Float32Array(NT*9),colArr=new Float32Array(NT*9);
+nestGeo.setAttribute("position",new THREE.BufferAttribute(posArr,3));nestGeo.setAttribute("color",new THREE.BufferAttribute(colArr,3));
+(function(){const c1=new THREE.Color(0xc9dcf5),c2=new THREE.Color(0x7aa7e0);let i=0;for(let n=0;n<NL-1;n++)for(let k=0;k<6;k++)for(const c of [c1,c2])for(let v=0;v<3;v++){colArr.set([c.r,c.g,c.b],i);i+=3;}
+  for(let k=0;k<6;k++)for(let v=0;v<3;v++){colArr.set([c2.r,c2.g,c2.b],i);i+=3;}})();
+const nodeMat=new THREE.MeshStandardMaterial({color:0xe0a82e,roughness:.35,metalness:.25}),daatMat=new THREE.MeshStandardMaterial({color:0xd1d5db,roughness:.5,transparent:true,opacity:.6});
+const nodeMesh={};Object.keys(NODES).forEach(k=>{const m=new THREE.Mesh(new THREE.SphereGeometry(k==="D"?.08:.11,24,16),k==="D"?daatMat:nodeMat);scene.add(m);nodeMesh[k]=m;
+  const el=document.createElement("div");el.className="lbl3d";lbls.appendChild(el);m.userData.el=el;});
+const greenMat=new THREE.MeshStandardMaterial({color:0x16a34a,roughness:.5}),greyMat=new THREE.MeshStandardMaterial({color:0x9ca3af,roughness:.5});
+const cyl=new THREE.CylinderGeometry(.025,.025,1,10);
+const pathMesh=PATHS.map(([a,b])=>{const m=new THREE.Mesh(cyl,isSpidronEdge(a,b)?greenMat:greyMat);scene.add(m);return m;});
+/* trilateration: point at distances r1,r2,r3 from p1,p2,p3; of the two solutions take the one nearer to `near` */
+function trilat(p1,p2,p3,r1,r2,r3,near){const v=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]],dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],sc=(a,s)=>a.map(x=>x*s),add=(a,b)=>a.map((x,i)=>x+b[i]),
+  cr=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],nrm=a=>sc(a,1/Math.hypot(...a));
+  const ex_=nrm(v(p2,p1)),i=dot(ex_,v(p3,p1)),ey=nrm(v(v(p3,p1),sc(ex_,i))),ez=cr(ex_,ey),d=Math.hypot(...v(p2,p1)),j=dot(ey,v(p3,p1));
+  const x=(r1*r1-r2*r2+d*d)/(2*d),y=(r1*r1-r3*r3+i*i+j*j)/(2*j)-i/j*x,zz=r1*r1-x*x-y*y,z=Math.sqrt(Math.max(0,zz));
+  const base=add(p1,add(sc(ex_,x),sc(ey,y))),A=add(base,sc(ez,z)),B=add(base,sc(ez,-z));return {p:d3(A,near)<=d3(B,near)?A:B,res:Math.max(0,-zz)};}
+const P3={},M={relief:0,t:0,err:0,res:0,last:0};
+function frame(relief){shape(relief);
+  let i=0,err=0;const put=p=>{posArr.set(p,i);i+=3;};
+  for(let n=0;n<NL-1;n++)for(let k=0;k<6;k++){const iso=[vp(n,k),vp(n,k+1),vp(n+1,k)],eq=[vp(n,k+1),vp(n+1,k),vp(n+1,k+1)];iso.forEach(put);eq.forEach(put);
+    if(n<8){const side=R0*Math.pow(s3,-n),leg=side/s3;[[iso[0],iso[1],side],[iso[1],iso[2],leg],[iso[2],iso[0],leg],[eq[0],eq[1],leg],[eq[1],eq[2],leg],[eq[2],eq[0],leg]].forEach(([p,q,w])=>{err=Math.max(err,Math.abs(d3(p,q)/w-1));});}}
+  for(let k=0;k<6;k++){put([0,0,0]);put(vp(NL-1,k));put(vp(NL-1,k+1));}
+  nestGeo.attributes.position.needsUpdate=true;nestGeo.computeVertexNormals();
+  Object.keys(ONNEST).forEach(k=>{P3[k]=vp(...ONNEST[k]);});P3.T=[0,0,0];
+  /* Keter and Malkhut are not on the nest.
+     Keter: the triangle Keter–Chokhmah–Binah stays rigid and hinges on the spidron edge Chokhmah–Binah, opening away from Tiferet
+     (Keter–Tiferet = 2 is the largest distance possible in the flat state, so it cannot be kept once the nest folds).
+     Malkhut: placed so that all three of its paths keep their flat lengths. */
+  const c=P3.Ch.map((x,i)=>(x+P3.B[i])/2),u=P3.Ch.map((x,i)=>P3.B[i]-x),ul=Math.hypot(...u),un=u.map(x=>x/ul);
+  const ct=c.map((x,i)=>x-P3.T[i]),pr=ct[0]*un[0]+ct[1]*un[1]+ct[2]*un[2],w=ct.map((x,i)=>x-pr*un[i]),wl=Math.hypot(...w),rr=Math.sqrt(Math.max(0,1-ul*ul/4));
+  P3.K=c.map((x,i)=>x+rr*w[i]/wl);
+  const mm=trilat(P3.Y,P3.N,P3.H,1,s3,s3,[0,-2,0]);P3.M=mm.p;
+  M.err=err;M.res=mm.res;}
+let th=.5,ph=1.25,rad=8,drag=null,camT=null;
+function resize(){const r=cv.getBoundingClientRect();if(!r.width)return;renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.updateProjectionMatrix();}
+new ResizeObserver(resize).observe(cv);
+cv.addEventListener("pointerdown",e=>{drag={x:e.clientX,y:e.clientY};camT=null;cv.setPointerCapture(e.pointerId);cv.style.cursor="grabbing";});
+cv.addEventListener("pointermove",e=>{if(!drag)return;th-=(e.clientX-drag.x)*.008;ph=Math.max(.05,Math.min(Math.PI-.05,ph-(e.clientY-drag.y)*.008));drag.x=e.clientX;drag.y=e.clientY;});
+cv.addEventListener("pointerup",()=>{drag=null;cv.style.cursor="grab";});
+cv.addEventListener("wheel",e=>{e.preventDefault();rad=Math.max(4,Math.min(16,rad*(1+Math.sign(e.deltaY)*.08)));},{passive:false});
+const up=new THREE.Vector3(0,1,0),tmp=new THREE.Vector3();
+function loop(now){requestAnimationFrame(loop);if(S.tab!=="3d")return;
+  const dt=Math.min(.05,(now-(M.last||now))/1000);M.last=now;
+  if(camT){th+=(camT[0]-th)*.12;ph+=(camT[1]-ph)*.12;}else if(S.spin&&!drag)th+=.003;
+  const Rr=rad*Math.max(1,1/camera.aspect);camera.position.set(Rr*Math.sin(ph)*Math.sin(th),Rr*Math.cos(ph),Rr*Math.sin(ph)*Math.cos(th));camera.lookAt(0,0,0);
+  if(S.breathe)M.t+=dt;M.relief=.25*S.fold*(S.breathe?.5-.5*Math.cos(M.t*.9):1);frame(M.relief);
+  const V=k=>new THREE.Vector3(P3[k][0],P3[k][1],P3[k][2]);
+  Object.keys(nodeMesh).forEach(k=>{const m=nodeMesh[k];m.position.copy(V(k));});
+  PATHS.forEach(([a,b],i)=>{const A=V(a),B=V(b),m=pathMesh[i];m.position.copy(A).add(B).multiplyScalar(.5);tmp.copy(B).sub(A);m.scale.set(1,tmp.length(),1);m.quaternion.setFromUnitVectors(up,tmp.normalize());});
+  renderer.render(scene,camera);
+  const r=cv.getBoundingClientRect();Object.keys(nodeMesh).forEach(k=>{const el=nodeMesh[k].userData.el;if(!S.labels){el.hidden=true;return;}el.hidden=false;
+    const p=nodeMesh[k].position.clone().project(camera);el.style.left=((p.x+1)/2*r.width)+"px";el.style.top=((1-p.y)/2*r.height)+"px";el.textContent=nm(k);});
+  if((M.tick=(M.tick||0)+1)%12===0)read3d();}
+function read3d(){if(!P3.T)frame(M.relief);
+  $("#read3d").innerHTML=T(`<b>Merev hajtás</b> (hajtásmélység a/oldal = ${num(M.relief,3)}): a fészek háromszögeinek legnagyobb élhossz-eltérése <b>${ex(M.err)}</b>. A Tiferet körüli hatszög csúcsai felváltva emelkednek és süllyednek: Chesed, Jeszod, Gevura az egyik, Necach, Hod és Da'at helye a másik oldalra. Keter és Malkut nincs a fészken. A Keter–Chokhma–Bina háromszög merev, és a Chokhma–Bina spidron-élen nyílik ki; a Keter–Tiferet út nem tarthatja meg a hosszát, mert síkban épp a lehető legnagyobb. Malkut mindhárom útja megmarad (maradék: <b>${ex(M.res)}</b>).`,
+    `<b>Rigid fold</b> (fold depth a/side = ${num(M.relief,3)}): the largest edge-length change in the nest's triangles is <b>${ex(M.err)}</b>. The vertices of the hexagon around Tiferet rise and sink alternately: Chesed, Yesod, Gevurah to one side, Netzach, Hod and the place of Da'at to the other. Keter and Malkhut are not on the nest. The triangle Keter–Chokhmah–Binah stays rigid and opens on the spidron edge Chokhmah–Binah; the Keter–Tiferet path cannot keep its length, because in the flat state it is already the largest possible. All three paths of Malkhut keep their length (residual: <b>${ex(M.res)}</b>).`);
+  let rows=`<tr><th>${T("Út","Path")}</th><th>${T("Sík","Flat")}</th><th>${T("Hajtva","Folded")}</th><th>${T("Változás","Change")}</th><th>${T("Szerep","Role")}</th></tr>`;
+  PATHS.forEach(([a,b])=>{const l0=dist2(NODES[a],NODES[b]),l=d3(P3[a],P3[b]),ch=(l/l0-1)*100,sp=isSpidronEdge(a,b),kt=(a==="M"||b==="M"),kk=(a==="K"&&b!=="T");
+    const role=sp?T("spidron-él","spidron edge"):kk?T("Keter merev háromszöge","Keter's rigid triangle"):kt?T("Malkut rögzítése","fixes Malkhut"):a==="T"||b==="T"?T("Tiferetből kifelé","out from Tiferet"):T("húr a fészken","chord across the nest");
+    rows+=`<tr><td>${nm(a)}–${nm(b)}</td><td class="m">${num(l0,3)}</td><td class="m">${num(l,3)}</td><td class="m" style="color:${Math.abs(ch)<1e-6?"#166534":"#92400e"}">${Math.abs(ch)<1e-6?"0":(ch>0?"+":"")+num(ch,2)+"%"}</td><td>${role}</td></tr>`;});
+  $("#ptab").innerHTML=rows;}
+
+/* ---------- side panel ---------- */
+function drawSide(){const c=F.count,li=(tag,cls,hu,en)=>`<li><span class="tag ${cls}">${tag}</span>${T(hu,en)}</li>`;
+  $("#truths").innerHTML=[
+    li(T("IGAZ","TRUE"),"ok",`<b>A szefirák egy szabályos háromszögrács pontjain állnak</b> (rácsállandó: Tiferet és Jeszod távolsága). Az oszlopok távolsága √3/2, a szintek fél lépésenként jönnek.`,`<b>The sefirot stand on the points of a regular triangular lattice</b> (lattice step: the distance from Tiferet to Yesod). The pillars are √3/2 apart, the levels come in half steps.`),
+    li(T("IGAZ","TRUE"),"ok",`<b>A 22 útnak csak háromféle hossza van:</b> ${F.len["1"]} × 1, ${F.len["√3"]} × √3 és ${F.len["2"]} × 2 (Keter–Tiferet). A √3 arány pontosan a hatszögű spidron egy szintlépése.`,`<b>The 22 paths have only three lengths:</b> ${F.len["1"]} × 1, ${F.len["√3"]} × √3 and ${F.len["2"]} × 2 (Keter–Tiferet). The ratio √3 is exactly one level step of the hexagonal spidron.`),
+    li(T("IGAZ","TRUE"),"ok",`<b>A ${F.tris.length} zárt háromszögből ${c.iso+c.eq} a spidron két háromszöge:</b> ${c.iso} darab 30°–120°–30°-os (pl. Keter–Chokhma–Bina) és ${c.eq} egyenlő oldalú (pl. Chokhma–Bina–Tiferet). A maradék ${c.right||0} derékszögű (Keter–Chokhma–Tiferet, Keter–Bina–Tiferet). A Keter–Chokhma–Bina és a Chokhma–Bina–Tiferet háromszög úgy illeszkedik, mint a spidronban: az egyenlő oldalú háromszög oldala a 30°–120°–30°-os alapja.`,
+      `<b>Of the ${F.tris.length} closed triangles, ${c.iso+c.eq} are the spidron's two triangles:</b> ${c.iso} of 30°–120°–30° (e.g. Keter–Chokhmah–Binah) and ${c.eq} equilateral (e.g. Chokhmah–Binah–Tiferet). The remaining ${c.right||0} are right triangles (Keter–Chokhmah–Tiferet, Keter–Binah–Tiferet). Keter–Chokhmah–Binah and Chokhmah–Binah–Tiferet meet as in a spidron: the side of the equilateral triangle is the base of the 30°–120°–30° one.`),
+    li(T("ÚJ","NEW"),"new",`<b>Tiferet egy hatszögű spidron-fészek közepe.</b> Chesed, Gevura, Necach, Hod és Jeszod pontosan 1 távolságra, 60°-onként áll tőle; a hatodik csúcs üres, és ez Da'at helye. Chokhma és Bina √3 távolságra, 30°-kal elforgatva ül: ez a fészek előző szintje. Keter és Malkut (2 távolságra) nincs a fészken.`,
+      `<b>Tiferet is the centre of a hexagonal spidron nest.</b> Chesed, Gevurah, Netzach, Hod and Yesod stand exactly 1 away from it, 60° apart; the sixth vertex is empty, and it is the place of Da'at. Chokhmah and Binah sit √3 away, turned by 30°: the previous level of the nest. Keter and Malkhut (2 away) are not on the nest.`),
+    li(T("ÚJ","NEW"),"new",`<b>${F.spidronPaths} út egyben spidron-él</b> (Chokhma–Bina, Chokhma–Chesed, Bina–Gevura, Chesed–Necach, Necach–Jeszod, Jeszod–Hod, Hod–Gevura). Ezek hossza a merev hajtásban sem változik; a többi út hossza igen, ezt a 3D nézet táblázata mutatja.`,
+      `<b>${F.spidronPaths} paths are also spidron edges</b> (Chokhmah–Binah, Chokhmah–Chesed, Binah–Gevurah, Chesed–Netzach, Netzach–Yesod, Yesod–Hod, Hod–Gevurah). Their length does not change in the rigid fold; the other paths do change, as the table in the 3D view shows.`),
+    li(T("PONTOSÍTANDÓ","REFINE"),"fix",`<b>β₁ = E − V + 1 = ${PATHS.length} − ${TEN.length} + 1 = ${F.beta}</b> független kör: helyes, de minden 10 pontú, 22 élű összefüggő gráfra ugyanennyi, ezért a fáról nem mond semmit. Beszédesebb, hogy a rajzban <b>${F.cross.length}</b> útpár metszi egymást (2D: „Metszések”).`,
+      `<b>β₁ = E − V + 1 = ${PATHS.length} − ${TEN.length} + 1 = ${F.beta}</b> independent cycles: correct, but the same for every connected graph with 10 vertices and 22 edges, so it says nothing about the tree. More telling: in the drawing <b>${F.cross.length}</b> pairs of paths cross (2D: “Crossings”).`),
+    li(T("NEM TARTHATÓ","DOES NOT HOLD"),"no",`<b>„Spidron-szalag” két szefira között.</b> Egy spidron-kar egyetlen pontba csavarodik, nem két egyenrangú pont között fut; a két végén kötött szalag már kitalált forma. Itt ezért a fészek egy szefira, Tiferet körül áll, és az utak vagy a fészek élei, vagy nem.`,
+      `<b>A “spidron ribbon” between two sefirot.</b> A spidron arm spirals into a single point; it does not run between two equal points, so a ribbon tied at both ends is an invented shape. Here the nest therefore stands around one sefirah, Tiferet, and each path either is an edge of the nest or is not.`),
+    li(T("PONTOSÍTANDÓ","REFINE"),"fix",`<b>A harmadik dimenzió.</b> Szabadon választott z koordináta helyett itt a merev hajtás emeli ki a fát: a fészek háromszögei nem torzulnak (eltérés < 10⁻⁹). Malkut mindhárom útja megmarad; Keternél csak kettő, mert a Keter–Tiferet távolság síkban már a lehető legnagyobb.`,
+      `<b>The third dimension.</b> Instead of a freely chosen z coordinate, the rigid fold lifts the tree here: the nest's triangles do not distort (deviation < 10⁻⁹). All three paths of Malkhut keep their length; Keter keeps only two, because the Keter–Tiferet distance is already the largest possible in the flat state.`),
+    li(T("PONTOSÍTANDÓ","REFINE"),"fix",`<b>Szimmetria.</b> A fának csak tükörszimmetriája van (bal és jobb oszlop). A Tiferet körüli hatszög helyi rend, nem az egész fa hatszoros szimmetriája.`,
+      `<b>Symmetry.</b> The tree has only mirror symmetry (left and right pillars). The hexagon around Tiferet is a local order, not a six-fold symmetry of the whole tree.`)
+  ].join("");
+  $("#names").innerHTML=Object.keys(NAME).map(k=>`<li><b>${nm(k)}</b> – ${NAME[k][L()==="en"?3:2]}${k==="D"?T(" (nem mindig számolják)"," (not always counted)"):""}</li>`).join("");}
+
+/* ---------- controls ---------- */
+document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{S.tab=b.dataset.tab;document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("on",x===b));
+  $("#pane3d").hidden=S.tab!=="3d";$("#pane2d").hidden=S.tab!=="2d";if(S.tab==="3d"){resize();read3d();}else draw2D();}));
+document.querySelectorAll("[data-show]").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.show;S.show[k]=!S.show[k];b.classList.toggle("on",S.show[k]);draw2D();}));
+const tog=(id,k,f)=>$(id).addEventListener("click",()=>{S[k]=!S[k];$(id).classList.toggle("on",S[k]);if(f)f();});
+tog("#breathe","breathe");tog("#mesh","mesh",()=>{nestMesh.visible=S.mesh;});tog("#labels","labels");tog("#spin","spin",()=>{if(S.spin)camT=null;});
+$("#fold").addEventListener("input",e=>{S.fold=e.target.value/100;});
+const VIEWS={front:[0,Math.PI/2],side:[Math.PI/2,Math.PI/2]};
+document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>{camT=VIEWS[b.dataset.view];S.spin=false;$("#spin").classList.remove("on");}));
+function applyLang(){const l=L();document.querySelectorAll(".langsw button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.l===l)));draw2D();drawSide();read3d();}
+document.querySelectorAll(".langsw button").forEach(b=>b.addEventListener("click",()=>{const l=b.dataset.l;try{localStorage.setItem("sjk-lang",l)}catch(e){}
+  document.documentElement.setAttribute("data-lang",l);document.documentElement.lang=l;applyLang();window.dispatchEvent(new CustomEvent("sjk:lang",{detail:l}));}));
+applyLang();requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
