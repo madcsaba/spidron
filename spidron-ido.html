@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A spidron ideje / The Time of the Spidron</title>
+<meta name="description" content="Modellhipotézis: a kiterített spidron mozog, és ami mozog, az a tudat állapota. Mozgás 2D-ben, téridő-diagram 3D-ben (logaritmikus idő vagy fénykúp), kitekert nézet, és hogy mi lenne mérhető. / Model hypothesis: the flat spidron moves, and what moves is the state of consciousness. Motion in 2D, a spacetime diagram in 3D (logarithmic time or light cone), an unrolled view, and what would be measurable.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="A spidron ideje / The Time of the Spidron">
+<meta property="og:description" content="Ha a spidron mozog: önhasonló mozgás, fénykúp, és egy mérhető jóslat. / If the spidron moves: self-similar motion, a light cone, and a testable prediction.">
+<meta property="og:url" content="https://madcsaba.github.io/spidron/spidron-ido.html">
+<script>
+(function(){var l;try{l=localStorage.getItem("sjk-lang")}catch(e){}
+if(l!=="hu"&&l!=="en")l=(navigator.language||"").toLowerCase().indexOf("hu")===0?"hu":"en";
+document.documentElement.setAttribute("data-lang",l);document.documentElement.lang=l;})();
+</script>
+<script src="vendor/three.min.js"></script>
+<style>
+  :root{--bg:#f6f7f9;--panel:#fff;--line:#e3e6ea;--ink:#1a1d21;--dim:#6b7280;--acc:#2563eb;--green:#16a34a;--gold:#c8901a;--red:#dc2626;--amber:#b45309;
+    --display:ui-sans-serif,system-ui,"Segoe UI",Helvetica,Arial;--serif:Georgia,'Times New Roman',serif}
+  html[data-lang="hu"] .en{display:none}
+  html[data-lang="en"] .hu{display:none}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--display)}
+  .wrap{max-width:1320px;margin:0 auto;padding:22px 18px 56px}
+  .kicker{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);font-weight:700}
+  h1{font:600 30px/1.2 var(--serif);margin:6px 0}
+  h2{font:600 20px/1.3 var(--serif);margin:0 0 8px}
+  h3{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin:16px 0 6px}
+  .lead{color:var(--dim);max-width:920px;margin:0 0 14px}
+  .grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:16px;align-items:start}
+  @media (max-width:1000px){.grid{grid-template-columns:minmax(0,1fr)}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
+  .bar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:0 0 10px}
+  .bar .lbl{font-size:12.5px;color:var(--dim)}
+  .bar label{font-size:13px;color:var(--dim);display:flex;align-items:center;gap:6px}
+  input[type=range]{width:110px}
+  button.t{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font:13px var(--display);cursor:pointer;color:var(--ink);min-height:34px}
+  button.t:hover{border-color:#c5cad1}
+  button.t.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+  .tabs{display:flex;gap:6px;margin-bottom:12px;border-bottom:1px solid var(--line);padding-bottom:10px}
+  .stage{position:relative;border-radius:12px;overflow:hidden;background:radial-gradient(ellipse at 50% 42%,#fffdf6 0%,#ece8de 100%);border:1px solid var(--line)}
+  #gl{display:block;width:100%;height:min(70vh,620px);touch-action:none;cursor:grab}
+  #svg2d{display:block;width:100%;height:auto;max-height:min(70vh,620px);background:#fffdf6;border-radius:12px;border:1px solid var(--line)}
+  .hint{position:absolute;left:10px;bottom:8px;font-size:12px;color:var(--dim);pointer-events:none;background:rgba(255,255,255,.85);padding:2px 6px;border-radius:6px}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--dim);margin-top:8px}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:5px;vertical-align:-2px}
+  .readout{font-size:14px;margin-top:8px;padding:8px 10px;background:#f8fafc;border:1px solid var(--line);border-radius:10px}
+  .readout b{font-family:var(--serif)}
+  .truths{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+  .truths li{border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13.5px}
+  .tag{display:inline-block;font-size:11.5px;font-weight:700;padding:1px 7px;border-radius:5px;margin-right:6px;letter-spacing:.02em}
+  .ok{background:#dcfce7;color:#166534}.fix{background:#fef3c7;color:#92400e}.no{background:#fee2e2;color:#991b1b}.new{background:#dbeafe;color:#1e40af}
+  table{border-collapse:collapse;width:100%;font-size:13px;min-width:460px}
+  th,td{border-bottom:1px solid var(--line);padding:6px 6px;text-align:left;vertical-align:top}
+  th{color:var(--dim);font-weight:600;font-size:12px}
+  td.m{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px}
+  .small{font-size:12.5px;color:var(--dim)}
+  a{color:var(--acc)}
+  .langsw{position:fixed;top:10px;right:12px;z-index:50;display:flex;background:#fff;border:1px solid #e3e6ea;border-radius:999px;padding:3px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+  .langsw button{border:0;background:none;font:600 13px var(--display);color:#6b7280;padding:5px 11px;border-radius:999px;cursor:pointer;min-height:32px}
+  .langsw button[aria-pressed="true"]{background:#1a1d21;color:#fff}
+  [hidden]{display:none!important}
+  .note{border-left:3px solid #7c3aed;background:#f5f3ff;padding:8px 12px;border-radius:0 10px 10px 0;font-size:13.5px;margin:0 0 14px;max-width:920px}
+  .hyp{background:#ede9fe;color:#5b21b6}
+  #svgU{display:block;width:100%;height:auto;background:#fffdf6;border-radius:12px;border:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker"><span class="hu">Modell · hipotézis</span><span class="en">Model · hypothesis</span></div>
+  <h1><span class="hu">A spidron ideje</span><span class="en">The Time of the Spidron</span></h1>
+  <p class="lead"><span class="hu">A kiterített, sárga spidron minden szintje az előző 1/√3-szorosa, 30°-kal elforgatva. Ha ezt a lépést időbeli lépésnek vesszük, az ábra egy mozgás nyoma lesz: egy háromszöggyűrű halad befelé, és minden lépéssel kisebb lesz, és hátrébb kerül az időben. Itt ezt jelenítjük meg, kétféle időméréssel, és megnézzük, mi következik belőle.</span><span class="en">Each level of the flat, yellow spidron is the previous one scaled by 1/√3 and turned by 30°. If we take that step as a step in time, the figure becomes the trace of a motion: a ring of triangles travels inward, getting smaller with every step and moving further back in time. Here we show it, with two ways of measuring time, and look at what follows from it.</span> <a href="index.html"><span class="hu">← nyitóoldal</span><span class="en">← home</span></a></p>
+  <p class="note"><span class="hu"><b>A modell hipotézise:</b> a spidron a valóságban mozog; a sík ábra ennek a mozgásnak a lenyomata. <b>Értelmezése:</b> ami mozog, az a tudat állapota; a mozgó gyűrű a pillanatnyi állapot, a nyom a korábbi állapotoké. Ez feltevés, nem megfigyelés. Az oldal azt mutatja meg, mi következik belőle, és mi lenne mérhető, ha igaz.</span><span class="en"><b>The model's hypothesis:</b> the spidron really moves; the flat figure is the imprint of that motion. <b>Its interpretation:</b> what moves is the state of consciousness; the moving ring is the present state, the trace is that of earlier states. This is an assumption, not an observation. The page shows what follows from it, and what would be measurable if it were true.</span></p>
+
+  <div class="grid">
+    <section class="card">
+      <div class="tabs" role="tablist">
+        <button class="t on" data-tab="2d" role="tab"><span class="hu">Mozgás (2D)</span><span class="en">Motion (2D)</span></button>
+        <button class="t" data-tab="3d" role="tab"><span class="hu">Téridő (3D)</span><span class="en">Spacetime (3D)</span></button>
+        <button class="t" data-tab="un" role="tab"><span class="hu">Kitekerve</span><span class="en">Unrolled</span></button>
+      </div>
+      <div class="bar"><span class="lbl"><span class="hu">Időmérés:</span><span class="en">Time:</span></span>
+        <button class="t on" data-mode="log"><span class="hu">Egyenlő lépések (logaritmikus idő)</span><span class="en">Equal steps (logarithmic time)</span></button>
+        <button class="t" data-mode="cone"><span class="hu">Méret szerinti lépések (fénykúp)</span><span class="en">Steps by size (light cone)</span></button>
+      </div>
+      <div class="bar">
+        <button class="t on" id="play"><span class="hu">❚❚ Szünet</span><span class="en">❚❚ Pause</span></button>
+        <label><span class="hu">Sebesség</span><span class="en">Speed</span> <input type="range" id="speed" min="10" max="200" value="60"></label>
+        <label><span class="hu">Idő</span><span class="en">Time</span> <input type="range" id="clock" min="0" max="1000" value="0"></label>
+      </div>
+
+      <div id="pane2d">
+        <svg id="svg2d" viewBox="-1.08 -1.08 2.16 2.16" role="img" aria-label="Mozgó spidron / Moving spidron"></svg>
+        <div class="legend">
+          <span><i style="background:#d9a441"></i><span class="hu">a mozgó gyűrű: a tudat pillanatnyi állapota</span><span class="en">the moving ring: the present state of consciousness</span></span>
+          <span><i style="background:#f3dc9a"></i><span class="hu">a nyom: a korábbi állapotok</span><span class="en">the trace: earlier states</span></span>
+          <span><i style="background:#fff;border:1px solid #b8860b"></i><span class="hu">ahová még ér</span><span class="en">where it is still going</span></span>
+          <span><i style="background:#0f172a"></i><span class="hu">a csúcsok pályája</span><span class="en">paths of the vertices</span></span>
+        </div>
+      </div>
+      <div id="pane3d" hidden>
+        <div class="bar"><button class="t on" id="cone"><span class="hu">Fénykúp</span><span class="en">Light cone</span></button><button class="t on" id="paths"><span class="hu">Csúcspályák</span><span class="en">Vertex paths</span></button><button class="t on" id="spin"><span class="hu">⟳ Forgás</span><span class="en">⟳ Spin</span></button></div>
+        <div class="stage"><canvas id="gl"></canvas><div class="hint"><span class="hu">Függőleges: a modell ideje (lefelé = hátrébb) · húzd: forgatás</span><span class="en">Vertical: the model's time (down = further back) · drag: rotate</span></div></div>
+      </div>
+      <div id="paneun" hidden>
+        <svg id="svgU" viewBox="-0.3 -0.15 7.2 4.35" role="img" aria-label="Kitekert spidron / Unrolled spidron"></svg>
+        <p class="small"><span class="hu">Vízszintesen: a megtett szintek száma, −ln r / ln √3. Függőlegesen: a szög, 0–360°. Ebben a nézetben a kicsinyítés eltolássá válik, a spidron szabályosan ismétlődő sáv, és a csúcsok spirálpályái egyenesek.</span><span class="en">Horizontal: levels travelled, −ln r / ln √3. Vertical: the angle, 0–360°. In this view scaling becomes a shift, the spidron is a regularly repeating strip, and the spiral paths of the vertices are straight lines.</span></p>
+      </div>
+      <div class="readout" id="readT"></div>
+    </section>
+
+    <aside class="card">
+      <h2><span class="hu">Mi következik és mi nem</span><span class="en">What follows and what does not</span></h2>
+      <ul class="truths" id="truths"></ul>
+    </aside>
+  </div>
+</div>
+<div class="langsw" role="group" aria-label="Nyelv / Language"><button type="button" data-l="hu">HU</button><button type="button" data-l="en">EN</button></div>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const L=()=>document.documentElement.getAttribute("data-lang")==="en"?"en":"hu";
+const T=(hu,en)=>L()==="en"?en:hu;
+const num=(x,d)=>{const s=x.toFixed(d);return L()==="en"?s:s.replace(".",",");};
+const ex=x=>x<1e-9?"< 10⁻⁹":x.toExponential(1);
+const s3=Math.sqrt(3),K=1/s3,LN=Math.log(s3),DEG=Math.PI/180,CHOPTUIK=3.4453;
+const S={tab:"2d",mode:"log",play:true,speed:.6,u:0,cone:true,paths:true,spin:true};
+/* the step map: scale by 1/√3 and turn by 30°. Continuous version after s steps: r = (1/√3)^s, angle + 30°·s.
+   Hypothesis: the ring of level 0 moves along this map; the flat spidron is its trace. */
+const P=(s,j)=>{const r=Math.pow(K,s),a=(30*s+60*j)*DEG;return [r*Math.cos(a),r*Math.sin(a)];};
+const MAXL=14;
+/* model clock u ∈ [0,1): log mode -> s = 12·u (12 levels = one full turn, then the pattern repeats exactly);
+   cone mode -> physical time t = u·T, size 1 − t/T, s = ln(1/(1 − t/T)) / ln√3 (reaches the centre at t = T) */
+const sOf=u=>S.mode==="log"?12*u:Math.log(1/Math.max(1e-9,1-u))/LN;
+/* time coordinate of level s (for the 3D picture; down = further back) */
+const H=3.2,timeOf=s=>S.mode==="log"?-s*.32:-H*(1-Math.pow(K,s));
+
+/* ---------- checks ---------- */
+const C={};
+(function(){const pts=[];for(let m=0;m<=8;m++)for(let j=0;j<6;j++)pts.push(P(m,j));
+  const near=(q,set)=>Math.min(...set.map(p=>Math.hypot(p[0]-q[0],p[1]-q[1])));
+  // one step maps level m onto level m+1 (self-similar motion), two steps = pure scaling by 1/3 (turn 60° is a symmetry of the hexagon)
+  let e1=0,e3=0;for(let m=0;m<6;m++)for(let j=0;j<6;j++){const p=P(m,j),r=Math.hypot(...p),a=Math.atan2(p[1],p[0]);
+    e1=Math.max(e1,near([r*K*Math.cos(a+30*DEG),r*K*Math.sin(a+30*DEG)],pts));e3=Math.max(e3,near([p[0]/3,p[1]/3],pts));}
+  C.e1=e1;C.e3=e3;C.perTurn=Math.pow(s3,12);C.chop=CHOPTUIK/LN;C.chopScale=Math.exp(CHOPTUIK);})();
+
+/* ---------- 2D ---------- */
+const svg=$("#svg2d"),pt=p=>`${p[0].toFixed(5)},${(-p[1]).toFixed(5)}`;
+function draw2D(s){let out="";
+  out+=`<circle cx="0" cy="0" r="1" fill="none" stroke="#e5d6a8" stroke-width="0.004" stroke-dasharray="0.02 0.015"/>`;
+  for(let m=0;m<MAXL;m++){const past=m+1<=s,now=m<=s&&s<m+1;
+    for(let j=0;j<6;j++){const iso=[P(m,j),P(m,j+1),P(m+1,j)],eq=[P(m,j+1),P(m+1,j),P(m+1,j+1)];
+      out+=`<polygon points="${iso.map(pt).join(" ")}" fill="${past?"#f3dc9a":"#fffdf6"}" stroke="#b8860b" stroke-width="0.003" opacity="${past?.9:.55}"/>`;
+      out+=`<polygon points="${eq.map(pt).join(" ")}" fill="${past?"#e9c46a":"#fffdf6"}" stroke="#b8860b" stroke-width="0.003" opacity="${past?.9:.55}"/>`;}}
+  // the moving ring: level 0 carried s steps along the map
+  for(let j=0;j<6;j++){const iso=[P(s,j),P(s,j+1),P(s+1,j)],eq=[P(s,j+1),P(s+1,j),P(s+1,j+1)];
+    out+=`<polygon points="${iso.map(pt).join(" ")}" fill="#d9a441" stroke="#7a5310" stroke-width="0.006"/>`;
+    out+=`<polygon points="${eq.map(pt).join(" ")}" fill="#c8901a" stroke="#7a5310" stroke-width="0.006"/>`;}
+  for(let j=0;j<6;j++){let d="";for(let i=0;i<=Math.min(s,MAXL)*20;i++){d+=(i?"L":"M")+pt(P(i/20,j));}
+    if(d)out+=`<path d="${d}" fill="none" stroke="#0f172a" stroke-width="0.006"/>`;
+    out+=`<circle cx="${P(s,j)[0].toFixed(5)}" cy="${(-P(s,j)[1]).toFixed(5)}" r="0.012" fill="#0f172a"/>`;}
+  svg.innerHTML=out;}
+
+/* ---------- unrolled view: x = s (levels), y = angle / 90° ---------- */
+const svgU=$("#svgU");
+function drawU(s){let out="";const X=sv=>sv,Y=a=>((a%360)+360)%360/90;
+  const seg=(p,q,col,w,fill)=>{};
+  // triangles mapped by (s, angle): an edge between plane points is sampled to show its true image
+  const toU=p=>{const r=Math.hypot(p[0],p[1]),a=Math.atan2(p[1],p[0])/DEG;return [-Math.log(r)/LN,a];};
+  for(let m=0;m<7;m++)for(let j=0;j<12;j++){const tris=[[P(m,j),P(m,j+1),P(m+1,j)],[P(m,j+1),P(m+1,j),P(m+1,j+1)]];
+    tris.forEach((tr,ti)=>{let pts=[],a0=null;for(let e=0;e<3;e++){const A=tr[e],B=tr[(e+1)%3];for(let i=0;i<10;i++){const q=[A[0]+(B[0]-A[0])*i/10,A[1]+(B[1]-A[1])*i/10],u=toU(q);
+        if(a0===null)a0=u[1];while(u[1]-a0>180)u[1]-=360;while(u[1]-a0<-180)u[1]+=360;pts.push(u);}}
+      const past=m+1<=s;for(const sh of[-360,0,360]){const ps=pts.map(([x,a])=>[x,4-(a+sh)/90]);if(ps.every(p=>p[1]<-.1)||ps.every(p=>p[1]>4.1))continue;
+        out+=`<polygon points="${ps.map(p=>p[0].toFixed(4)+","+p[1].toFixed(4)).join(" ")}" fill="${past?(ti?"#e9c46a":"#f3dc9a"):"#fffdf6"}" stroke="#b8860b" stroke-width="0.008" opacity="${past?.9:.6}"/>`;}});}
+  // vertex paths: straight lines a = 30°·s + 60°·j
+  for(let j=-12;j<12;j++)out+=`<line x1="0" y1="${(4-(60*j)/90).toFixed(4)}" x2="7" y2="${(4-(60*j+210)/90).toFixed(4)}" stroke="#0f172a" stroke-width="0.012" opacity=".55"/>`;
+  out+=`<rect x="-0.3" y="-0.15" width="0.3" height="4.5" fill="#fffdf6"/><rect x="0" y="-0.15" width="7" height="0.15" fill="#fffdf6"/><rect x="0" y="4" width="7" height="0.3" fill="#fffdf6"/><rect x="7" y="-0.15" width="0.3" height="4.5" fill="#fffdf6"/>`;
+  for(let x=0;x<=7;x++)out+=`<line x1="${x}" y1="0" x2="${x}" y2="4" stroke="#9ca3af" stroke-width="0.008" opacity=".5"/><text x="${x}" y="4.15" font-size="0.12" text-anchor="middle" fill="#6b7280">${x}</text>`;
+  [0,1,2,3,4].forEach(y=>{out+=`<text x="-0.04" y="${y+.04}" font-size="0.11" text-anchor="end" fill="#6b7280">${360-y*90}°</text>`;});
+  if(s<=7)out+=`<line x1="${s}" y1="0" x2="${s}" y2="4" stroke="#dc2626" stroke-width="0.025"/><text x="${s+.05}" y="0.12" font-size="0.12" fill="#dc2626">${T("most","now")}</text>`;
+  svgU.innerHTML=out;}
+
+/* ---------- 3D spacetime ---------- */
+const cv=$("#gl"),renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(34,1,.1,100);
+scene.add(new THREE.HemisphereLight(0xffffff,0x9a8f7a,.85));const dl=new THREE.DirectionalLight(0xffffff,.7);dl.position.set(3,5,6);scene.add(dl);
+const RS=2,root=new THREE.Group();scene.add(root);
+const funMat=new THREE.MeshStandardMaterial({vertexColors:true,side:THREE.DoubleSide,flatShading:true,roughness:.6,transparent:true,opacity:.92});
+let funnel=null,coneMesh=null,pathLines=null;
+const ringMat=new THREE.MeshStandardMaterial({color:0xc8901a,side:THREE.DoubleSide,flatShading:true,emissive:0x5a3a00,emissiveIntensity:.35});
+const ringGeo=new THREE.BufferGeometry(),ringMesh=new THREE.Mesh(ringGeo,ringMat);root.add(ringMesh);
+const nowPlane=new THREE.Mesh(new THREE.PlaneGeometry(4.6,4.6),new THREE.MeshBasicMaterial({color:0xdc2626,transparent:true,opacity:.08,side:THREE.DoubleSide,depthWrite:false}));nowPlane.rotation.x=-Math.PI/2;root.add(nowPlane);
+const W3=(s,j)=>{const p=P(s,j);return [p[0]*RS,timeOf(s),-p[1]*RS];};
+function buildFunnel(){[funnel,coneMesh,pathLines].forEach(o=>{if(o)root.remove(o);});
+  const pos=[],col=[],c1=new THREE.Color(0xf3dc9a),c2=new THREE.Color(0xe9c46a);
+  for(let m=0;m<MAXL;m++)for(let j=0;j<6;j++){[[[W3(m,j),W3(m,j+1),W3(m+1,j)],c1],[[W3(m,j+1),W3(m+1,j),W3(m+1,j+1)],c2]].forEach(([tr,c])=>tr.forEach(p=>{pos.push(...p);col.push(c.r,c.g,c.b);}));}
+  const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));g.setAttribute("color",new THREE.Float32BufferAttribute(col,3));g.computeVertexNormals();
+  funnel=new THREE.Mesh(g,funMat);root.add(funnel);
+  const lp=[];for(let j=0;j<6;j++)for(let i=0;i<MAXL*20;i++){lp.push(...W3(i/20,j),...W3((i+1)/20,j));}
+  const lg=new THREE.BufferGeometry();lg.setAttribute("position",new THREE.Float32BufferAttribute(lp,3));pathLines=new THREE.LineSegments(lg,new THREE.LineBasicMaterial({color:0x0f172a}));pathLines.visible=S.paths;root.add(pathLines);
+  // light cone through the vertex paths: r = RS·(1 + y/H), apex at y = −H
+  const cg=new THREE.ConeGeometry(RS,H,64,1,true);cg.rotateX(Math.PI);cg.translate(0,-H/2,0);
+  coneMesh=new THREE.Mesh(cg,new THREE.MeshBasicMaterial({color:0x7c3aed,transparent:true,opacity:.12,side:THREE.DoubleSide,depthWrite:false}));
+  coneMesh.visible=S.mode==="cone"&&S.cone;root.add(coneMesh);
+  root.position.y=S.mode==="log"?1.6:1.4;}
+function updateRing(s){const pos=[];for(let j=0;j<6;j++){[W3(s,j),W3(s,j+1),W3(s+1,j),W3(s,j+1),W3(s+1,j),W3(s+1,j+1)].forEach(p=>pos.push(...p));}
+  ringGeo.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));ringGeo.computeVertexNormals();nowPlane.position.y=timeOf(s);}
+let th=.7,ph=1.2,rad=9,drag=null;
+function resize(){const r=cv.getBoundingClientRect();if(!r.width)return;renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.updateProjectionMatrix();}
+new ResizeObserver(resize).observe(cv);
+cv.addEventListener("pointerdown",e=>{drag={x:e.clientX,y:e.clientY};cv.setPointerCapture(e.pointerId);});
+cv.addEventListener("pointermove",e=>{if(!drag)return;th-=(e.clientX-drag.x)*.008;ph=Math.max(.05,Math.min(Math.PI-.05,ph-(e.clientY-drag.y)*.008));drag.x=e.clientX;drag.y=e.clientY;});
+cv.addEventListener("pointerup",()=>{drag=null;});
+cv.addEventListener("wheel",e=>{e.preventDefault();rad=Math.max(4,Math.min(18,rad*(1+Math.sign(e.deltaY)*.08)));},{passive:false});
+
+/* ---------- readout ---------- */
+function readT(s){const scale=Math.pow(K,s);let r;
+  if(S.mode==="log")r=T(`<b>Egyenlő lépések:</b> minden lépés ugyanannyi idő, ln √3 ≈ ${num(LN,4)} egység. Megtett lépések: <b>${num(s,2)}</b>, méret: <b>${num(scale,4)}</b>, elfordulás: ${num(30*s,0)}°. A gyűrű sosem ér a közepére: bármely pillanatban ugyanúgy néz ki, csak kisebb. 12 lépés (egy teljes fordulat) után a méret 1/${num(C.perTurn,0)}.`,
+    `<b>Equal steps:</b> every step takes the same time, ln √3 ≈ ${num(LN,4)} units. Steps taken: <b>${num(s,2)}</b>, size: <b>${num(scale,4)}</b>, turned: ${num(30*s,0)}°. The ring never reaches the centre: at any moment it looks the same, only smaller. After 12 steps (one full turn) its size is 1/${num(C.perTurn,0)}.`);
+  else r=T(`<b>Méret szerinti lépések:</b> minden lépés annyi idő, amekkora a gyűrű; ekkor a méret egyenletesen fogy, 1 − t/T. Most t/T = <b>${num(1-scale,3)}</b>, megtett lépések: <b>${num(s,2)}</b>, elfordulás: ${num(30*s,0)}°. A gyűrű t = T-kor ér a közepére, végtelen sok lépés után (Zénón): a pályák egyre gyorsabban forognak, és a téridőben egy kúpon futnak, amelynek csúcsa egyetlen esemény.`,
+    `<b>Steps by size:</b> every step takes as long as the ring is large; then the size shrinks evenly, 1 − t/T. Now t/T = <b>${num(1-scale,3)}</b>, steps taken: <b>${num(s,2)}</b>, turned: ${num(30*s,0)}°. The ring reaches the centre at t = T, after infinitely many steps (Zeno): the paths turn ever faster, and in spacetime they run on a cone whose apex is a single event.`);
+  $("#readT").innerHTML=r;}
+
+function drawSide(){const li=(tag,cls,hu,en)=>`<li><span class="tag ${cls}">${tag}</span>${T(hu,en)}</li>`;
+  $("#truths").innerHTML=[
+    li(T("HIPOTÉZIS","HYPOTHESIS"),"hyp",`<b>A spidron a valóságban mozog.</b> Egy háromszöggyűrű lépésenként 1/√3-szorosára kicsinyül, 30°-ot fordul és hátrébb kerül az időben; a sík spidron ennek a mozgásnak a nyoma. Ez a modell kiinduló feltevése.`,
+      `<b>The spidron really moves.</b> A ring of triangles shrinks by 1/√3 per step, turns 30° and moves further back in time; the flat spidron is the trace of this motion. This is the model's starting assumption.`),
+    li(T("ÉRTELMEZÉS","INTERPRETATION"),"hyp",`<b>Ami mozog, az a tudat állapota.</b> A mozgó gyűrű a pillanatnyi állapot; a nyom a korábbi állapotok sora, mindegyik az előző kicsinyített, elfordult másolata, egyre hátrébb az időben. A modell szerint tehát egy állapot nem tűnik el, hanem a mintázat belsejébe kerül, és ugyanaz a forma marad. Ez képi értelmezés: a tudat nem háromszöggyűrű, és a modell semmit nem mond arról, mi a tudat; csak azt, hogy az állapotai között ilyen önhasonló viszony lenne.`,
+      `<b>What moves is the state of consciousness.</b> The moving ring is the present state; the trace is the sequence of earlier states, each a smaller, turned copy of the one before, further and further back in time. In the model, then, a state does not vanish but moves into the interior of the pattern, keeping the same form. This is a pictorial interpretation: consciousness is not a ring of triangles, and the model says nothing about what consciousness is; only that its states would be related in this self-similar way.`),
+    li(T("MÉRHETŐ","TESTABLE"),"new",`<b>Mi különböztetné meg a tudat-értelmezést?</b> Az agyi aktivitás sok mérésben skálafüggetlen (hatványfüggvényes) jegyeket mutat, például az ún. neuronlavinákban (Beggs és Plenz, 2003). Ez folytonos skálainvariancia. A spidron-modell ennél többet állít: diszkrétet, kitüntetett 3-as (illetve √3 és 30°) aránnyal. Ha ilyen log-periodikus ismétlődés kimutatható lenne az állapotok időbeli mintázatában, az a modell mellett szólna; ha csak sima hatványfüggvény van, az ellene.`,
+      `<b>What would set the consciousness reading apart?</b> Brain activity shows scale-free (power-law) features in many measurements, e.g. in so-called neuronal avalanches (Beggs and Plenz, 2003). That is continuous scale invariance. The spidron model claims more: a discrete one, with a preferred ratio of 3 (or √3 with 30°). If such a log-periodic repetition could be shown in the temporal pattern of states, it would speak for the model; if there is only a plain power law, against it.`),
+    li(T("IGAZ","TRUE"),"ok",`<b>A mozgás önhasonló.</b> Egy lépés minden szintet pontosan a következőre visz (eltérés ${ex(C.e1)}), ezért a mozgás bármely pillanatban ugyanazt a képet adja, csak kisebben. Két lépés (60° fordulat) a hatszög szimmetriája miatt tiszta kicsinyítés 1/3-ra (eltérés ${ex(C.e3)}).`,
+      `<b>The motion is self-similar.</b> One step carries each level exactly onto the next (deviation ${ex(C.e1)}), so at any moment the motion shows the same picture, only smaller. Two steps (a 60° turn) are, by the hexagon's symmetry, a pure scaling by 1/3 (deviation ${ex(C.e3)}).`),
+    li(T("IGAZ","TRUE"),"ok",`<b>Az idő mérése választás, és kétféle következetes választás van.</b> Egyenlő lépéseknél (logaritmikus idő) a gyűrű sosem ér a közepére; a kitekert nézetben ez egyenletes eltolás, a csúcsok pályái egyenesek. Ha a lépés ideje a mérettel arányos, a gyűrű véges idő alatt ér a közepére, és a pályák egy kúpon futnak: ha a kúp meredeksége a fénysebesség, ez fénykúp.`,
+      `<b>Measuring time is a choice, and there are two consistent choices.</b> With equal steps (logarithmic time) the ring never reaches the centre; in the unrolled view this is an even shift, and the vertex paths are straight lines. If a step lasts in proportion to the size, the ring reaches the centre in finite time and the paths run on a cone: if its slope is the speed of light, that is a light cone.`),
+    li(T("IGAZ","TRUE"),"ok",`<b>Van fizikai keret, ahol a kicsinyítés maga az idő.</b> A konform térelméletek ún. radiális kvantálásában a ln r az idő, és a nagyítás az időbeli eltolás. A logaritmikus időmérés ennek felel meg. Csak tömeg nélküli, skálafüggetlen fizikában érvényes; ahol tömeg van, ott van természetes méret is.`,
+      `<b>There is a physical framework in which scaling is time itself.</b> In the so-called radial quantisation of conformal field theories, ln r is time and dilation is a time shift. Logarithmic time corresponds to this. It holds only in massless, scale-free physics; where there is mass, there is also a natural size.`),
+    li(T("MÉRHETŐ","TESTABLE"),"new",`<b>Mit jósolna a hipotézis?</b> Diszkrét skálainvarianciát: log-periodikus jelet, amely 3-szoros kicsinyítésenként ismétlődik (ln 3 ≈ 1,099 periódus a logaritmikus skálán), forgásra érzékeny mérésben √3-onként 30°-os fordulattal. Ilyen log-periodikus jeleket valóban keresnek és találnak, például törési folyamatokban (Sornette munkái); a spidron konkrétan a 3-as arányt jósolja.`,
+      `<b>What would the hypothesis predict?</b> Discrete scale invariance: a log-periodic signal that repeats with every 3-fold reduction (period ln 3 ≈ 1.099 on a log scale), and, in a rotation-sensitive measurement, every √3 with a 30° turn. Such log-periodic signals are really searched for and found, e.g. in fracture processes (Sornette's work); the spidron specifically predicts the ratio 3.`),
+    li(T("PONTOSÍTANDÓ","REFINE"),"fix",`<b>Choptuik kritikus kollapszusa.</b> Az általános relativitáselméletben valóban létezik ilyen önhasonló „visszhang”-szerkezet, de ott egy visszhang e^${num(CHOPTUIK,2)} ≈ ${num(C.chopScale,1)}-szeres kicsinyítés, ami ${num(C.chop,2)} spidron-lépésnek felel meg. Ez nem egész szám, tehát a spidron nem ez a megoldás; a fizika a szerkezetet ismeri, az arányt nem.`,
+      `<b>Choptuik's critical collapse.</b> General relativity really has such a self-similar “echo” structure, but there one echo is a reduction by e^${num(CHOPTUIK,2)} ≈ ${num(C.chopScale,1)}, which is ${num(C.chop,2)} spidron steps. That is not a whole number, so the spidron is not that solution; physics knows the structure, not the ratio.`),
+    li(T("NEM TARTHATÓ","DOES NOT HOLD"),"no",`<b>„Ami hátrébb van az időben, az mindig kisebb.”</b> A táguló világegyetemben a távolabbi, korábbi tárgyak látszó mérete nagyjából z ≈ 1,6 vöröseltolódásig csökken, azon túl újra nő. A modell kicsinyítése tehát nem általános téridő-szabály, hanem a modell saját feltevése.`,
+      `<b>“What is further back in time is always smaller.”</b> In the expanding universe the apparent size of more distant, earlier objects shrinks only up to a redshift of about z ≈ 1.6, and beyond that grows again. The model's shrinking is therefore not a general law of spacetime but the model's own assumption.`)
+  ].join("");}
+
+/* ---------- loop & controls ---------- */
+let last=0;
+function frame(now){requestAnimationFrame(frame);const dt=Math.min(.05,(now-(last||now))/1000);last=now;
+  if(S.play){S.u+=dt*S.speed*(S.mode==="log"?.04:.05);if(S.u>=(S.mode==="log"?1:.985))S.u=0;$("#clock").value=Math.round(S.u*1000);}
+  const s=sOf(S.u);
+  if(S.tab==="2d")draw2D(s);else if(S.tab==="un")drawU(s);
+  else{updateRing(s);if(S.spin&&!drag)th+=.003;const Rr=rad*Math.max(1,1/camera.aspect);camera.position.set(Rr*Math.sin(ph)*Math.sin(th),Rr*Math.cos(ph),Rr*Math.sin(ph)*Math.cos(th));camera.lookAt(0,0,0);renderer.render(scene,camera);}
+  if((S.tick=(S.tick||0)+1)%6===0)readT(s);}
+document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{S.tab=b.dataset.tab;document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("on",x===b));
+  ["2d","3d","un"].forEach(k=>{$("#pane"+k).hidden=S.tab!==k;});if(S.tab==="3d")resize();}));
+document.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",()=>{S.mode=b.dataset.mode;S.u=0;document.querySelectorAll("[data-mode]").forEach(x=>x.classList.toggle("on",x===b));buildFunnel();}));
+$("#play").addEventListener("click",()=>{S.play=!S.play;$("#play").classList.toggle("on",S.play);$("#play").innerHTML=S.play?T("❚❚ Szünet","❚❚ Pause"):T("▶ Indítás","▶ Play");});
+$("#speed").addEventListener("input",e=>{S.speed=e.target.value/100;});
+$("#clock").addEventListener("input",e=>{S.u=Math.min(S.mode==="log"?.999:.985,e.target.value/1000);});
+const tog=(id,k,f)=>$(id).addEventListener("click",()=>{S[k]=!S[k];$(id).classList.toggle("on",S[k]);if(f)f();});
+tog("#cone","cone",()=>{coneMesh.visible=S.mode==="cone"&&S.cone;});tog("#paths","paths",()=>{pathLines.visible=S.paths;});tog("#spin","spin");
+function applyLang(){const l=L();document.querySelectorAll(".langsw button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.l===l)));
+  $("#play").innerHTML=S.play?T("❚❚ Szünet","❚❚ Pause"):T("▶ Indítás","▶ Play");drawSide();readT(sOf(S.u));}
+document.querySelectorAll(".langsw button").forEach(b=>b.addEventListener("click",()=>{const l=b.dataset.l;try{localStorage.setItem("sjk-lang",l)}catch(e){}
+  document.documentElement.setAttribute("data-lang",l);document.documentElement.lang=l;applyLang();window.dispatchEvent(new CustomEvent("sjk:lang",{detail:l}));}));
+buildFunnel();applyLang();requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
