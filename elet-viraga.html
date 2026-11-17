@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Élet virága és spidron / Flower of Life and Spidron</title>
+<meta name="description" content="Az Élet virága és a spidron geometriai igazságai: 2D szerkesztés, 3D gömb robbantott és metszeti nézettel, forgatási próba és a gyakori állítások ellenőrzése. / The geometric truths of the Flower of Life and the spidron: 2D construction, a 3D sphere with exploded and section views, a rotation test and common claims checked.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Élet virága és spidron / Flower of Life and Spidron">
+<meta property="og:description" content="Mi igaz, mi pontosítandó, mi nem tartható – számolva és 3D-ben. / What is true, what needs refining, what does not hold – computed and in 3D.">
+<meta property="og:url" content="https://madcsaba.github.io/spidron/elet-viraga.html">
+<script>
+(function(){var l;try{l=localStorage.getItem("sjk-lang")}catch(e){}
+if(l!=="hu"&&l!=="en")l=(navigator.language||"").toLowerCase().indexOf("hu")===0?"hu":"en";
+document.documentElement.setAttribute("data-lang",l);document.documentElement.lang=l;})();
+</script>
+<script src="vendor/three.min.js"></script>
+<style>
+  :root{--bg:#f6f7f9;--panel:#fff;--line:#e3e6ea;--ink:#1a1d21;--dim:#6b7280;--acc:#2563eb;--green:#16a34a;--gold:#c8901a;--red:#dc2626;--amber:#b45309;
+    --display:ui-sans-serif,system-ui,"Segoe UI",Helvetica,Arial;--serif:Georgia,'Times New Roman',serif}
+  html[data-lang="hu"] .en{display:none}
+  html[data-lang="en"] .hu{display:none}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--display)}
+  .wrap{max-width:1320px;margin:0 auto;padding:22px 18px 56px}
+  .kicker{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);font-weight:700}
+  h1{font:600 30px/1.2 var(--serif);margin:6px 0}
+  h2{font:600 20px/1.3 var(--serif);margin:0 0 8px}
+  h3{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin:16px 0 6px}
+  .lead{color:var(--dim);max-width:920px;margin:0 0 14px}
+  .grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:16px;align-items:start}
+  @media (max-width:1000px){.grid{grid-template-columns:minmax(0,1fr)}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
+  .bar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:0 0 10px}
+  .bar .lbl{font-size:12.5px;color:var(--dim)}
+  .bar label{font-size:13px;color:var(--dim);display:flex;align-items:center;gap:6px}
+  input[type=range]{width:110px}
+  button.t{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font:13px var(--display);cursor:pointer;color:var(--ink);min-height:34px}
+  button.t:hover{border-color:#c5cad1}
+  button.t.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+  .tabs{display:flex;gap:6px;margin-bottom:12px;border-bottom:1px solid var(--line);padding-bottom:10px}
+  .stage{position:relative;border-radius:12px;overflow:hidden;background:radial-gradient(ellipse at 50% 42%,#fffdf6 0%,#ece8de 100%);border:1px solid var(--line)}
+  #gl{display:block;width:100%;height:min(70vh,620px);touch-action:none;cursor:grab}
+  #svg2d{display:block;width:100%;height:auto;max-height:min(70vh,620px);background:#fffdf6;border-radius:12px;border:1px solid var(--line)}
+  .hint{position:absolute;left:10px;bottom:8px;font-size:12px;color:var(--dim);pointer-events:none;background:rgba(255,255,255,.85);padding:2px 6px;border-radius:6px}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--dim);margin-top:8px}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:5px;vertical-align:-2px}
+  .readout{font-size:14px;margin-top:8px;padding:8px 10px;background:#f8fafc;border:1px solid var(--line);border-radius:10px}
+  .readout b{font-family:var(--serif)}
+  .truths{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+  .truths li{border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13.5px}
+  .tag{display:inline-block;font-size:11.5px;font-weight:700;padding:1px 7px;border-radius:5px;margin-right:6px;letter-spacing:.02em}
+  .ok{background:#dcfce7;color:#166534}.fix{background:#fef3c7;color:#92400e}.no{background:#fee2e2;color:#991b1b}.new{background:#dbeafe;color:#1e40af}
+  table{border-collapse:collapse;width:100%;font-size:13px;min-width:460px}
+  th,td{border-bottom:1px solid var(--line);padding:6px 6px;text-align:left;vertical-align:top}
+  th{color:var(--dim);font-weight:600;font-size:12px}
+  td.m{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px}
+  .small{font-size:12.5px;color:var(--dim)}
+  a{color:var(--acc)}
+  .langsw{position:fixed;top:10px;right:12px;z-index:50;display:flex;background:#fff;border:1px solid #e3e6ea;border-radius:999px;padding:3px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+  .langsw button{border:0;background:none;font:600 13px var(--display);color:#6b7280;padding:5px 11px;border-radius:999px;cursor:pointer;min-height:32px}
+  .langsw button[aria-pressed="true"]{background:#1a1d21;color:#fff}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker"><span class="hu">Geometria · ellenőrzés</span><span class="en">Geometry · fact check</span></div>
+  <h1><span class="hu">Élet virága és spidron</span><span class="en">Flower of Life and Spidron</span></h1>
+  <p class="lead"><span class="hu">Egy elterjedt ábra két rendszert egyesít: az Élet virágát gömbhéjként és egy 4 karú spidront magként, C₄ szimmetriával. Itt mindkettőt megépítjük, és számolva megnézzük, mi igaz belőle. A fő eredmény: a <b>hatszögű</b> spidron pontosan ráül az Élet virága rácsára, a 4 karú nem; a hatszöges rács pedig csak 12 ötszögű ponttal fedhet be gömböt.</span><span class="en">A popular figure joins two systems: the Flower of Life as a spherical shell and a 4-arm spidron as its core, with C₄ symmetry. Here we build both and check, by computation, what holds. The main result: the <b>hexagonal</b> spidron sits exactly on the Flower of Life lattice, the 4-arm one does not; and a hexagonal lattice can cover a sphere only with 12 five-fold points.</span> <a href="index.html"><span class="hu">← nyitóoldal</span><span class="en">← home</span></a></p>
+
+  <div class="grid">
+    <section class="card">
+      <div class="tabs" role="tablist">
+        <button class="t on" data-tab="3d" role="tab"><span class="hu">3D gömb</span><span class="en">3D sphere</span></button>
+        <button class="t" data-tab="2d" role="tab"><span class="hu">2D szerkesztés és forgatási próba</span><span class="en">2D construction and rotation test</span></button>
+      </div>
+      <div class="bar"><span class="lbl"><span class="hu">Spidron karjai:</span><span class="en">Spidron arms:</span></span>
+        <button class="t on" data-arms="6"><span class="hu">6 (hatszögű)</span><span class="en">6 (hexagonal)</span></button>
+        <button class="t" data-arms="4"><span class="hu">4 (négyszögű)</span><span class="en">4 (square)</span></button>
+      </div>
+
+      <div id="pane3d">
+        <div class="bar">
+          <span class="lbl"><span class="hu">Nézet:</span><span class="en">View:</span></span>
+          <button class="t on" data-view="free"><span class="hu">Szabad</span><span class="en">Free</span></button>
+          <button class="t" data-view="front"><span class="hu">Elöl (x–y)</span><span class="en">Front (x–y)</span></button>
+          <button class="t" data-view="top"><span class="hu">Felül (x–z)</span><span class="en">Top (x–z)</span></button>
+          <button class="t" data-view="side"><span class="hu">Oldal (y–z)</span><span class="en">Side (y–z)</span></button>
+        </div>
+        <div class="bar">
+          <label><span class="hu">Robbantás</span><span class="en">Explode</span> <input type="range" id="explode" min="0" max="100" value="0"></label>
+          <label><span class="hu">Hajtás</span><span class="en">Fold</span> <input type="range" id="fold" min="0" max="100" value="55"></label>
+          <button class="t" id="cut"><span class="hu">✂ Metszet (¼ kivágás)</span><span class="en">✂ Section (¼ cut)</span></button>
+          <button class="t" id="truth"><span class="hu">✓ Igaz összeállítás</span><span class="en">✓ True composition</span></button>
+          <button class="t on" id="spin"><span class="hu">⟳ Forgás</span><span class="en">⟳ Spin</span></button>
+        </div>
+        <div class="stage"><canvas id="gl"></canvas><div class="hint"><span class="hu">Húzd: forgatás · görgő: nagyítás</span><span class="en">Drag: rotate · wheel: zoom</span></div></div>
+        <div class="legend">
+          <span><i style="background:var(--gold)"></i><span class="hu">Élet virága a gömbön (geodéziai rács, 162 kör)</span><span class="en">Flower of Life on the sphere (geodesic grid, 162 circles)</span></span>
+          <span><i style="background:var(--red)"></i><span class="hu">a 12 ötszögű pont (5 szomszéd 6 helyett)</span><span class="en">the 12 five-fold points (5 neighbours instead of 6)</span></span>
+          <span><i style="background:#d9b45f"></i><span class="hu">hatszögű spidron a hatszomszédos pontokon</span><span class="en">hexagonal spidrons on six-fold points</span></span>
+          <span><i style="background:#d9534f"></i><span class="hu">ötszögű spidron a 12 ötszomszédos ponton</span><span class="en">pentagonal spidrons on the 12 five-fold points</span></span>
+          <span><i style="background:#7aa7e0"></i><span class="hu">spidron-mag (szemléltető dombormű)</span><span class="en">spidron core (illustrative relief)</span></span>
+        </div>
+        <div class="readout" id="read3d"></div>
+      </div>
+
+      <div id="pane2d" hidden>
+        <div class="bar">
+          <label><span class="hu">Szintek</span><span class="en">Levels</span> <input type="range" id="levels" min="1" max="7" value="5"></label>
+          <button class="t on" data-show="circles"><span class="hu">Körök</span><span class="en">Circles</span></button>
+          <button class="t on" data-show="lattice"><span class="hu">Rácspontok</span><span class="en">Lattice points</span></button>
+          <button class="t on" data-show="spidron">Spidron</button>
+        </div>
+        <div class="bar"><span class="lbl"><span class="hu">Forgatási próba:</span><span class="en">Rotation test:</span></span>
+          <button class="t" data-rot="0">0°</button><button class="t" data-rot="60">60°</button><button class="t" data-rot="90">90°</button><button class="t" data-rot="120">120°</button><button class="t" data-rot="180">180°</button>
+        </div>
+        <svg id="svg2d" viewBox="-3.6 -3.6 7.2 7.2" role="img" aria-label="Flower of Life and spidron"></svg>
+        <div class="legend">
+          <span><i style="background:var(--gold)"></i><span class="hu">Élet virága: 19 kör, sugár r = középponttávolság</span><span class="en">Flower of Life: 19 circles, radius r = centre distance</span></span>
+          <span><i style="background:var(--green)"></i><span class="hu">spidron-csúcs a rácson</span><span class="en">spidron vertex on the lattice</span></span>
+          <span><i style="background:var(--red)"></i><span class="hu">spidron-csúcs a rácson kívül</span><span class="en">spidron vertex off the lattice</span></span>
+          <span><i style="background:#7c3aed"></i><span class="hu">elforgatott másolat</span><span class="en">rotated copy</span></span>
+        </div>
+        <div class="readout" id="read2d"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2><span class="hu">Az ábra állításai – ellenőrizve</span><span class="en">The figure's claims – checked</span></h2>
+      <ul class="truths">
+        <li><span class="tag ok"><span class="hu">IGAZ</span><span class="en">TRUE</span></span><span class="hu"><b>Élet virága (2D):</b> egyenlő r sugarú körök, a középpontok távolsága r. Minden kör átmegy a hat szomszéd középpontján, ezért a középpontok és a metszéspontok ugyanazt a háromszögrácsot adják.</span><span class="en"><b>Flower of Life (2D):</b> circles of equal radius r, centres r apart. Every circle passes through the centres of its six neighbours, so centres and intersections form the same triangular lattice.</span></li>
+        <li><span class="tag fix"><span class="hu">PONTOSÍTVA</span><span class="en">REFINED</span></span><span class="hu"><b>Spidron: aₙ = a₀·kⁿ.</b> A hatszögű spidronnál k pontosan 1/√3 ≈ 0,5774, szintenként 30° elfordulással, és a háromszögek 60–60–60° és 30–120–30°-osak. A „k ≈ 0,5–0,7, α ≈ 45–60°” tartomány általános spirál, nem spidron.</span><span class="en"><b>Spidron: aₙ = a₀·kⁿ.</b> For the hexagonal spidron k is exactly 1/√3 ≈ 0.5774, with a 30° turn per level, and the triangles are 60–60–60° and 30–120–30°. The range “k ≈ 0.5–0.7, α ≈ 45–60°” describes a generic spiral, not a spidron.</span></li>
+        <li><span class="tag new"><span class="hu">ÚJ IGAZSÁG</span><span class="en">NEW TRUTH</span></span><span class="hu"><b>A hatszögű spidron az Élet virága rácsán ül.</b> Ha egy szint csúcsai rácspontok, akkor minden kifelé eső szinté is: a √3-szoros nagyítás 30°-os forgatással a háromszögrácsot önmagába viszi (az Eisenstein-egészek között egy 3 normájú szorzás). Befelé, r/√3-nál már nem rácspont. Nézd a 2D lapon: a zöld csúcsok.</span><span class="en"><b>The hexagonal spidron sits on the Flower of Life lattice.</b> If one level's vertices are lattice points, so are those of every level further out: a √3 zoom with a 30° turn maps the triangular lattice into itself (multiplication by an Eisenstein integer of norm 3). Inward, at r/√3, they are no longer lattice points. See the green vertices on the 2D tab.</span></li>
+        <li><span class="tag fix"><span class="hu">PONTOSÍTVA</span><span class="en">REFINED</span></span><span class="hu"><b>4 karú spidron.</b> Van négyszögű változat: 15–150–15°-os egyenlő szárú és egyenlő oldalú háromszögekből, k = 1/(2·cos 15°) ≈ 0,5176, szintenként 45° elfordulással (itt levezetve: az összekötő háromszögek pontosan egyenlő oldalúak). A hatszöges rácsra viszont nem illik.</span><span class="en"><b>4-arm spidron.</b> A square variant exists: built from 15–150–15° isosceles and equilateral triangles, k = 1/(2·cos 15°) ≈ 0.5176, with a 45° turn per level (derived here: the connecting triangles are exactly equilateral). It does not fit the hexagonal lattice, though.</span></li>
+        <li><span class="tag new"><span class="hu">ÚJ IGAZSÁG</span><span class="en">NEW TRUTH</span></span><span class="hu"><b>Általános spidron-szabály.</b> Ha az n-szögű spidron összekötő háromszögei egyenlő oldalúak, az egyenlő szárú háromszög alapszöge <b>β = 60° − 180°/n</b>, a léptékarány <b>k = 1/(2·cos β)</b>, a fordulat szintenként 180°/n. n = 6: 30° és 1/√3; n = 4: 15°; n = 5: 24° és k ≈ 0,5473. (Levezetés: a csúcs távolsága a középponttól cos(π/n) − sin(π/n)·tg β, ami pontosan akkor egyenlő 1/(2·cos β)-val, ha cos(π/n + β) = ½.)</span><span class="en"><b>General spidron law.</b> If the connecting triangles of an n-gon spidron are equilateral, the isosceles base angle is <b>β = 60° − 180°/n</b>, the scale ratio <b>k = 1/(2·cos β)</b>, and the turn per level 180°/n. n = 6: 30° and 1/√3; n = 4: 15°; n = 5: 24° and k ≈ 0.5473. (Derivation: the apex distance from the centre is cos(π/n) − sin(π/n)·tan β, which equals 1/(2·cos β) exactly when cos(π/n + β) = ½.)</span></li>
+        <li><span class="tag no"><span class="hu">NEM TARTHATÓ</span><span class="en">DOES NOT HOLD</span></span><span class="hu"><b>C₄ (D₄h) szimmetria az együttesre.</b> A hatszöges rács 90°-os forgatásra nem kerül önmagába, ezért a 4 karú mag és az Élet virága közös szimmetriája legfeljebb 180° (C₂). A forgatási próba ezt számszerűen mutatja.</span><span class="en"><b>C₄ (D₄h) symmetry for the whole.</b> The hexagonal lattice does not map onto itself under a 90° turn, so the 4-arm core and the Flower of Life share at most a 180° symmetry (C₂). The rotation test shows this numerically.</span></li>
+        <li><span class="tag fix"><span class="hu">PONTOSÍTVA</span><span class="en">REFINED</span></span><span class="hu"><b>Élet virága a gömbön.</b> Hatszöges rács nem fedheti egyenletesen a gömböt: az Euler-képlet (V − E + F = 2) miatt pontosan 12 ötszögű pont kell, mint a geodéziai kupolán vagy a focilabdán. A 3D nézet piros pontjai ezek.</span><span class="en"><b>Flower of Life on a sphere.</b> A hexagonal lattice cannot cover a sphere uniformly: Euler's formula (V − E + F = 2) forces exactly 12 five-fold points, as on a geodesic dome or a football. They are the red points in the 3D view.</span></li>
+        <li><span class="tag new"><span class="hu">ÖSSZEÁLLÍTÁS</span><span class="en">COMPOSITION</span></span><span class="hu"><b>Ami együtt igaz marad.</b> A gömbön a hatszöges rács egyetlen őszinte formája a geodéziai rács (150 hatszomszédos, 12 ötszomszédos pont). Minden pontra olyan spidron kerül, amelynek karszáma a szomszédszámmal egyezik, a karok a szomszédok felé. Ha mind azonos irányba csavarodik, az együttes szimmetriája az ikozaéder 60 forgatása. A 4 karú mag és a C₄ ebből kimarad. Kapcsold be: „Igaz összeállítás”.</span><span class="en"><b>What stays true together.</b> On a sphere the only honest form of the hexagonal lattice is the geodesic grid (150 six-fold and 12 five-fold points). Each point gets a spidron whose number of arms equals its number of neighbours, arms toward the neighbours. If all twist the same way, the whole has the 60 rotations of the icosahedron as its symmetry. The 4-arm core and C₄ are left out. Switch on “True composition”.</span></li>
+        <li><span class="tag ok"><span class="hu">IGAZ</span><span class="en">TRUE</span></span><span class="hu"><b>Befoglaló gömb:</b> sugár R, átmérő 2R (meghatározás).</span><span class="en"><b>Bounding sphere:</b> radius R, diameter 2R (by definition).</span></li>
+      </ul>
+
+      <h3><span class="hu">Matematikai összefoglaló</span><span class="en">Mathematical summary</span></h3>
+      <div style="overflow-x:auto"><table>
+        <tr><th></th><th><span class="hu">Hatszögű spidron</span><span class="en">Hexagonal spidron</span></th><th><span class="hu">Ötszögű spidron</span><span class="en">Pentagonal spidron</span></th><th><span class="hu">Négyszögű spidron</span><span class="en">Square spidron</span></th></tr>
+        <tr><td><span class="hu">Léptékarány k</span><span class="en">Scale ratio k</span></td><td class="m">1/√3 ≈ 0.5774</td><td class="m">1/(2·cos24°) ≈ 0.5473</td><td class="m">1/(2·cos15°) ≈ 0.5176</td></tr>
+        <tr><td><span class="hu">Fordulat szintenként</span><span class="en">Turn per level</span></td><td class="m">30°</td><td class="m">36°</td><td class="m">45°</td></tr>
+        <tr><td><span class="hu">Háromszögek</span><span class="en">Triangles</span></td><td class="m">60–60–60°, 30–120–30°</td><td class="m">60–60–60°, 24–132–24°</td><td class="m">60–60–60°, 15–150–15°</td></tr>
+        <tr><td><span class="hu">Spirál</span><span class="en">Spiral</span></td><td class="m">r = r₀·e^(−bθ), b = ln√3/(π/6) ≈ 1.049</td><td class="m">b = ln(1/k)/(π/5) ≈ 0.958</td><td class="m">b = ln(1/k)/(π/4) ≈ 0.838</td></tr>
+        <tr><td><span class="hu">Rácsra illik?</span><span class="en">Fits the lattice?</span></td><td><span class="hu">igen, kifelé minden szint</span><span class="en">yes, every level outward</span></td><td><span class="hu">a gömb 12 ötszögpontján</span><span class="en">at the sphere's 12 five-fold points</span></td><td><span class="hu">nem (csak a tengelyen fekvő 2 csúcs)</span><span class="en">no (only the 2 vertices on the axis)</span></td></tr>
+        <tr><td><span class="hu">Közös szimmetria az Élet virágával</span><span class="en">Shared symmetry with the Flower of Life</span></td><td class="m">C₆ (60°)</td><td class="m"><span class="hu">ikozaéderes (gömbön)</span><span class="en">icosahedral (on the sphere)</span></td><td class="m">C₂ (180°)</td></tr>
+      </table></div>
+      <p class="small" style="margin-top:12px"><span class="hu">A 3D mag hajtása szemléltető dombormű, nem méretpontos hajtogatás. A spidron Erdély Dániel geometriája. Kapcsolódó oldalak:</span><span class="en">The 3D core's fold is an illustrative relief, not a dimensionally exact fold. The spidron is the geometry of Dániel Erdély. Related pages:</span> <a href="spidron-lab.html"><span class="hu">Spidron-labor</span><span class="en">Spidron Lab</span></a> · <a href="harmonia.html"><span class="hu">Harmónia Labor</span><span class="en">Harmony Lab</span></a> · <a href="spidron-cube.html"><span class="hu">Spidron-kocka</span><span class="en">Spidron Cube</span></a></p>
+    </section>
+  </div>
+</div>
+
+<div class="langsw" role="group" aria-label="Nyelv / Language"><button type="button" data-l="hu">HU</button><button type="button" data-l="en">EN</button></div>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const L=()=>document.documentElement.getAttribute("data-lang")==="en"?"en":"hu";
+const T=(hu,en)=>L()==="en"?en:hu;
+const S={arms:6,tab:"3d",levels:5,show:{circles:true,lattice:true,spidron:true},rot:0,explode:0,fold:.55,cut:false,spin:true};
+const SQ3=Math.sqrt(3);
+/* general spidron law (equilateral connecting triangles): base angle β = 60° − 180°/n, scale ratio k = 1/(2·cos β) */
+const betaOf=n=>Math.PI/3-Math.PI/n,kOf=n=>1/(2*Math.cos(betaOf(n)));
+
+/* ---------- complex helpers & lattice ---------- */
+const W=[Math.cos(Math.PI/3),Math.sin(Math.PI/3)];
+function onLattice(x,y){const b=y/W[1],a=x-b*W[0];return Math.abs(a-Math.round(a))<1e-6&&Math.abs(b-Math.round(b))<1e-6;}
+function latticePts(rmax){const out=[];const N=Math.ceil(rmax)+2;for(let a=-N;a<=N;a++)for(let b=-N;b<=N;b++){const x=a+b*W[0],y=b*W[1];if(Math.hypot(x,y)<=rmax+1e-9)out.push([x,y]);}return out;}
+/* spidron nest: vertex (m,j) at radius R·k^m, angle m·π/n + 2πj/n */
+function nest(n,levels,R){const k=kOf(n),P=(m,j)=>{const a=m*Math.PI/n+2*Math.PI*j/n,r=R*Math.pow(k,m);return [r*Math.cos(a),r*Math.sin(a)];};
+  const tris=[],verts=[];
+  for(let m=0;m<=levels;m++)for(let j=0;j<n;j++)verts.push({m,p:P(m,j)});
+  for(let m=0;m<levels;m++)for(let j=0;j<n;j++){tris.push({m,j,iso:true,p:[P(m,j),P(m,(j+1)%n),P(m+1,j)]});tris.push({m,j,iso:false,p:[P(m,(j+1)%n),P(m+1,j),P(m+1,(j+1)%n)]});}
+  return {tris,verts};}
+
+/* ---------- 2D view ---------- */
+const svg=$("#svg2d");
+const rotPt=(p,deg)=>{const a=deg*Math.PI/180;return [p[0]*Math.cos(a)-p[1]*Math.sin(a),p[0]*Math.sin(a)+p[1]*Math.cos(a)];};
+function draw2D(){
+  const n=S.arms,R=3,{tris,verts}=nest(n,S.levels,R),centres=latticePts(2),lat=latticePts(3.4);
+  const fy=p=>[p[0],-p[1]];let s="";
+  // outer enclosing circle of the classic 19-circle Flower
+  s+=`<circle cx="0" cy="0" r="3" fill="none" stroke="#c8901a" stroke-width="0.03" opacity=".7"/>`;
+  if(S.show.circles)centres.forEach(c=>{s+=`<circle cx="${c[0].toFixed(4)}" cy="${(-c[1]).toFixed(4)}" r="1" fill="none" stroke="#c8901a" stroke-width="0.022"/>`;});
+  if(S.show.spidron)tris.forEach(t=>{const q=t.p.map(fy);const shade=t.iso?(t.m%2?"#cfe0f5":"#e6eefb"):(t.m%2?"#9fbde6":"#b9cfee");
+    s+=`<polygon points="${q.map(p=>p.map(v=>v.toFixed(4)).join(",")).join(" ")}" fill="${shade}" fill-opacity=".85" stroke="#4b6fa8" stroke-width="0.012"/>`;});
+  if(S.show.lattice)lat.forEach(p=>{s+=`<circle cx="${p[0].toFixed(4)}" cy="${(-p[1]).toFixed(4)}" r="0.035" fill="#8a6a1e" opacity=".55"/>`;});
+  let on=0,tot=0;const per=[];
+  if(S.show.spidron)verts.forEach(v=>{const ok=onLattice(v.p[0],v.p[1]);tot++;on+=ok;per[v.m]=(per[v.m]||0)+ok;
+    s+=`<circle cx="${v.p[0].toFixed(4)}" cy="${(-v.p[1]).toFixed(4)}" r="${Math.max(.025,.07*Math.pow(kOf(n),v.m*.5))}" fill="${ok?"#16a34a":"#dc2626"}"/>`;});
+  // rotation test: rotated ghost of everything, and the share of points that land on an original point
+  const pts=centres.concat(verts.map(v=>v.p));let match=null;
+  if(S.rot){const g=pts.map(p=>rotPt(p,S.rot));
+    match=g.filter(q=>pts.some(p=>Math.hypot(p[0]-q[0],p[1]-q[1])<1e-6)).length/pts.length;
+    if(S.show.circles)centres.forEach(c=>{const q=rotPt(c,S.rot);s+=`<circle cx="${q[0].toFixed(4)}" cy="${(-q[1]).toFixed(4)}" r="1" fill="none" stroke="#7c3aed" stroke-width="0.02" stroke-dasharray="0.06 0.05" opacity=".8"/>`;});
+    if(S.show.spidron)tris.forEach(t=>{const q=t.p.map(p=>fy(rotPt(p,S.rot)));s+=`<polygon points="${q.map(p=>p.map(v=>v.toFixed(4)).join(",")).join(" ")}" fill="none" stroke="#7c3aed" stroke-width="0.014" stroke-dasharray="0.05 0.04"/>`;});}
+  svg.innerHTML=s;
+  const k=kOf(n),kS=T(k.toFixed(4).replace('.',','),k.toFixed(4));
+  let r=T(`<b>${n} karú spidron</b>, k = ${kS}, ${180/n}° fordulat szintenként. Rácsra eső csúcsok: <b>${on} / ${tot}</b> (szintenként, kívülről: ${per.map((x,m)=>`${x}/${n}`).join(", ")}).`,
+           `<b>${n}-arm spidron</b>, k = ${kS}, ${180/n}° turn per level. Vertices on the lattice: <b>${on} / ${tot}</b> (per level, from outside: ${per.map((x,m)=>`${x}/${n}`).join(", ")}).`);
+  if(n===6)r+=T(" A legkülső három szint (sugár 3r, √3·r, r) teljesen a rácson van, befelé már nincs.","  The outer three levels (radius 3r, √3·r, r) lie fully on the lattice; further in they do not.");
+  if(match!==null)r+=`<br>`+T(`Forgatás ${S.rot}°: a pontok <b>${Math.round(match*100)}%-a</b> kerül vissza önmagára`,`Rotation ${S.rot}°: <b>${Math.round(match*100)}%</b> of the points land back on the figure`)+` – ${match>0.999?T("ez a forgatás szimmetria.","this rotation is a symmetry."):T("ez a forgatás nem szimmetria.","this rotation is not a symmetry.")}`;
+  else r+=`<br>${T("Válassz egy forgatási szöget: a lila másolat mutatja, hová kerül az ábra.","Pick a rotation angle: the violet copy shows where the figure goes.")}`;
+  $("#read2d").innerHTML=r;
+}
+
+/* ---------- 3D view ---------- */
+const cv=$("#gl");
+const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
+renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));renderer.localClippingEnabled=true;
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(34,1,.1,100);
+scene.add(new THREE.HemisphereLight(0xffffff,0x9a8f7a,.85));
+const d1=new THREE.DirectionalLight(0xffffff,.7);d1.position.set(3,5,6);scene.add(d1);
+const R=2;
+const cutPlanes=[new THREE.Plane(new THREE.Vector3(-1,0,0),0),new THREE.Plane(new THREE.Vector3(0,0,-1),0)];
+/* geodesic grid: icosahedron, each edge split in 4 -> 162 vertices, 12 of them with 5 neighbours */
+function geodesic(){
+  const g=new THREE.IcosahedronGeometry(1,3),pos=g.attributes.position,key=v=>v.toArray().map(x=>x.toFixed(5)).join(","),idx=new Map(),V=[];
+  const vid=[];for(let i=0;i<pos.count;i++){const v=new THREE.Vector3().fromBufferAttribute(pos,i).normalize(),k=key(v);if(!idx.has(k)){idx.set(k,V.length);V.push(v);}vid.push(idx.get(k));}
+  const nb=V.map(()=>new Set());for(let i=0;i<vid.length;i+=3){const a=vid[i],b=vid[i+1],c=vid[i+2];nb[a].add(b).add(c);nb[b].add(a).add(c);nb[c].add(a).add(b);}
+  let sum=0,cnt=0;nb.forEach((s,i)=>s.forEach(j=>{sum+=V[i].angleTo(V[j]);cnt++;}));
+  return {V,nb,edge:sum/cnt};}
+const GEO=geodesic();
+const goldMat=new THREE.LineBasicMaterial({color:0xc8901a,transparent:true,opacity:.85,clippingPlanes:cutPlanes,clipIntersection:true});
+const shellMat=new THREE.MeshStandardMaterial({color:0xfff4dc,transparent:true,opacity:.18,side:THREE.DoubleSide,depthWrite:false,clippingPlanes:cutPlanes,clipIntersection:true});
+const halves=[new THREE.Group(),new THREE.Group()];halves.forEach(h=>scene.add(h));
+function circleOn(u,rho,seg){const a=Math.abs(u.x)<.9?new THREE.Vector3(1,0,0):new THREE.Vector3(0,1,0),e1=new THREE.Vector3().crossVectors(u,a).normalize(),e2=new THREE.Vector3().crossVectors(u,e1);
+  const out=[];for(let i=0;i<=seg;i++){const t=i/seg*Math.PI*2;out.push(u.clone().multiplyScalar(Math.cos(rho)).add(e1.clone().multiplyScalar(Math.sin(rho)*Math.cos(t))).add(e2.clone().multiplyScalar(Math.sin(rho)*Math.sin(t))).multiplyScalar(R));}return out;}
+(function buildShell(){
+  const segs=[[],[]];
+  GEO.V.forEach(u=>{const side=u.x>=0?1:0,pts=circleOn(u,GEO.edge,40);for(let i=0;i<pts.length-1;i++)segs[side].push(pts[i].x,pts[i].y,pts[i].z,pts[i+1].x,pts[i+1].y,pts[i+1].z);});
+  segs.forEach((arr,s)=>{const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(arr,3));halves[s].add(new THREE.LineSegments(g,goldMat));
+    const shell=new THREE.Mesh(new THREE.SphereGeometry(R*.995,48,24,s?-Math.PI/2:Math.PI/2,Math.PI),shellMat);halves[s].add(shell);});
+  const dotG=new THREE.SphereGeometry(.055,12,8),dotM=new THREE.MeshBasicMaterial({color:0xdc2626});
+  GEO.V.forEach((u,i)=>{if(GEO.nb[i].size!==5)return;const m=new THREE.Mesh(dotG,dotM);m.position.copy(u).multiplyScalar(R*1.01);halves[u.x>=0?1:0].add(m);});
+})();
+/* true composition: a spidron on every geodesic point, arms = number of neighbours, arms toward the neighbours */
+const nestMat=new THREE.MeshStandardMaterial({vertexColors:true,side:THREE.DoubleSide,flatShading:true,roughness:.5,clippingPlanes:cutPlanes,clipIntersection:true});
+const nestHalves=[];
+(function buildNests(){
+  const data=[[],[]],cols=[[],[]];
+  GEO.V.forEach((u,i)=>{const nb=[...GEO.nb[i]].map(j=>GEO.V[j]),n=nb.length,side=u.x>=0?1:0;
+    const t0=nb[0].clone().sub(u.clone().multiplyScalar(u.dot(nb[0]))).normalize(),t1=new THREE.Vector3().crossVectors(u,t0);
+    const ang=nb.map(v=>{const d=v.clone().sub(u.clone().multiplyScalar(u.dot(v)));return Math.atan2(d.dot(t1),d.dot(t0));}).sort((a,b)=>a-b);
+    const a0=ang[0]+Math.PI/n,rr=R*GEO.edge/(2*Math.cos(Math.PI/n))*.97,{tris}=nest(n,4,rr),C=u.clone().multiplyScalar(R*1.006);
+    const c1=new THREE.Color(n===6?0xf3dfae:0xf2b8b0),c2=new THREE.Color(n===6?0xd9b45f:0xd9534f);
+    tris.forEach(tr=>{const c=tr.iso?c1:c2;tr.p.forEach(p=>{const ca=Math.cos(a0),sa=Math.sin(a0),x=p[0]*ca-p[1]*sa,y=p[0]*sa+p[1]*ca;
+      const w=C.clone().add(t0.clone().multiplyScalar(x)).add(t1.clone().multiplyScalar(y)).normalize().multiplyScalar(R*1.006);
+      data[side].push(w.x,w.y,w.z);cols[side].push(c.r,c.g,c.b);});});});
+  data.forEach((d,s)=>{const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(d,3));g.setAttribute("color",new THREE.Float32BufferAttribute(cols[s],3));g.computeVertexNormals();
+    const m=new THREE.Mesh(g,nestMat);m.visible=false;halves[s].add(m);nestHalves.push(m);});
+})();
+/* spidron core: nest in the x–y plane with an alternating, twisting relief (illustrative) */
+const coreGeo=new THREE.BufferGeometry(),coreMat=new THREE.MeshStandardMaterial({vertexColors:true,side:THREE.DoubleSide,flatShading:true,transparent:true,opacity:.9,roughness:.45,metalness:.05});
+const core=new THREE.Mesh(coreGeo,coreMat);scene.add(core);
+function buildCore(){
+  const n=S.arms,lev=7,Rc=R*.93,{tris}=nest(n,lev,Rc),pos=[],col=[];
+  const z=(p,m)=>{const r=Math.hypot(p[0],p[1]);return S.fold*.55*r*Math.sin(m*Math.PI/2+Math.atan2(p[1],p[0])*n/2)*.6;};
+  const cA=new THREE.Color(0x9fc0ea),cB=new THREE.Color(0xe7eefa);
+  tris.forEach(t=>{const c=(t.iso?cB:cA).clone().lerp(new THREE.Color(0x5b7fb8),t.j%2?.18:0);
+    t.p.forEach((p,i)=>{const m=t.m+(t.iso?(i===2?1:0):(i===0?0:1));pos.push(p[0],p[1],z(p,m));col.push(c.r,c.g,c.b);});});
+  coreGeo.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));coreGeo.setAttribute("color",new THREE.Float32BufferAttribute(col,3));coreGeo.computeVertexNormals();
+}
+let th=.6,ph=1.15,rad=8.2,drag=null,camT=null;
+const VIEWS={front:[0,Math.PI/2],top:[0,.001],side:[Math.PI/2,Math.PI/2]};
+function resize(){const r=cv.getBoundingClientRect();if(!r.width)return;renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.updateProjectionMatrix();}
+new ResizeObserver(resize).observe(cv);
+cv.addEventListener("pointerdown",e=>{drag={x:e.clientX,y:e.clientY};camT=null;setView("free",true);cv.setPointerCapture(e.pointerId);cv.style.cursor="grabbing";});
+cv.addEventListener("pointermove",e=>{if(!drag)return;th-=(e.clientX-drag.x)*.008;ph=Math.max(.001,Math.min(Math.PI-.001,ph-(e.clientY-drag.y)*.008));drag.x=e.clientX;drag.y=e.clientY;});
+cv.addEventListener("pointerup",()=>{drag=null;cv.style.cursor="grab";});
+cv.addEventListener("wheel",e=>{e.preventDefault();rad=Math.max(4,Math.min(18,rad*(1+Math.sign(e.deltaY)*.08)));},{passive:false});
+function setView(v,keep){document.querySelectorAll("[data-view]").forEach(b=>b.classList.toggle("on",b.dataset.view===v));if(v!=="free"&&!keep){camT=VIEWS[v];S.spin=false;$("#spin").classList.remove("on");}}
+function loop(){requestAnimationFrame(loop);if(S.tab!=="3d")return;
+  if(camT){th+=(camT[0]-th)*.12;ph+=(camT[1]-ph)*.12;}else if(S.spin&&!drag)th+=.003;
+  const Rr=rad*Math.max(1,1/camera.aspect);camera.position.set(Rr*Math.sin(ph)*Math.sin(th),Rr*Math.cos(ph),Rr*Math.sin(ph)*Math.cos(th));
+  camera.up.set(0,ph<.01?0:1,ph<.01?-1:0);camera.lookAt(0,0,0);
+  const d=S.explode*2.4;halves[0].position.x=-d;halves[1].position.x=d;
+  renderer.render(scene,camera);}
+function read3d(){const n=S.arms;
+  if(S.truth){$("#read3d").innerHTML=T("<b>Igaz összeállítás:</b> 150 hatszögű spidron (k = 0,5774, 30°/szint) a hatszomszédos és 12 ötszögű spidron (k = 0,5473, 36°/szint) az ötszomszédos pontokon, a karok a szomszédok felé. Minden elem a rács pontján ül, és az együttes az ikozaéder 60 forgatására változatlan. A 4 karú mag itt nem szerepel, mert ellentmond a rácsnak.",
+    "<b>True composition:</b> 150 hexagonal spidrons (k = 0.5774, 30°/level) on the six-fold and 12 pentagonal spidrons (k = 0.5473, 36°/level) on the five-fold points, arms toward the neighbours. Every element sits on a lattice point, and the whole is unchanged under the 60 rotations of the icosahedron. The 4-arm core is left out because it contradicts the lattice.");return;}
+  $("#read3d").innerHTML=T(`Gömbháló: 162 kör, ebből <b>150</b> hatszomszédos és <b>12</b> ötszomszédos (piros). Euler: V − E + F = 162 − 480 + 320 = 2. A mag ${n} karú spidron (k = ${kOf(n).toFixed(4).replace('.',',')}); ${n===6?"a hatszöges rács szimmetriáival összhangban.":"a 90°-os forgatása a rácsot nem viszi önmagába, ezért az együttes szimmetriája C₂."}`,
+    `Sphere grid: 162 circles, <b>150</b> with six neighbours and <b>12</b> with five (red). Euler: V − E + F = 162 − 480 + 320 = 2. The core is a ${n}-arm spidron (k = ${kOf(n).toFixed(4)}); ${n===6?"consistent with the symmetries of the hexagonal lattice.":"its 90° turn does not map the lattice onto itself, so the whole has C₂ symmetry."}`);}
+
+/* ---------- controls ---------- */
+document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{S.tab=b.dataset.tab;document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("on",x===b));
+  $("#pane3d").hidden=S.tab!=="3d";$("#pane2d").hidden=S.tab!=="2d";if(S.tab==="3d")resize();else draw2D();}));
+document.querySelectorAll("[data-arms]").forEach(b=>b.addEventListener("click",()=>{S.arms=+b.dataset.arms;document.querySelectorAll("[data-arms]").forEach(x=>x.classList.toggle("on",x===b));buildCore();read3d();draw2D();}));
+document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.view==="free"){camT=null;setView("free",true);}else setView(b.dataset.view);}));
+document.querySelectorAll("[data-show]").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.show;S.show[k]=!S.show[k];b.classList.toggle("on",S.show[k]);draw2D();}));
+document.querySelectorAll("[data-rot]").forEach(b=>b.addEventListener("click",()=>{S.rot=+b.dataset.rot;document.querySelectorAll("[data-rot]").forEach(x=>x.classList.toggle("on",x===b));draw2D();}));
+$("#levels").addEventListener("input",e=>{S.levels=+e.target.value;draw2D();});
+$("#explode").addEventListener("input",e=>{S.explode=e.target.value/100;});
+$("#fold").addEventListener("input",e=>{S.fold=e.target.value/100;buildCore();});
+$("#cut").addEventListener("click",()=>{S.cut=!S.cut;$("#cut").classList.toggle("on",S.cut);const p=S.cut?cutPlanes:[];[goldMat,shellMat,nestMat].forEach(m=>{m.clippingPlanes=p;m.needsUpdate=true;});});
+$("#truth").addEventListener("click",()=>{S.truth=!S.truth;$("#truth").classList.toggle("on",S.truth);core.visible=!S.truth;nestHalves.forEach(m=>m.visible=S.truth);
+  shellMat.opacity=S.truth?.5:.18;read3d();});
+$("#spin").addEventListener("click",()=>{S.spin=!S.spin;$("#spin").classList.toggle("on",S.spin);if(S.spin){camT=null;setView("free",true);}});
+function applyLang(){const l=L();document.querySelectorAll(".langsw button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.l===l)));read3d();draw2D();}
+document.querySelectorAll(".langsw button").forEach(b=>b.addEventListener("click",()=>{const l=b.dataset.l;try{localStorage.setItem("sjk-lang",l)}catch(e){}
+  document.documentElement.setAttribute("data-lang",l);document.documentElement.lang=l;applyLang();window.dispatchEvent(new CustomEvent("sjk:lang",{detail:l}));}));
+goldMat.clippingPlanes=[];shellMat.clippingPlanes=[];nestMat.clippingPlanes=[];
+document.querySelector('[data-rot="0"]').classList.add("on");
+buildCore();resize();applyLang();requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
