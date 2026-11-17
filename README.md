@@ -14,9 +14,12 @@ Interaktív, böngészőben futó prototípusok egy közös, 6 bites állapotté
 | `spidron-cube.html` | **Spidron-kocka** (three.js): a 64 hexagram spidron-fészkekből kirakva egy 4×4×4-es kockában; a fészek hajtásai a vonalak, színe a vonalpárok (R, G, B), a kiválasztott hexagram 錯 ellentéte a középponton át és 6 szomszédja kiemelve; szétnyitás, hajtásmélység, emeletenkénti szűrés |
 | `harmonia.html` | **Spidron Harmónia Labor** (three.js): a spidron felépítése 4 lépésben (2D kiterítve és 3D hajtogatva: egy kar, hatszögű fészek, kupola); a szintek mérete hangfrekvenciára (négy leképezés, köztük a mérettel fordított arányú f₀·(√3)^k) és a 2⁴⁰-es oktáv-transzponálással fényhullámhosszra képezve, Web Audio hangokkal |
 | `spidron-lab.html` | **Spidron-labor:** SJK-mozaik (hatszögű LBP vs. gradiens-szabály), SJK-UI demó (spidron-gomb, mutáció + időgörbe, spirális menü), színek (spidron-színkör HSL/OKLCH-ban, harmóniák, hexagram mint paletta, 64 szín) |
+| `hatvannegy-pont.html` | **Hatvannégy pont** (three.js): a 64 hexagram hét elrendezés között animálva (6D hiperkocka ikozaéder-vetülettel, Petrie-tizenkétszög, Cullinane 4×4×4 kockája, Taiji-fa, Fu Xi kör, King Wen rács, kodon-kerék); hexagram-lap (錯, 綜, 互, trigram-kör, életvirág-kód); DNS-réteg választható leképezéssel (Krakowski, Zhang, Castro-Chavez) és aminosav-színezéssel; spidron / SpHidron fészek (6 öv = 6 vonal); spidronhedron: 8 befelé süllyedő csúcs-fészek (8 trigram = RGB-kocka) merüléssel; mantra- és 五行-színek, 五音 trigram-hangpárok, bináris tükörhang, fény-oktáv (Web Audio); részletes ismertető forrásokkal. Csak magyarul |
 | `kodonfeszek/` | **Kodonfészek:** mozgó 3D spidronfészek, amelyben minden öv egy kodon és minden kar egy hexagramvonal (應-páros kiosztás); szemközti szál mint tükör, kötés-trigram, inzulingén és ismert változatai, szinonim átirat, hangrend magyarázattal, három igazságszint, véletlen elleni próba, adattáblák CSV-ben, versciklus. Részletek: [`kodonfeszek/README.md`](kodonfeszek/README.md) |
 
 A `chroma.html` saját hozzárendelést használ: a színt a két trigramból számolja (az R csatornát az 1. és 4. vonal adja, azaz ⅔ alsó + ⅓ felső trigram), a kodont pedig Krakowski kódolásával. A 錯 itt is a kiegészítő szín. A többi oldal a vonalpáros (1–2 = R, 3–4 = G, 5–6 = B) hozzárendelést használja.
+
+A `hatvannegy-pont.html` a `chroma.html`-hez hasonlóan a két trigramból számolja a színt (⅔ alsó + ⅓ felső), a kodon-leképezés pedig az oldalon választható; a 錯 mindig a kiegészítő szín.
 
 A `harmonia.html` 2⁴⁰-es oktáv-transzponálása (hang → fény) és a hajtás–felhang kapcsolata szemléltető leképezés, nem fizikai törvény; az oldal ezt jelzi is.
 
@@ -33,7 +36,8 @@ Utána: `http://localhost:8000/`
 ## Felépítés
 
 - Nincs külső betűtípus, CDN vagy követőkód. Az `index.html`, `iching.html` és `spidron-lab.html` minden CSS-t és JS-t az oldalon belül tartalmaz; a `spidron-cube.html` minden CSS-t az oldalon belül tartalmaz, a three.js-t a helyi `vendor/three.min.js`-ből tölti; a `chroma.html` és a `harmonia.html` a saját helyi CSS-ét (`chroma.css`, `harmonia.css`: Tailwind CSS 3.4-gyel előre fordítva, csak a használt osztályok) és a helyi `vendor/three.min.js`-t (three.js r128) tölti be. A `kodonfeszek/` oldal a közös `vendor/three.min.js` másolatot használja.
-- Mind a hét oldal kétnyelvű (HU/EN), a `kodonfeszek/` is: a szövegek `<span class="hu">` / `<span class="en">` párokban; a választott nyelv a `localStorage["sjk-lang"]` kulcsban, a nyelvváltáskor `sjk:lang` esemény fut. A `kodonfeszek/` README-je és adattáblái magyarul vannak.
+- A `hatvannegy-pont.html` minden CSS-t és JS-t az oldalon belül tartalmaz, a three.js-t a helyi `vendor/three.min.js`-ből tölti; egyelőre csak magyarul érhető el.
+- A többi hét oldal kétnyelvű (HU/EN), a `kodonfeszek/` is: a szövegek `<span class="hu">` / `<span class="en">` párokban; a választott nyelv a `localStorage["sjk-lang"]` kulcsban, a nyelvváltáskor `sjk:lang` esemény fut. A `kodonfeszek/` README-je és adattáblái magyarul vannak.
 - Böngészőben tárolva (csak az adott gépen): nyelv, idővonal (`iching-log`), képgenerálási beállítások (`iching-img`; a kulcs csak kifejezett kérésre).
 - A képgenerálás az egyetlen hely, ahol az oldal külső szolgáltatást hív: csak kattintásra, a felhasználó saját kulcsával, közvetlenül a böngészőből.
 
